@@ -1,0 +1,7 @@
+<aui:input 
+			name="multiLine" 
+			label="allow-multi-line" 
+			type="checkbox"
+			checked="<%= Validator.isNull(jsonDedicatedAttrs)? false : jsonDedicatedAttrs.getBoolean(IcecapSSSTermAttributes.MULTI_LINE, false) %>" 
+			helpMessage="string-allow-multi-line-help">
+</aui:input>

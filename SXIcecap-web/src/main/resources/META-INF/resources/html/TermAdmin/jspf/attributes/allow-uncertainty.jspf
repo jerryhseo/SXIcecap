@@ -1,0 +1,7 @@
+<aui:input 
+			name="allowUncertainty" 
+			label="allow-uncertainty" 
+			type="checkbox"
+			checked="<%= Validator.isNull(jsonDedicatedAttrs)? false : jsonDedicatedAttrs.getBoolean(IcecapSSSTermAttributes.UNCERTAINTY, false) %>" 
+			helpMessage="array-allow-uncertainty-help">
+</aui:input>

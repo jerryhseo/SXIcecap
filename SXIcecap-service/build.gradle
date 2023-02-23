@@ -1,0 +1,33 @@
+dependencies {
+	compile project(":modules:SXIcecap:SXIcecap-api")
+
+	compileOnly group: "com.liferay", name: "com.liferay.petra.io"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.lang"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.string"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.function"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.model.adapter"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.reflect"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.aop.api"
+	compile group: "com.liferay", name: "com.liferay.portal.upgrade", version: "2.0.0"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.search.spi"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.search.api"
+	
+	compileOnly group: "com.liferay", name: "com.liferay.exportimport.api"
+	compileOnly group: "com.liferay", name: "com.liferay.xstream.configurator.api"
+	
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel"
+	
+	compileOnly group: "org.osgi", name: "org.osgi.annotation.versioning"
+	compileOnly group: "org.osgi", name: "org.osgi.core"
+	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"
+	
+	
+	compileOnly group: "javax.portlet", name: "portlet-api"
+	compileOnly group: "javax.servlet", name: "javax.servlet-api"
+}
+
+buildService {
+	apiDir = "../SXIcecap-api/src/main/java"
+}
+
+group = "com.sx.icecap"

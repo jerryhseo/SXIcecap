@@ -1,0 +1,19 @@
+<aui:fieldset-group markupView="lexicon">
+	<aui:fieldset label="boolean-attrinutes">
+		<aui:container>
+			<aui:fieldset label="display-style" helpMessage="display-style-help">
+				<aui:row>
+					<aui:col md="4">
+						<aui:input type="radio" name="displayStyle" value="checkbox" label="checkbox" checked="true"></aui:input>
+					</aui:col>
+					<aui:col md="4">
+						<aui:input type="radio" name="displayStyle" value="radio" label="radio-button" ></aui:input>
+					</aui:col>
+					<aui:col md="4">
+						<aui:input type="radio" name="displayStyle" value="selectbox" label="selectbox" ></aui:input>
+					</aui:col>
+				</aui:row>
+			</aui:fieldset>
+		</aui:container>
+	</aui:fieldset>
+</aui:fieldset-group>

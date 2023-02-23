@@ -1,0 +1,56 @@
+<aui:select name="termType" label="term-type" helpMessage="term-type-select-help">
+	<aui:option label="String" value="String"/>
+	<aui:option label="Numeric" value="Numeric"/>
+	<aui:option label="List" value="List"/>
+	<aui:option label="Boolean" value="Boolean"/>
+	<aui:option label="Group" value="Group"/>
+	<aui:option label="Address" value="Address"/>
+	<aui:option label="Phone" value="Phone"/>
+	<aui:option label="EMail" value="EMail"/>
+	<aui:option label="Date" value="Date"/>
+	<aui:option label="Matrix" value="Matrix"/>
+</aui:select>
+<aui:input  
+				name="termName" 
+				label="term-name"  
+				required="true" 
+				placeholder="ex) termName"
+				helpMessage="term-name-help">
+</aui:input>
+<aui:input  
+				name="termVersion" 
+				label="term-version" 
+				required="true"
+				helpMessage="term-version-help">
+</aui:input>
+<aui:field-wrapper name="termDisplayName" required="true" label="term-display-name" helpMessage="term-display-name-help">
+		<liferay-ui:input-localized 
+						name="termDisplayName"
+						xml="">
+		</liferay-ui:input-localized>
+</aui:field-wrapper>
+<aui:field-wrapper name="termDefinition" label="definition" helpMessage="definition-help">
+		<liferay-ui:input-localized 
+						type="textarea"
+						name="termDefinition"
+						xml="">
+		</liferay-ui:input-localized>
+</aui:field-wrapper>
+<aui:field-wrapper name="termTooltip" label="tooltip" helpMessage="term-tooltip-help">
+		<liferay-ui:input-localized 
+						name="termTooltip"
+						xml="">
+		</liferay-ui:input-localized>
+</aui:field-wrapper>
+<aui:input 
+			type="text"
+			name="synonyms" 
+			label="synonyms" 
+			helpMessage="term-synonyms-help">
+</aui:input>
+<aui:input 
+			type="text"
+			name="value" 
+			label="default-value" 
+			helpMessage="default-value-help">
+</aui:input>

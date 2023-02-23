@@ -1,0 +1,68 @@
+	<%@page import="com.sx.icecap.constant.IcecapSSSTermAttributes"%>
+<aui:row cssClass="wide-top-margin-row">
+		<aui:col>
+			<dt>
+				<liferay-ui:message key="place-holder"/>
+			</dt>
+			<dd>
+				<%
+					JSONObject jsonPlaceHolder = null;
+					try{
+						jsonPlaceHolder = JSONFactoryUtil.createJSONObject( jsonTerm.getString("placeHolder") );
+					} catch( JSONException je ){
+						out.println(je.getMessage());
+					}
+				%>
+				<%= jsonPlaceHolder.getString(locale.toString()) %>
+			</dd>
+		</aui:col>
+	</aui:row>
+	<aui:row cssClass="wide-top-margin-row">
+		<aui:col md="3">
+			<dt>
+				<liferay-ui:message key="min-length"/>
+			</dt>
+			<dd>
+				<%
+					if( jsonTerm.has("minLength") ){
+						jsonTerm.getString("minLength");
+					}
+					else{
+						out.print(IcecapSSSTermAttributes.DEFAULT_STRING_MIN_LENGTH);
+					}
+				%>
+			</dd>
+		</aui:col>
+		<aui:col md="3">
+			<dt>
+				<liferay-ui:message key="max-length"/>
+			</dt>
+			<dd>
+				<%
+					if( jsonTerm.has("maxLength") ){
+						jsonTerm.getString("maxLength");
+					}
+					else{
+						out.print(IcecapSSSTermAttributes.DEFAULT_STRING_MAX_LENGTH);
+					}
+				%>
+			</dd>
+		</aui:col>
+	</aui:row>
+		<aui:row cssClass="wide-top-margin-row">
+		<aui:col>
+			<dt>
+				<liferay-ui:message key="validation-rule"/>
+			</dt>
+			<dd>
+				<%
+					if( jsonTerm.has("validationRule") ){
+						jsonTerm.getString("validationRule");
+					}
+					else{
+						out.print(IcecapSSSTermAttributes.DEFAULT_STRING_VALIDATION_RULE);
+					}
+				%>
+			</dd>
+		</aui:col>
+	</aui:row>

@@ -1,0 +1,13 @@
+<aui:fieldset-group markupView="lexicon">
+	<aui:fieldset label="boolean-attrinutes">
+		<aui:container>
+			<aui:fieldset label="display-style" helpMessage="display-style-help">
+				<aui:row>
+					<aui:col md="4">
+						<aui:input name="displayFormat" label="display-format" helpMessage="date-display-format-help"></aui:input>
+					</aui:col>
+				</aui:row>
+			</aui:fieldset>
+		</aui:container>
+	</aui:fieldset>
+</aui:fieldset-group>

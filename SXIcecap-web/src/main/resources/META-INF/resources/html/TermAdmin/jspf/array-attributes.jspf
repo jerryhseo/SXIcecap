@@ -1,0 +1,21 @@
+<aui:fieldset-group markupView="lexicon">
+	<aui:fieldset label="array-attrinutes">
+		<aui:row>
+			<aui:col md="2">
+				<%@include file="attributes/min-length.jspf" %>
+			</aui:col>
+			<aui:col md="2">
+				<%@include file="attributes/max-length.jspf" %>
+			</aui:col>
+		</aui:row>
+		<%@include file="attributes/element-type.jspf" %>
+		<c:if test="<%= !isString %>">
+			<%@include file="attributes/element-unit.jspf" %>
+			<aui:row>
+				<aui:col>
+					<%@include file="attributes/allow-uncertainty.jspf" %>
+				</aui:col>
+			</aui:row>
+		</c:if>
+	</aui:fieldset>
+</aui:fieldset-group>

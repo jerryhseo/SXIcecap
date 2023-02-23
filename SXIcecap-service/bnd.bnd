@@ -1,0 +1,10 @@
+Bundle-Name: SXIcecap-service
+Bundle-SymbolicName: com.sx.icecap.service
+Bundle-Version: 1.0.0
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true
+-dsannotations-options: inherit
+
+Export-Package: \
+	com.sx.icecap.search.datatype,\
+	com.sx.icecap.security.permission.resource.sss

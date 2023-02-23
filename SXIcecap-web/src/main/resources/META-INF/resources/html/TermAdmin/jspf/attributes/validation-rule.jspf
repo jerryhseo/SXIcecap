@@ -1,0 +1,7 @@
+<aui:input 
+			name="validationRule" 
+			label="validation-rule" 
+			type="text" 
+			value="<%= Validator.isNull(jsonDedicatedAttrs)? "" : jsonDedicatedAttrs.getString(IcecapSSSTermAttributes.VALIDATION_RULE, "") %>" 
+			helpMessage="string-validation-rule-help">
+</aui:input>

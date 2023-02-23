@@ -1,0 +1,28 @@
+<%
+	boolean isString = true;
+	if( Validator.isNotNull(jsonDedicatedAttrs) ){
+		String elementType = jsonDedicatedAttrs.getString(IcecapSSSTermAttributes.ELEMENT_TYPE, IcecapSSSTermTypes.STRING);
+		isString = elementType.equals(IcecapSSSTermTypes.STRING);
+	}
+%>
+<aui:fieldset label="element-type" helpMessage="array-element-types-help">
+	<aui:row>
+		<aui:col md= "2">
+			<aui:input 
+					type="radio" 
+					name="elementType" 
+					value="<%= IcecapSSSTermTypes.STRING %>"
+					checked="<%= isString %>"
+					label="string" ></aui:input>
+		</aui:col>
+		<aui:col md= "2">
+			<aui:input 
+					type="radio" 
+					name="elementType" 
+					value="<%= IcecapSSSTermTypes.NUMERIC %>"
+					checked="<%= !isString %>"
+					label="numeric" ></aui:input>
+		</aui:col>
+	</aui:row>
+</aui:fieldset>
+

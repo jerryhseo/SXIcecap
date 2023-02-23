@@ -1,0 +1,11 @@
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset label="phone-attrinutes">
+			<aui:container>
+				<aui:row>
+					<aui:col>
+						<aui:input type="checkbox" name="countryCode" label="country-code" helpMessage="phone-country-code-help"></aui:input>
+					</aui:col>
+				</aui:row>
+			</aui:container>
+		</aui:fieldset>
+	</aui:fieldset-group>

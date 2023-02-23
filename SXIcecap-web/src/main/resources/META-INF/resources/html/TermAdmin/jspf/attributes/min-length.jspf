@@ -1,0 +1,7 @@
+<aui:input 
+			name="minLength" 
+			label="min-length" 
+			type="number" 
+			value="<%= Validator.isNull(jsonDedicatedAttrs)? 1 : jsonDedicatedAttrs.getInt(IcecapSSSTermAttributes.MIN_LENGTH, 1) %>" 
+			helpMessage="string-min-length-help">
+</aui:input>

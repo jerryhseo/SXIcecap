@@ -1,0 +1,24 @@
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset label="fileattrinutes">
+			<aui:container>
+				<aui:row>
+					<aui:col>
+						<aui:select name="urlType" label="url-type">
+							<aui:option label="file-path" value="path" selected="true"></aui:option>
+							<aui:option label="url" value="url"></aui:option>
+							<aui:option label="uri" value="uri"></aui:option>
+							<aui:option label="doi" value="doi"></aui:option>
+						</aui:select>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col md="6">
+						<aui:input name="dataTypeName" label="data-type-name"></aui:input>
+					</aui:col>
+					<aui:col md="2">
+						<aui:input name="dataTypeVersion" label="data-type-version"></aui:input>
+					</aui:col>
+				</aui:row>
+			</aui:container>
+		</aui:fieldset>
+	</aui:fieldset-group>

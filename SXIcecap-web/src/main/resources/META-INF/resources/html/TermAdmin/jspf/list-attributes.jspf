@@ -1,0 +1,132 @@
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset label="list-attrinutes">
+			<aui:container>
+				<aui:row>
+					<aui:col md= "6">
+						<aui:select name="listItemList" label="list-items" helpMessage="term-list-items-help"></aui:select>
+						<aui:input type="hidden" name="listItems"></aui:input>
+					</aui:col>
+					<aui:col md="6">
+						<aui:fieldset label="display-style" helpMessage="display-style-help">
+							<aui:row>
+								<aui:col md="6">
+									<aui:input type="radio" name="displayStyle" value="selectbox" label="selectbox" checked="true"></aui:input>
+								</aui:col>
+								<aui:col md="6">
+									<aui:input type="radio" name="displayStyle" value="radio" label="radio-button" ></aui:input>
+								</aui:col>
+							</aui:row>
+						</aui:fieldset>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col>
+						<aui:fieldset label="manage-list-items">
+							<aui:container>
+								<aui:row>
+									<aui:col md="5" id="defineOption">
+										 <aui:field-wrapper name="listItemDisplayName" label="item-display-name" helpMessage="term-list-item-display-name-help">
+											<liferay-ui:input-localized name="listItemDisplayName"  xml=""></liferay-ui:input-localized>
+										</aui:field-wrapper>
+									</aui:col>
+									<aui:col md="5">
+										<aui:input name="listItemValue" label="list-item-value" helpMessage="list-item-value-help"></aui:input>
+									</aui:col>
+								</aui:row>
+								<aui:row>
+									<aui-col>
+									<aui:button name="addItem" value="add-item"></aui:button>
+									<aui:button name="updateItem" value="update-item"></aui:button>
+									<aui:button name="deleteItem" value="delete-item"></aui:button>
+									</aui-col>
+								</aui:row>
+							</aui:container>
+						</aui:fieldset>
+					</aui:col>
+				</aui:row>
+			</aui:container>
+		</aui:fieldset>
+	</aui:fieldset-group>
+
+<script>
+(function (){
+	var listItems = [];
+	var selectedItem;
+	var dirty;
+	
+	$('#<portlet:namespace/>addItem').click( function(){
+		var listItem = SSS.Util.getLocalizedInputValue( '<portlet:namespace/>listItemDisplayName', <%=availableLanguageIds%> );
+		listItem.value = $('#<portlet:namespace/>listItemValue').val();
+		listItems.push( listItem );
+		console.log( listItems );
+		
+		$('#<portlet:namespace/>listItemList').append(
+				'<option value="' + listItem.value + '">' +
+				listItem.displayName['<%=LanguageUtil.getLanguageId(locale)%>'] + '</option>');
+		$('#<portlet:namespace/>listItemList').val( listItem.value);
+		selectedItem = listItem;
+	});
+	
+	$('#<portlet:namespace/>listItemList').change( function(){
+
+		var selectedValue = $('#<portlet:namespace/>listItemList').val();
+		
+		if( !selectedValue ){
+			SSS.Util.clearLocalizedInputValue('<portlet:namespace/>listItemDisplayName', $('#<portlet:namespace/>defineOption'), <%=availableLanguageIds%>);
+			$('#<portlet:namespace/>listItemValue').val('');
+		}
+		else{
+			listItemList.forEach( function(item){
+				if( item.value === selectedValue ){
+					SSS.Util.setLocalizedInputValue('<portlet:namespace/>listItemDisplayName', $('#<portlet:namespace/>defineOption'), <%=availableLanguageIds%>, item.displayName);
+					$('#<portlet:namespace/>listItemValue').val( selectedValue);
+					selectedItem = item;
+				}
+			});
+		}
+	});
+	
+	$('#<portlet:namespace/>updateItem').click( function(){
+		var listItem = SSS.Util.getLocalizedInputValue( '<portlet:namespace/>listItemDisplayName', <%=availableLanguageIds%> );
+		listItem.value = $('#<portlet:namespace/>listItemValue').val();
+		
+		var $selectedOption = $('#<portlet:namespace/>listItems option:selected');
+		//console.log('Update option... ', $option);
+		
+		$selectedOption.attr('value', listItem.value);
+		$selectedOption.text(listItem.displayName['<%= LanguageUtil.getLanguageId(locale)%>']);
+		
+		listItems.forEach(function(item){
+			if( item.value === listItem.value ){
+				item.displayName = listItem.displayName;
+				item.value = listItem.value;
+			}
+		});
+		
+		selectedItem.displayName = listItem.displayName;
+		selectedItem.value = listItem.value;
+		
+		//console.log( 'Updated listItems.... ', <portlet:namespace/>listItemList );
+	});
+	
+	$('#<portlet:namespace/>deleteItem').click( function(){
+		$('#<portlet:namespace/>listItemList option').remove('option:selected');
+		
+		var selectedValue = $('#<portlet:namespace/>listItemList').val();
+		
+			if( !selectedValue ){
+				listItems = [];
+			}
+			else{
+				for( var i=0; i< listItems.length; i++){
+					if( listItems[i].value === selectedItem.value ){
+						SSS.Util.removeArrayElement( listItems, i );
+						break;
+					}
+				}
+			}
+		
+		$('#<portlet:namespace/>listItemList').trigger('change');
+	});
+}());
+</script>

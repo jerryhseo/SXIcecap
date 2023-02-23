@@ -1,0 +1,7 @@
+<aui:input 
+			name="maxLength" 
+			label="max-length" 
+			type="number" 
+			value="<%= Validator.isNull(jsonDedicatedAttrs)? 64 : jsonDedicatedAttrs.getInt(IcecapSSSTermAttributes.MAX_LENGTH, 64) %>" 
+			helpMessage="string-max-length-help">
+</aui:input>

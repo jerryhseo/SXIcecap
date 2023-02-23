@@ -1,0 +1,99 @@
+	<aui:form name="termDefinitionForm" method="POST" action="<%= updateTermURL %>">
+		<input type="hidden" name="<portlet:namespace/>selectedTermType" value=""/>
+		<aui:row>
+			<aui:col md="12" cssClass="term-definition-section">
+				<aui:fieldset-group markupView="lexicon">
+					<aui:container>
+					<aui:fieldset label="term-definition">
+						<aui:row>
+								<aui:col md="5">
+											<aui:input 
+															name="name" 
+															label="parameter-name"  
+															required="true" 
+															placeholder="ex) parameterName"
+															helpMessage="parameter-name-help">
+											</aui:input>
+								</aui:col>
+								<aui:col md="2">
+											<aui:input 
+															name="version" 
+															label="term-version" 
+															required="true" 
+															placeholder="ex) 1.0.0"
+															helpMessage="parameter-version-help">
+											</aui:input>
+								</aui:col>
+								<aui:col md="5">
+											<aui:input 
+															name="displayName" 
+															label="term-display-name" 
+															localized="true" 
+															required="true" 
+															model="<%= Term.class %>"
+															helpMessage="term-display-name-help">
+											</aui:input>
+								</aui:col>
+							</aui:row>
+							<aui:row>
+								<aui:col md="12">
+									<aui:fieldset-group markupView="lexicon">
+										<aui:fieldset label="categorization" helpMessage="term-categories-help">
+											<liferay-asset:asset-categories-selector className="<%= Term.class.getName() %>" />
+										</aui:fieldset>
+									</aui:fieldset-group>
+								</aui:col>
+							</aui:row>
+							<aui:row>
+								<aui:col md="12">
+											<aui:input 
+															type="textarea" 
+															name="definition" 
+															label="term-definition" 
+															localized="true" 
+															model="<%= Term.class %>"
+															helpMessage="term-definition-help">
+											</aui:input>
+								</aui:col>
+							</aui:row>
+							<aui:row>
+								<aui:col md="12">
+									<aui:input name="synonyms" label="synonyms" placeholder="ex)synTerm1, synterm2" helpMessage="term-synonyms-help"></aui:input>
+									<aui:input name="tooltip" 
+														  label="tooltip" 
+														  placeholder="Enter simple example to be displayed as a placeholder of the input control."
+														  localized="true"
+														  model="<%= Term.class %>"
+														  helpMessage="term-tooltip-help">
+									</aui:input>
+									<aui:input name="value" label="default-value" helpMessage="term-default-value-help"></aui:input>
+								</aui:col>
+							</aui:row>
+							<aui:row id="stringAttributes">
+								<aui:col md="12" id="typeDedicatedAttributes">
+								</aui:col>
+							</aui:row>	
+					</aui:fieldset>
+					</aui:container>
+				</aui:fieldset-group>
+			</aui:col>
+		</aui:row>
+		<aui:button-row>
+			<aui:button 
+					type="submit" 
+					name="submit" 
+					value="<%=submitButtonLabel %>">
+			</aui:button>
+			<aui:button 
+					type="reset" 
+					name="clear" 
+					value="<%= LanguageUtil.get(locale, "clear", "Clear") %>">
+			</aui:button>
+			<aui:button 
+					type="button" 
+					name="cancel" 
+					value="<%= LanguageUtil.get(locale, "cancel", "Cancel") %>"
+					href="<%= redirect %>">
+			</aui:button>
+		</aui:button-row>
+	</aui:form> 

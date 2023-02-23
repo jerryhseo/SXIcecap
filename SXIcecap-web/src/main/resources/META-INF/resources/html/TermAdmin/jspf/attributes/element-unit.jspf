@@ -1,0 +1,14 @@
+<aui:row>
+	<aui:col md="3">
+		<aui:input 
+				type="text" 
+				name="elementUnit" 
+				label="element-unit"
+				value="<%= Validator.isNull(jsonDedicatedAttrs)? StringPool.BLANK : jsonDedicatedAttrs.getString(IcecapSSSTermAttributes.UNIT, StringPool.BLANK) %>" 
+				helpMessage="array-element-unit-help"></aui:input>
+	</aui:col>
+	<aui:col md="2">
+		<label class="control-label" for="<portlet:namespace/>unitPreview">Preview</label>
+		<div class="field form-control" style="width:100%;min-height: 2.5rem;background:##F1F2F5;" id="<portlet:namespace/>unitPreview"></div>
+	</aui:col>
+</aui:row>

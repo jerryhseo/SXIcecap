@@ -1,0 +1,8 @@
+Bundle-Name: SXIcecap-web
+Bundle-SymbolicName: com.sx.icecap.web
+Bundle-Version: 1.0.0
+Export-Package: com.sx.icecap.web.constants
+
+Import-Package: \
+		!com.liferay.portal.freemarker,\
+		*

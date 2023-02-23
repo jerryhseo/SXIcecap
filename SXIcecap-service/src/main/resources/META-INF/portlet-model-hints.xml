@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.sx.icecap.model.DataType">
+		<field name="uuid" type="String" />
+		<field name="dataTypeId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="dataTypeName" type="String" />
+		<field name="dataTypeVersion" type="String" />
+		<field localized="true" name="displayName" type="String" />
+		<field name="extension" type="String" />
+		<field name="sampleFileId" type="long" />
+		<field localized="true" name="description" type="String" />
+		<field localized="true" name="tooltip" type="String" />
+		<field name="hasDataStructure" type="boolean" />
+	</model>
+	<model name="com.sx.icecap.model.DataTypeStructure">
+		<field name="dataTypeId" type="long" />
+		<field name="structure" type="String">
+			<hint name="max-length">4096</hint>
+		</field>
+	</model>
+	<model name="com.sx.icecap.model.StructuredData">
+		<field name="structuredDataId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="dataSetId" type="long" />
+		<field name="dataTypeId" type="long" />
+		<field name="structuredData" type="String" />
+		<field name="patientId" type="long" />
+		<field name="crfId" type="long" />
+	</model>
+	<model name="com.sx.icecap.model.Term">
+		<field name="uuid" type="String" />
+		<field name="termId" type="long" />
+		<field name="groupTermId" type="String" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="lastPublishDate" type="Date" />
+		<field name="termName" type="String" />
+		<field name="termVersion" type="String" />
+		<field name="termType" type="String" />
+		<field localized="true" name="displayName" type="String" />
+		<field localized="true" name="definition" type="String" />
+		<field localized="true" name="tooltip" type="String" />
+		<field name="synonyms" type="String">
+			<hint name="max-length">512</hint>
+		</field>
+		<field name="attributesJSON" type="String">
+			<hint name="max-length">4096</hint>
+		</field>
+		<field name="standard" type="boolean" />
+	</model>
+</model-hints>

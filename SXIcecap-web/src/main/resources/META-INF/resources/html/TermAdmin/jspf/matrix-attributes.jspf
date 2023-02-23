@@ -1,0 +1,14 @@
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset label="matrix-attrinutes">
+			<aui:container>
+				<aui:row>
+					<aui:col md="2">
+						<aui:input name="dimensionX" label="dimension-x" type="number" value="2" helpMessage="matrix-dimension-x-help"></aui:input>
+					</aui:col>
+					<aui:col md="2">
+						<aui:input name="dimensionY" label="dimension-y" type="number" value="2" helpMessage="matrix-dimension-y-help"></aui:input>
+					</aui:col>
+				</aui:row>
+			</aui:container>
+		</aui:fieldset>
+	</aui:fieldset-group>
