@@ -4,7 +4,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.sx.icecap.constant.IcecapJsps;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.Term;
 import com.sx.icecap.service.TermLocalService;
@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.TERM_ADMIN,
-	        "mvc.command.name="+IcecapSSSMVCCommands.RENDER_ADMIN_TERM_VIEW
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_ADMIN_TERM_VIEW
 	    },
 	    service = MVCRenderCommand.class
 	)

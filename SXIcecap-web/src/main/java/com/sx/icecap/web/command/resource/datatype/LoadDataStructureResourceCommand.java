@@ -3,7 +3,7 @@ package com.sx.icecap.web.command.resource.datatype;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.service.DataTypeLocalService;
@@ -18,7 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_LOAD_STRUCTURE
+	        "mvc.command.name="+IcecapMVCCommands.RESOURCE_DATATYPE_LOAD_STRUCTURE
 	    },
 	    service = MVCResourceCommand.class
 )

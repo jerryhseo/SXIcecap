@@ -30,7 +30,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.configuration.kernel.util.PortletConfigurationApplicationType;
 import com.sx.constant.StationXWebKeys;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.Term;
@@ -147,7 +147,7 @@ public class TermAdminActionDropdownItemsProvider {
 		
 		long[] termIds = { _term.getTermId()};
 //		deleteURL.setParameter(IcecapSSSWebKeys.MVC_ACTION_COMMAND_NAME, MVCCommandNames.ACTION_TERM_DELETE);
-		deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapSSSMVCCommands.ACTION_ADMIN_TERM_DELETE);
+		deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_ADMIN_TERM_DELETE);
 		deleteURL.setParameter(Constants.CMD, Constants.DELETE);
 		deleteURL.setParameter(StationXWebKeys.REDIRECT, _getRedirectURL());
 		deleteURL.setParameter(StationXWebKeys.TERM_IDS, Arrays.toString(termIds) );
@@ -168,7 +168,7 @@ public class TermAdminActionDropdownItemsProvider {
 		return dropdownItem -> {
 			dropdownItem.setHref(
 				_renderResponse.createRenderURL(), 
-				StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapSSSMVCCommands.RENDER_ADMIN_TERM_EDIT, 
+				StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_ADMIN_TERM_EDIT, 
 				Constants.CMD, Constants.UPDATE,
 				StationXWebKeys.REDIRECT, _getRedirectURL(), 
 				IcecapSSSTermAttributes.TERM_ID, _term.getTermId());
@@ -184,7 +184,7 @@ public class TermAdminActionDropdownItemsProvider {
 		ActionURL moveToTrashURL = _renderResponse.createActionURL();
 
 		moveToTrashURL.setParameter(
-					ActionRequest.ACTION_NAME, IcecapSSSMVCCommands.ACTION_ADMIN_TERM_DELETE);
+					ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_ADMIN_TERM_DELETE);
 		moveToTrashURL.setParameter(Constants.CMD, Constants.MOVE_TO_TRASH);
 		moveToTrashURL.setParameter(StationXWebKeys.REDIRECT, _getRedirectURL());
 		moveToTrashURL.setParameter(IcecapSSSTermAttributes.TERM_ID, String.valueOf(_term.getTermId()));
@@ -318,7 +318,7 @@ public class TermAdminActionDropdownItemsProvider {
 		ActionURL publishEntryURL = _renderResponse.createActionURL();
 
 		publishEntryURL.setParameter(
-				ActionRequest.ACTION_NAME, IcecapSSSMVCCommands.ACTION_ADMIN_TERM_PUBLISH);
+				ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_ADMIN_TERM_PUBLISH);
 		publishEntryURL.setParameter(StationXWebKeys.BACK_URL, _getRedirectURL());
 		publishEntryURL.setParameter(
 				IcecapSSSTermAttributes.TERM_ID, String.valueOf(_term.getTermId()));
@@ -335,7 +335,7 @@ public class TermAdminActionDropdownItemsProvider {
 		PortletURL redirectURL = _renderResponse.createRenderURL();
 
 		redirectURL.setParameter(
-				StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST);
+				StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_ADMIN_TERM_LIST);
 
 		return redirectURL.toString();
 	}

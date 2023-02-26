@@ -8,6 +8,7 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 		<portlet-ref>
 			<portlet-name>com_sx_icecap_web_portlet_sss_TermAdminPortlet</portlet-name>
 			<portlet-name>com_sx_icecap_web_portlet_datatype_DataTypeManagementPortlet</portlet-name>
+			<portlet-name>com_sx_icecap_web_portlet_sd_StructuredDataPortlet</portlet-name>
 		</portlet-ref>
 		<root>true</root>
 		<weight>1</weight>
@@ -89,6 +90,52 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 		<model-name>com.sx.icecap.model.DataType</model-name>
 		<portlet-ref>
 			<portlet-name>com_sx_icecap_web_portlet_datatype_DataTypeManagementPortlet</portlet-name>
+		</portlet-ref>
+		<weight>2</weight>
+		<permissions>
+			<supports>
+				<action-key>ADD</action-key>
+				<action-key>UPDATE</action-key>
+				<action-key>DELETE</action-key>
+				<action-key>REVIEW</action-key>
+				<action-key>APPROVE</action-key>
+				<action-key>ADD_DISCUSSION</action-key>
+				<action-key>DELETE_DISCUSSION</action-key>
+				<action-key>UPDATE_DISCUSSION</action-key>
+				<action-key>PERMISSIONS</action-key>
+				<action-key>VIEW</action-key>
+			</supports>
+			<site-member-defaults>
+				<action-key>ADD</action-key>
+				<action-key>UPDATE</action-key>
+				<action-key>DELETE</action-key>
+				<action-key>REVIEW</action-key>
+				<action-key>ADD_DISCUSSION</action-key>
+				<action-key>DELETE_DISCUSSION</action-key>
+				<action-key>UPDATE_DISCUSSION</action-key>
+				<action-key>VIEW</action-key>
+			</site-member-defaults>
+			<guest-defaults>
+				<action-key>ADD_DISCUSSION</action-key>
+				<action-key>UPDATE_DISCUSSION</action-key>
+				<action-key>DELETE_DISCUSSION</action-key>
+				<action-key>VIEW</action-key>
+			</guest-defaults>
+			<guest-unsupported>
+				<action-key>ADD</action-key>
+				<action-key>UPDATE</action-key>
+				<action-key>DELETE</action-key>
+				<action-key>REVIEW</action-key>
+				<action-key>APPROVE</action-key>
+				<action-key>PERMISSIONS</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+	
+	<model-resource>
+		<model-name>com.sx.icecap.model.StructuredData</model-name>
+		<portlet-ref>
+			<portlet-name>com_sx_icecap_web_portlet_sd_StructuredDataPortlet</portlet-name>
 		</portlet-ref>
 		<weight>2</weight>
 		<permissions>

@@ -14,7 +14,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.DataType;
@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 		property = {
 				"javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-				"mvc.command.name=" + IcecapDataTypeMVCCommands.ACTION_DATATYPE_ADD,
-				"mvc.command.name=" + IcecapDataTypeMVCCommands.ACTION_DATATYPE_UPDATE
+				"mvc.command.name=" + IcecapMVCCommands.ACTION_DATATYPE_ADD,
+				"mvc.command.name=" + IcecapMVCCommands.ACTION_DATATYPE_UPDATE
 		},
 		service = MVCActionCommand.class
 )
@@ -70,9 +70,9 @@ public class SaveDataTypeActionCommand extends BaseMVCActionCommand {
 				themeDisplay.getPlid(),
 				PortletRequest.RENDER_PHASE);
 		
-		String renderCommand = IcecapDataTypeMVCCommands.RENDER_DATATYPE_LIST; 
+		String renderCommand = IcecapMVCCommands.RENDER_DATATYPE_LIST; 
 		if( cmd.equals( IcecapConstants.CMD_REDIRECT_TO_DEFINE_STRUCTURE ) ) {
-			renderCommand = IcecapDataTypeMVCCommands.RENDER_DEFINE_DATA_STRUCTURE;
+			renderCommand = IcecapMVCCommands.RENDER_DEFINE_DATA_STRUCTURE;
 			renderURL.setParameter(StationXWebKeys.BACK_URL, backURL);
 		}
 		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, renderCommand);

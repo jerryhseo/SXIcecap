@@ -9,7 +9,7 @@
 <%@page import="javax.portlet.PortletURL"%>
 <%@page import="com.liferay.portal.kernel.util.Validator"%>
 <%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
-<%@page import="com.sx.icecap.constant.IcecapSSSMVCCommands"%>
+<%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
 <%@page import="com.liferay.portal.kernel.util.Constants"%>
 <%@page import="com.sx.icecap.constant.IcecapActionKeys"%>
 <%@page import="java.util.Locale"%>
@@ -58,13 +58,13 @@
 	}
 %>
 
-<liferay-portlet:actionURL name="<%=IcecapSSSMVCCommands.ACTION_ADMIN_TERM_ADD%>" var="addTermURL">
+<liferay-portlet:actionURL name="<%=IcecapMVCCommands.ACTION_ADMIN_TERM_ADD%>" var="addTermURL">
 </liferay-portlet:actionURL>
 
 <portlet:renderURL var="termListURL">
 	<portlet:param
 			name="<%=StationXWebKeys.MVC_RENDER_COMMAND_NAME%>" 
-    		value="<%=IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST%>" />
+    		value="<%=IcecapMVCCommands.RENDER_ADMIN_TERM_LIST%>" />
     <portlet:param
     		name="<%=StationXWebKeys.NAVIGATION%>"
     		value="<%=ParamUtil.getString(renderRequest, StationXWebKeys.NAVIGATION)%>" />
@@ -92,16 +92,16 @@
 </portlet:renderURL>
 
 <portlet:actionURL 
-			name="<%=IcecapSSSMVCCommands.ACTION_ADMIN_TERM_UPDATE %>" 
+			name="<%=IcecapMVCCommands.ACTION_ADMIN_TERM_UPDATE %>" 
 			var="updateTermURL">
 </portlet:actionURL>
 
 <portlet:actionURL 
-			name="<%=IcecapSSSMVCCommands.ACTION_ADMIN_LOAD_TERM_ATTRIBURES%>" 
+			name="<%=IcecapMVCCommands.ACTION_ADMIN_LOAD_TERM_ATTRIBURES%>" 
 			var="loadTermAttributesURL"/>
 
 <portlet:resourceURL 
-			id="<%= IcecapSSSMVCCommands.RESOURCE_ADMIN_RENDER_TERM %>"
+			id="<%= IcecapMVCCommands.RESOURCE_ADMIN_RENDER_TERM %>"
 			 var="renderTermURL">
 </portlet:resourceURL>
 
@@ -147,7 +147,7 @@
 					<aui:button type="submit" value="<%= submitButtonLabel %>" ></aui:button>
 					<aui:button name="clear" type="reset" value="clear"></aui:button>
 					<c:if test="<%= Validator.isNotNull(term) %>">
-						<portlet:actionURL name="<%=IcecapSSSMVCCommands.ACTION_ADMIN_TERM_DELETE%>" var="deleteTermURL">
+						<portlet:actionURL name="<%=IcecapMVCCommands.ACTION_ADMIN_TERM_DELETE%>" var="deleteTermURL">
 							<portlet:param name="termId" value="<%= String.valueOf(term.getTermId()) %>"/>
 						</portlet:actionURL>
 						<aui:button name="delete" type="delete" value="delete" href="<%= deleteTermURL.toString() %>"></aui:button>

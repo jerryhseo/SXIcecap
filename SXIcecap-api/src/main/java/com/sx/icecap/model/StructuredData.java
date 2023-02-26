@@ -36,6 +36,26 @@ public interface StructuredData extends PersistedModel, StructuredDataModel {
 	 *
 	 * Never modify this interface directly. Add methods to <code>com.sx.icecap.model.impl.StructuredDataImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public static final Accessor<StructuredData, String> UUID_ACCESSOR =
+		new Accessor<StructuredData, String>() {
+
+			@Override
+			public String get(StructuredData structuredData) {
+				return structuredData.getUuid();
+			}
+
+			@Override
+			public Class<String> getAttributeClass() {
+				return String.class;
+			}
+
+			@Override
+			public Class<StructuredData> getTypeClass() {
+				return StructuredData.class;
+			}
+
+		};
+
 	public static final Accessor<StructuredData, Long>
 		STRUCTURED_DATA_ID_ACCESSOR = new Accessor<StructuredData, Long>() {
 

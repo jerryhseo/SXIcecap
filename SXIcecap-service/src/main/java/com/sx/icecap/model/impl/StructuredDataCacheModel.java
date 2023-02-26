@@ -63,9 +63,11 @@ public class StructuredDataCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(35);
 
-		sb.append("{structuredDataId=");
+		sb.append("{uuid=");
+		sb.append(uuid);
+		sb.append(", structuredDataId=");
 		sb.append(structuredDataId);
 		sb.append(", groupId=");
 		sb.append(groupId);
@@ -79,16 +81,24 @@ public class StructuredDataCacheModel
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", status=");
+		sb.append(status);
+		sb.append(", statusByUserId=");
+		sb.append(statusByUserId);
+		sb.append(", statusByUserName=");
+		sb.append(statusByUserName);
+		sb.append(", statusDate=");
+		sb.append(statusDate);
 		sb.append(", dataSetId=");
 		sb.append(dataSetId);
+		sb.append(", dataSetDisplayName=");
+		sb.append(dataSetDisplayName);
 		sb.append(", dataTypeId=");
 		sb.append(dataTypeId);
+		sb.append(", dataTypeDisplayName=");
+		sb.append(dataTypeDisplayName);
 		sb.append(", structuredData=");
 		sb.append(structuredData);
-		sb.append(", patientId=");
-		sb.append(patientId);
-		sb.append(", crfId=");
-		sb.append(crfId);
 		sb.append("}");
 
 		return sb.toString();
@@ -97,6 +107,13 @@ public class StructuredDataCacheModel
 	@Override
 	public StructuredData toEntityModel() {
 		StructuredDataImpl structuredDataImpl = new StructuredDataImpl();
+
+		if (uuid == null) {
+			structuredDataImpl.setUuid("");
+		}
+		else {
+			structuredDataImpl.setUuid(uuid);
+		}
 
 		structuredDataImpl.setStructuredDataId(structuredDataId);
 		structuredDataImpl.setGroupId(groupId);
@@ -124,8 +141,40 @@ public class StructuredDataCacheModel
 			structuredDataImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
+		structuredDataImpl.setStatus(status);
+		structuredDataImpl.setStatusByUserId(statusByUserId);
+
+		if (statusByUserName == null) {
+			structuredDataImpl.setStatusByUserName("");
+		}
+		else {
+			structuredDataImpl.setStatusByUserName(statusByUserName);
+		}
+
+		if (statusDate == Long.MIN_VALUE) {
+			structuredDataImpl.setStatusDate(null);
+		}
+		else {
+			structuredDataImpl.setStatusDate(new Date(statusDate));
+		}
+
 		structuredDataImpl.setDataSetId(dataSetId);
+
+		if (dataSetDisplayName == null) {
+			structuredDataImpl.setDataSetDisplayName("");
+		}
+		else {
+			structuredDataImpl.setDataSetDisplayName(dataSetDisplayName);
+		}
+
 		structuredDataImpl.setDataTypeId(dataTypeId);
+
+		if (dataTypeDisplayName == null) {
+			structuredDataImpl.setDataTypeDisplayName("");
+		}
+		else {
+			structuredDataImpl.setDataTypeDisplayName(dataTypeDisplayName);
+		}
 
 		if (structuredData == null) {
 			structuredDataImpl.setStructuredData("");
@@ -134,9 +183,6 @@ public class StructuredDataCacheModel
 			structuredDataImpl.setStructuredData(structuredData);
 		}
 
-		structuredDataImpl.setPatientId(patientId);
-		structuredDataImpl.setCrfId(crfId);
-
 		structuredDataImpl.resetOriginalValues();
 
 		return structuredDataImpl;
@@ -144,6 +190,8 @@ public class StructuredDataCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
+		uuid = objectInput.readUTF();
+
 		structuredDataId = objectInput.readLong();
 
 		groupId = objectInput.readLong();
@@ -155,18 +203,29 @@ public class StructuredDataCacheModel
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
 
+		status = objectInput.readInt();
+
+		statusByUserId = objectInput.readLong();
+		statusByUserName = objectInput.readUTF();
+		statusDate = objectInput.readLong();
+
 		dataSetId = objectInput.readLong();
+		dataSetDisplayName = objectInput.readUTF();
 
 		dataTypeId = objectInput.readLong();
+		dataTypeDisplayName = objectInput.readUTF();
 		structuredData = objectInput.readUTF();
-
-		patientId = objectInput.readLong();
-
-		crfId = objectInput.readLong();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
+		if (uuid == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(uuid);
+		}
+
 		objectOutput.writeLong(structuredDataId);
 
 		objectOutput.writeLong(groupId);
@@ -185,9 +244,36 @@ public class StructuredDataCacheModel
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
+		objectOutput.writeInt(status);
+
+		objectOutput.writeLong(statusByUserId);
+
+		if (statusByUserName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(statusByUserName);
+		}
+
+		objectOutput.writeLong(statusDate);
+
 		objectOutput.writeLong(dataSetId);
 
+		if (dataSetDisplayName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(dataSetDisplayName);
+		}
+
 		objectOutput.writeLong(dataTypeId);
+
+		if (dataTypeDisplayName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(dataTypeDisplayName);
+		}
 
 		if (structuredData == null) {
 			objectOutput.writeUTF("");
@@ -195,12 +281,9 @@ public class StructuredDataCacheModel
 		else {
 			objectOutput.writeUTF(structuredData);
 		}
-
-		objectOutput.writeLong(patientId);
-
-		objectOutput.writeLong(crfId);
 	}
 
+	public String uuid;
 	public long structuredDataId;
 	public long groupId;
 	public long companyId;
@@ -208,10 +291,14 @@ public class StructuredDataCacheModel
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public int status;
+	public long statusByUserId;
+	public String statusByUserName;
+	public long statusDate;
 	public long dataSetId;
+	public String dataSetDisplayName;
 	public long dataTypeId;
+	public String dataTypeDisplayName;
 	public String structuredData;
-	public long patientId;
-	public long crfId;
 
 }

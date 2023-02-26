@@ -8,7 +8,7 @@
 <%@page import="java.util.Set"%>
 <%@page import="java.util.Locale"%>
 <%@page import="com.sx.constant.StationXWebKeys"%>
-<%@page import="com.sx.icecap.constant.IcecapDataTypeMVCCommands"%>
+<%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
 <%@page import="com.sx.icecap.constant.IcecapConstants"%>
 <%@page import="com.sx.icecap.model.DataType"%>
 <%@page import="com.sx.icecap.model.DataTypeStructure"%>
@@ -43,15 +43,15 @@
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:resourceURL>
 
-<portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_TERM %>" var="renderTermResourceCommandURL">
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_RENDER_TERM %>" var="renderTermResourceCommandURL">
 	<portlet:param name="cmd" value="<%= IcecapConstants.RENDER_TERM %>"/>
 </portlet:resourceURL>
 
-<portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_DATATYPE %>" var="renderDataTypeResourceCommandURL">
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_RENDER_DATATYPE %>" var="renderDataTypeResourceCommandURL">
 	<portlet:param name="cmd" value="<%= IcecapConstants.RENDER_DATATYPE %>"/>
 </portlet:resourceURL>
 
-<portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_SAVE_STRUCTURE %>" var="saveDataStructureResourceCommandURL">
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_SAVE_STRUCTURE %>" var="saveDataStructureResourceCommandURL">
 </portlet:resourceURL>
 
 

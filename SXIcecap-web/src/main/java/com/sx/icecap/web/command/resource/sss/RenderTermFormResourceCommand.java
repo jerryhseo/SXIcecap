@@ -2,7 +2,7 @@ package com.sx.icecap.web.command.resource.sss;
 
 import com.liferay.portal.freemarker.FreeMarkerUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import org.osgi.service.component.annotations.Component;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.TERM_ADMIN,
-	        "mvc.command.name="+IcecapSSSMVCCommands.RESOURCE_ADMIN_RENDER_TERM
+	        "mvc.command.name="+IcecapMVCCommands.RESOURCE_ADMIN_RENDER_TERM
 	    },
 	    service = MVCResourceCommand.class
 	)

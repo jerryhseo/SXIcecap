@@ -9,6 +9,7 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 			<supports>
 				<action-key>ADD_TO_PAGE</action-key>
 				<action-key>CONFIGURATION</action-key>
+				<action-key>ADD_TERM</action-key>
 				<action-key>VIEW</action-key>
 			</supports>
 			<site-member-defaults>
@@ -20,6 +21,7 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 			<guest-unsupported>
 				<action-key>ADD_TO_PAGE</action-key>
 				<action-key>CONFIGURATION</action-key>
+				<action-key>ADD_TERM</action-key>
 			</guest-unsupported>
 		</permissions>
 	</portlet-resource>
@@ -42,7 +44,32 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 			<guest-unsupported>
 				<action-key>ADD_TO_PAGE</action-key>
 				<action-key>CONFIGURATION</action-key>
+				<action-key>ADD_DATATYPE</action-key>
 			</guest-unsupported>
 		</permissions>
 	</portlet-resource>
+	
+	<portlet-resource>
+		<portlet-name>com_sx_icecap_web_portlet_sd_StructuredDataPortlet</portlet-name>
+		<permissions>
+			<supports>
+				<action-key>ADD_TO_PAGE</action-key>
+				<action-key>CONFIGURATION</action-key>
+				<action-key>ADD_STRUCTURED_DATA</action-key>
+				<action-key>VIEW</action-key>
+			</supports>
+			<site-member-defaults>
+				<action-key>VIEW</action-key>
+			</site-member-defaults>
+			<guest-defaults>
+				<action-key>VIEW</action-key>
+			</guest-defaults>
+			<guest-unsupported>
+				<action-key>ADD_TO_PAGE</action-key>
+				<action-key>CONFIGURATION</action-key>
+				<action-key>ADD_STRUCTURED_DATA</action-key>
+			</guest-unsupported>
+		</permissions>
+	</portlet-resource>
+	
 </resource-action-mapping>

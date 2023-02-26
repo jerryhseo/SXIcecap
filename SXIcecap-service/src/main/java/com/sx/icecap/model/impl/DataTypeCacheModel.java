@@ -62,7 +62,7 @@ public class DataTypeCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(41);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -80,6 +80,8 @@ public class DataTypeCacheModel
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", lastPublishDate=");
+		sb.append(lastPublishDate);
 		sb.append(", status=");
 		sb.append(status);
 		sb.append(", statusByUserId=");
@@ -144,6 +146,13 @@ public class DataTypeCacheModel
 		}
 		else {
 			dataTypeImpl.setModifiedDate(new Date(modifiedDate));
+		}
+
+		if (lastPublishDate == Long.MIN_VALUE) {
+			dataTypeImpl.setLastPublishDate(null);
+		}
+		else {
+			dataTypeImpl.setLastPublishDate(new Date(lastPublishDate));
 		}
 
 		dataTypeImpl.setStatus(status);
@@ -228,6 +237,7 @@ public class DataTypeCacheModel
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+		lastPublishDate = objectInput.readLong();
 
 		status = objectInput.readInt();
 
@@ -272,6 +282,7 @@ public class DataTypeCacheModel
 
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
+		objectOutput.writeLong(lastPublishDate);
 
 		objectOutput.writeInt(status);
 
@@ -341,6 +352,7 @@ public class DataTypeCacheModel
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public long lastPublishDate;
 	public int status;
 	public long statusByUserId;
 	public String statusByUserName;

@@ -8,7 +8,7 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.sx.constant.StationXWebKeys;
 import com.sx.debug.Debug;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.service.TermLocalService;
 
@@ -21,7 +21,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 		property = {
 				"javax.portlet.name=" + IcecapWebPortletKeys.TERM_ADMIN,
-				"mvc.command.name=" + IcecapSSSMVCCommands.ACTION_ADMIN_TERM_DELETE
+				"mvc.command.name=" + IcecapMVCCommands.ACTION_ADMIN_TERM_DELETE
 		},
 		service = MVCActionCommand.class
 )

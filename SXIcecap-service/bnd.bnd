@@ -7,4 +7,8 @@ Liferay-Service: true
 
 Export-Package: \
 	com.sx.icecap.search.datatype,\
-	com.sx.icecap.security.permission.resource.sss
+	com.sx.icecap.security.permission.resource.sss,\
+	com.sx.icecap.security.permission.resource.sd,\
+	com.sx.icecap.security.permission.resource.datatype,\
+	com.sx.icecap.search.sss,\
+	com.sx.icecap.search.sd

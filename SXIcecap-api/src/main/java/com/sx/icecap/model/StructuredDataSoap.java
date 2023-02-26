@@ -31,6 +31,7 @@ public class StructuredDataSoap implements Serializable {
 	public static StructuredDataSoap toSoapModel(StructuredData model) {
 		StructuredDataSoap soapModel = new StructuredDataSoap();
 
+		soapModel.setUuid(model.getUuid());
 		soapModel.setStructuredDataId(model.getStructuredDataId());
 		soapModel.setGroupId(model.getGroupId());
 		soapModel.setCompanyId(model.getCompanyId());
@@ -38,11 +39,15 @@ public class StructuredDataSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
+		soapModel.setStatus(model.getStatus());
+		soapModel.setStatusByUserId(model.getStatusByUserId());
+		soapModel.setStatusByUserName(model.getStatusByUserName());
+		soapModel.setStatusDate(model.getStatusDate());
 		soapModel.setDataSetId(model.getDataSetId());
+		soapModel.setDataSetDisplayName(model.getDataSetDisplayName());
 		soapModel.setDataTypeId(model.getDataTypeId());
+		soapModel.setDataTypeDisplayName(model.getDataTypeDisplayName());
 		soapModel.setStructuredData(model.getStructuredData());
-		soapModel.setPatientId(model.getPatientId());
-		soapModel.setCrfId(model.getCrfId());
 
 		return soapModel;
 	}
@@ -101,6 +106,14 @@ public class StructuredDataSoap implements Serializable {
 		setStructuredDataId(pk);
 	}
 
+	public String getUuid() {
+		return _uuid;
+	}
+
+	public void setUuid(String uuid) {
+		_uuid = uuid;
+	}
+
 	public long getStructuredDataId() {
 		return _structuredDataId;
 	}
@@ -157,12 +170,52 @@ public class StructuredDataSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
+	public int getStatus() {
+		return _status;
+	}
+
+	public void setStatus(int status) {
+		_status = status;
+	}
+
+	public long getStatusByUserId() {
+		return _statusByUserId;
+	}
+
+	public void setStatusByUserId(long statusByUserId) {
+		_statusByUserId = statusByUserId;
+	}
+
+	public String getStatusByUserName() {
+		return _statusByUserName;
+	}
+
+	public void setStatusByUserName(String statusByUserName) {
+		_statusByUserName = statusByUserName;
+	}
+
+	public Date getStatusDate() {
+		return _statusDate;
+	}
+
+	public void setStatusDate(Date statusDate) {
+		_statusDate = statusDate;
+	}
+
 	public long getDataSetId() {
 		return _dataSetId;
 	}
 
 	public void setDataSetId(long dataSetId) {
 		_dataSetId = dataSetId;
+	}
+
+	public String getDataSetDisplayName() {
+		return _dataSetDisplayName;
+	}
+
+	public void setDataSetDisplayName(String dataSetDisplayName) {
+		_dataSetDisplayName = dataSetDisplayName;
 	}
 
 	public long getDataTypeId() {
@@ -173,6 +226,14 @@ public class StructuredDataSoap implements Serializable {
 		_dataTypeId = dataTypeId;
 	}
 
+	public String getDataTypeDisplayName() {
+		return _dataTypeDisplayName;
+	}
+
+	public void setDataTypeDisplayName(String dataTypeDisplayName) {
+		_dataTypeDisplayName = dataTypeDisplayName;
+	}
+
 	public String getStructuredData() {
 		return _structuredData;
 	}
@@ -181,22 +242,7 @@ public class StructuredDataSoap implements Serializable {
 		_structuredData = structuredData;
 	}
 
-	public long getPatientId() {
-		return _patientId;
-	}
-
-	public void setPatientId(long patientId) {
-		_patientId = patientId;
-	}
-
-	public long getCrfId() {
-		return _crfId;
-	}
-
-	public void setCrfId(long crfId) {
-		_crfId = crfId;
-	}
-
+	private String _uuid;
 	private long _structuredDataId;
 	private long _groupId;
 	private long _companyId;
@@ -204,10 +250,14 @@ public class StructuredDataSoap implements Serializable {
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private int _status;
+	private long _statusByUserId;
+	private String _statusByUserName;
+	private Date _statusDate;
 	private long _dataSetId;
+	private String _dataSetDisplayName;
 	private long _dataTypeId;
+	private String _dataTypeDisplayName;
 	private String _structuredData;
-	private long _patientId;
-	private long _crfId;
 
 }

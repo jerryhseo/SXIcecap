@@ -36,6 +36,26 @@ public interface Term extends PersistedModel, TermModel {
 	 *
 	 * Never modify this interface directly. Add methods to <code>com.sx.icecap.model.impl.TermImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public static final Accessor<Term, String> UUID_ACCESSOR =
+		new Accessor<Term, String>() {
+
+			@Override
+			public String get(Term term) {
+				return term.getUuid();
+			}
+
+			@Override
+			public Class<String> getAttributeClass() {
+				return String.class;
+			}
+
+			@Override
+			public Class<Term> getTypeClass() {
+				return Term.class;
+			}
+
+		};
+
 	public static final Accessor<Term, Long> TERM_ID_ACCESSOR =
 		new Accessor<Term, Long>() {
 

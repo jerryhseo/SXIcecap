@@ -10,6 +10,7 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
+		<field name="lastPublishDate" type="Date" />
 		<field name="status" type="int" />
 		<field name="statusByUserId" type="long" />
 		<field name="statusByUserName" type="String" />
@@ -30,6 +31,7 @@
 		</field>
 	</model>
 	<model name="com.sx.icecap.model.StructuredData">
+		<field name="uuid" type="String" />
 		<field name="structuredDataId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
@@ -37,11 +39,15 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
 		<field name="dataSetId" type="long" />
+		<field localized="true" name="dataSetDisplayName" type="String" />
 		<field name="dataTypeId" type="long" />
+		<field localized="true" name="dataTypeDisplayName" type="String" />
 		<field name="structuredData" type="String" />
-		<field name="patientId" type="long" />
-		<field name="crfId" type="long" />
 	</model>
 	<model name="com.sx.icecap.model.Term">
 		<field name="uuid" type="String" />

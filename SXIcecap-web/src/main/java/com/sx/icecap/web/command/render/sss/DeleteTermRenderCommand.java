@@ -2,7 +2,7 @@ package com.sx.icecap.web.command.render.sss;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.sx.icecap.constant.IcecapJsps;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.service.TermLocalService;
 
@@ -17,7 +17,7 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.TERM_ADMIN,
-	        "mvc.command.name="+IcecapSSSMVCCommands.RENDER_ADMIN_TERM_DELETE
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_ADMIN_TERM_DELETE
 	    },
 	    service = MVCRenderCommand.class
 	)

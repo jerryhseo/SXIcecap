@@ -14,7 +14,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.DataType;
@@ -112,7 +112,7 @@ public class DataTypeAssetRenderer extends BaseJSPAssetRenderer<DataType> {
 		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
                 getControlPanelPlid(liferayPortletRequest), IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
                 PortletRequest.RENDER_PHASE);
-        portletURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapDataTypeMVCCommands.RENDER_DATATYPE_EDIT);
+        portletURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_EDIT);
         portletURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(_dataType.getDataTypeId()));
         portletURL.setParameter(StationXWebKeys.SHOW_BACK, Boolean.FALSE.toString());
         
@@ -146,7 +146,7 @@ public class DataTypeAssetRenderer extends BaseJSPAssetRenderer<DataType> {
                 		PortletRequest.RENDER_PHASE);
             }
 
-            portletURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapDataTypeMVCCommands.RENDER_DATATYPE_VIEW);
+            portletURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_VIEW);
             portletURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(_dataType.getDataTypeId()));
 
             String currentUrl = PortalUtil.getCurrentURL(liferayPortletRequest);

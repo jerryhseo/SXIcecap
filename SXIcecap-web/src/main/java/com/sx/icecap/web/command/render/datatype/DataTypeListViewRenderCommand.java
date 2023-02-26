@@ -31,7 +31,7 @@ import com.liferay.trash.TrashHelper;
 import com.sx.icecap.web.display.context.datatype.DataTypeManagementToolbarDisplayContext;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
@@ -58,8 +58,8 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RENDER_ROOT,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RENDER_DATATYPE_LIST
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_ROOT,
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_DATATYPE_LIST
 	    },
 	    service = MVCRenderCommand.class
 	)

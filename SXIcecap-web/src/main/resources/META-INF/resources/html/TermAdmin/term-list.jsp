@@ -17,7 +17,7 @@
 <%@page import="com.sx.icecap.constant.IcecapConstants"%>
 <%@page import="com.sx.icecap.web.display.context.sss.TermAdminManagementToolbarDisplayContext"%>
 <%@page import="com.sx.icecap.constant.IcecapJsps"%>
-<%@page import="com.sx.icecap.constant.IcecapSSSMVCCommands"%>
+<%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
 <%@page import="com.sx.constant.StationXWebKeys"%>
 <%@ include file="../init.jsp" %>
 
@@ -41,7 +41,7 @@
 <portlet:renderURL var="addTermURL">
     <portlet:param 
     		name="<%=StationXWebKeys.MVC_RENDER_COMMAND_NAME%>" 
-    		value="<%=IcecapSSSMVCCommands.RENDER_ADMIN_TERM_EDIT%>"/>
+    		value="<%=IcecapMVCCommands.RENDER_ADMIN_TERM_EDIT%>"/>
     <portlet:param 
     		name="<%=StationXWebKeys.BACK_URL%>" 
     		value="<%=currentURL%>"/>
@@ -54,13 +54,13 @@
 
 <portlet:renderURL var="searchTermsURL">
     <portlet:param name="<%=StationXWebKeys.MVC_RENDER_COMMAND_NAME%>" 
-    value="<%=IcecapSSSMVCCommands.RENDER_ADMIN_SEARCH_TERMS%>" />
+    value="<%=IcecapMVCCommands.RENDER_ADMIN_SEARCH_TERMS%>" />
 </portlet:renderURL>
 
-<portlet:actionURL name="<%=IcecapSSSMVCCommands.ACTION_ADMIN_SEARCH_TERMS%>"  var="searchActionURL">
+<portlet:actionURL name="<%=IcecapMVCCommands.ACTION_ADMIN_SEARCH_TERMS%>"  var="searchActionURL">
 </portlet:actionURL>
 
-<portlet:actionURL name="<%=IcecapSSSMVCCommands.ACTION_ADMIN_BULK_ACTIONS%>"  var="bulkActionURL">
+<portlet:actionURL name="<%=IcecapMVCCommands.ACTION_ADMIN_BULK_ACTIONS%>"  var="bulkActionURL">
 </portlet:actionURL>
 
 
@@ -100,7 +100,7 @@
 
 																												PortletURL rowURL = renderResponse.createRenderURL();
 
-																												rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapSSSMVCCommands.RENDER_ADMIN_TERM_VIEW);
+																												rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_ADMIN_TERM_VIEW);
 																												rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
 																												rowURL.setParameter(StationXWebKeys.TERM_ID, String.valueOf(term.getTermId()));
 												%>

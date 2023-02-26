@@ -2,7 +2,7 @@ package com.sx.icecap.web.portlet.sss;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.sx.icecap.constant.IcecapJsps;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 
 import javax.portlet.Portlet;
@@ -21,7 +21,7 @@ import org.osgi.service.component.annotations.Component;
 		"javax.portlet.display-name=Term Admin",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.portlet-title-based-navigation=true",
-		"javax.portlet.init-param.template-path="+IcecapSSSMVCCommands.RENDER_ROOT,
+		"javax.portlet.init-param.template-path="+IcecapMVCCommands.RENDER_ROOT,
 		"javax.portlet.init-param.view-template="+IcecapJsps.ADMIN_TERM_LIST_JSP,
 		"javax.portlet.name=" + IcecapWebPortletKeys.TERM_ADMIN,
 		"javax.portlet.resource-bundle=content.Language",

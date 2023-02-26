@@ -1,72 +1,72 @@
 .SXIcecap-web {
-	.hide {
+	> .hide {
 		display:none;
 	}
 
-	.show {
+	> .show {
 		display:block;
 	}
 
-	.card-horizontal {
+	> .card-horizontal {
 		margin-bottom: 0px;
 	}
 	
-	.main-content-card {
+	> .main-content-card {
 		min-height: auto !important;
 	}
 
-	.form-group {
+	> .form-group {
 		margin-bottom: 0.5rem;
 	}
 
-	.form-control {
+	> .form-control {
 		margin-bottom: 0.5rem;
 		background-color: rgba(255, 255, 255, 0.989);
 	}
 	
-	.show-border{ 
+	> .show-border{ 
 		border: solid #ddd 1px;
 	}
 
-	.lfr-ddm-field-group {
+	> .lfr-ddm-field-group {
 		margin-bottom: 5px;
 	}
 
-	.title-horizontal-line {
+	> .title-horizontal-line {
 		margin-top: 0.5rem;
 		border-top: 3px solid #bbb;
 	}
 
-	.content-horizontal-line {
+	> .content-horizontal-line {
 		margin-top: 1rem;
 		margin-bottom: 1rem;
 		border-top: 3px solid #ddd;
 	}
 
-	.right{
+	> .right{
 		float: right;
 	}
 
-	.vertical-align-bottom{
+	> .vertical-align-bottom{
 		bottom:0;
 		position: absolute;
 	}
 
-	.height-full{
+	> .height-full{
 		height: 100%;
 	}
 
-	.full{
+	> .full{
 		min-height:100%;
 		min-width:100%;
 	}
 
-	.border{
+	> .border{
 		border: 2px solid gray !important;
 		margin-bottom: 5px;
 	}
 
-	.vertical-center-side-border{
+	> .vertical-center-side-border{
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -74,15 +74,15 @@
 		border-right: 1px solid lightgray !important;
 	}
 
-	.bottom-margin{
+	> .bottom-margin{
 		margin-bottom: 15px;
 	}
 
-	.highlight-border{
+	> .highlight-border{
 		border: 3px solid darkcyan;
 	}
 
-	.center-button{
+	> .center-button{
 		width:80px;
 		height:65px;
 		padding: 2px;

@@ -31,7 +31,7 @@ import com.sx.icecap.web.taglib.clay.datatype.DataTypeVerticalCard;
 import com.sx.icecap.constant.IcecapActionKeys;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
 import com.sx.debug.Debug;
@@ -185,7 +185,7 @@ public class DataTypeManagementToolbarDisplayContext
 		
 		searchURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME, 
-				IcecapDataTypeMVCCommands.RENDER_DATATYPE_LIST);
+				IcecapMVCCommands.RENDER_DATATYPE_LIST);
 		
 		Debug.printFooter("DataTypeManagementToolbarDisplayContext.getSearchActionURL()");
 
@@ -196,7 +196,7 @@ public class DataTypeManagementToolbarDisplayContext
 		PortletURL filterURL =  getPortletURL();
 		filterURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME,
-				IcecapDataTypeMVCCommands.RENDER_DATATYPE_LIST);
+				IcecapMVCCommands.RENDER_DATATYPE_LIST);
 
 		return filterURL;
 	}
@@ -340,7 +340,7 @@ public class DataTypeManagementToolbarDisplayContext
 	
 	public String getBulkActionURL() {
 		PortletURL actionURL = liferayPortletResponse.createActionURL();
-		actionURL.setParameter("actionName", IcecapDataTypeMVCCommands.ACTION_BULK);
+		actionURL.setParameter("actionName", IcecapMVCCommands.ACTION_BULK);
 		
 		return actionURL.toString();
 	}
@@ -354,7 +354,7 @@ public class DataTypeManagementToolbarDisplayContext
 							add(dropdownItem -> {
 								dropdownItem.setHref(
 										getPortletURL(), 
-										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapDataTypeMVCCommands.RENDER_DATATYPE_EDIT, 
+										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_EDIT, 
 										Constants.CMD, Constants.UPDATE,
 										StationXWebKeys.REDIRECT, _getRedirectURL(), 
 										StationXWebKeys.DATATYPE_ID, dataTypeId);
@@ -368,7 +368,7 @@ public class DataTypeManagementToolbarDisplayContext
 							PortletURL deleteURL = liferayPortletResponse.createActionURL();
 							
 							long[] dataTypeIds = { dataTypeId};
-							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapDataTypeMVCCommands.ACTION_DATATYPE_DELETE);
+							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_DATATYPE_DELETE);
 							deleteURL.setParameter(Constants.CMD, Constants.DELETE);
 							deleteURL.setParameter(StationXWebKeys.REDIRECT, _getRedirectURL());
 							deleteURL.setParameter(StationXWebKeys.DATATYPE_IDS, Arrays.toString(dataTypeIds) );
@@ -379,6 +379,19 @@ public class DataTypeManagementToolbarDisplayContext
 								dropdownItem.setLabel(
 									LanguageUtil.get(request, "delete"));
 							});		
+						}
+
+						{
+							add(dropdownItem -> {
+								dropdownItem.setHref(
+										getPortletURL(), 
+										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_LIST, 
+										StationXWebKeys.REDIRECT, _getRedirectURL(), 
+										StationXWebKeys.DATATYPE_ID, dataTypeId);
+
+									dropdownItem.setIcon("view");
+									dropdownItem.setLabel(LanguageUtil.get(_locale, "view-data-list"));
+							});	
 						}
 					}
 				};
@@ -406,7 +419,7 @@ public class DataTypeManagementToolbarDisplayContext
 								dropdownItem -> {
 									dropdownItem.setHref(
 											getPortletURL(),
-											StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapDataTypeMVCCommands.RENDER_DATATYPE_EDIT,
+											StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_EDIT,
 											StationXWebKeys.REDIRECT, currentURLObj.toString(),
 											Constants.CMD, Constants.ADD);
 									dropdownItem.setLabel(
@@ -484,9 +497,9 @@ public class DataTypeManagementToolbarDisplayContext
 		
 		RenderURL renderURL = liferayPortletResponse.createRenderURL();
 		
-		String renderCommand = IcecapDataTypeMVCCommands.RENDER_DATATYPE_LIST;
+		String renderCommand = IcecapMVCCommands.RENDER_DATATYPE_LIST;
 		if( Validator.isNotNull(_keywords) && !_keywords.isEmpty() ) {
-			renderCommand = IcecapDataTypeMVCCommands.RENDER_SEARCH_DATATYPES;
+			renderCommand = IcecapMVCCommands.RENDER_SEARCH_DATATYPES;
 		}
 		
 		if (ArrayUtil.contains(displayViews, StationXConstants.VIEW_TYPE_CARDS)) {

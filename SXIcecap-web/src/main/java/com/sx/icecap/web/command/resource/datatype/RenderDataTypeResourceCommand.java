@@ -15,7 +15,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
 import com.sx.constant.StationXConstants;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 
@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.Component;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_TERM,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_DATATYPE
+	        "mvc.command.name="+IcecapMVCCommands.RESOURCE_DATATYPE_RENDER_TERM,
+	        "mvc.command.name="+IcecapMVCCommands.RESOURCE_DATATYPE_RENDER_DATATYPE
 	    },
 	    service = MVCResourceCommand.class
 )

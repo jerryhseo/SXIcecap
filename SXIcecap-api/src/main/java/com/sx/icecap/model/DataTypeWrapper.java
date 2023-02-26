@@ -51,6 +51,7 @@ public class DataTypeWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("lastPublishDate", getLastPublishDate());
 		attributes.put("status", getStatus());
 		attributes.put("statusByUserId", getStatusByUserId());
 		attributes.put("statusByUserName", getStatusByUserName());
@@ -115,6 +116,12 @@ public class DataTypeWrapper
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		Date lastPublishDate = (Date)attributes.get("lastPublishDate");
+
+		if (lastPublishDate != null) {
+			setLastPublishDate(lastPublishDate);
 		}
 
 		Integer status = (Integer)attributes.get("status");
@@ -433,6 +440,16 @@ public class DataTypeWrapper
 	}
 
 	/**
+	 * Returns the last publish date of this data type.
+	 *
+	 * @return the last publish date of this data type
+	 */
+	@Override
+	public Date getLastPublishDate() {
+		return model.getLastPublishDate();
+	}
+
+	/**
 	 * Returns the modified date of this data type.
 	 *
 	 * @return the modified date of this data type
@@ -589,6 +606,40 @@ public class DataTypeWrapper
 	}
 
 	/**
+	 * Returns the trash entry created when this data type was moved to the Recycle Bin. The trash entry may belong to one of the ancestors of this data type.
+	 *
+	 * @return the trash entry created when this data type was moved to the Recycle Bin
+	 */
+	@Override
+	public com.liferay.trash.kernel.model.TrashEntry getTrashEntry()
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return model.getTrashEntry();
+	}
+
+	/**
+	 * Returns the class primary key of the trash entry for this data type.
+	 *
+	 * @return the class primary key of the trash entry for this data type
+	 */
+	@Override
+	public long getTrashEntryClassPK() {
+		return model.getTrashEntryClassPK();
+	}
+
+	/**
+	 * Returns the trash handler for this data type.
+	 *
+	 * @return the trash handler for this data type
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
+	@Override
+	public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler() {
+		return model.getTrashHandler();
+	}
+
+	/**
 	 * Returns the user ID of this data type.
 	 *
 	 * @return the user ID of this data type
@@ -696,6 +747,36 @@ public class DataTypeWrapper
 	@Override
 	public boolean isIncomplete() {
 		return model.isIncomplete();
+	}
+
+	/**
+	 * Returns <code>true</code> if this data type is in the Recycle Bin.
+	 *
+	 * @return <code>true</code> if this data type is in the Recycle Bin; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInTrash() {
+		return model.isInTrash();
+	}
+
+	/**
+	 * Returns <code>true</code> if the parent of this data type is in the Recycle Bin.
+	 *
+	 * @return <code>true</code> if the parent of this data type is in the Recycle Bin; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInTrashContainer() {
+		return model.isInTrashContainer();
+	}
+
+	@Override
+	public boolean isInTrashExplicitly() {
+		return model.isInTrashExplicitly();
+	}
+
+	@Override
+	public boolean isInTrashImplicitly() {
+		return model.isInTrashImplicitly();
 	}
 
 	/**
@@ -950,6 +1031,16 @@ public class DataTypeWrapper
 	@Override
 	public void setHasDataStructure(boolean hasDataStructure) {
 		model.setHasDataStructure(hasDataStructure);
+	}
+
+	/**
+	 * Sets the last publish date of this data type.
+	 *
+	 * @param lastPublishDate the last publish date of this data type
+	 */
+	@Override
+	public void setLastPublishDate(Date lastPublishDate) {
+		model.setLastPublishDate(lastPublishDate);
 	}
 
 	/**

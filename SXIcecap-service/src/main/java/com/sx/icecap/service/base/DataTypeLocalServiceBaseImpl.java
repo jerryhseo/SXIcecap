@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Conjunction;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
@@ -353,6 +354,29 @@ public abstract class DataTypeLocalServiceBaseImpl
 					Criterion modifiedDateCriterion =
 						portletDataContext.getDateRangeCriteria("modifiedDate");
 
+					if (modifiedDateCriterion != null) {
+						Conjunction conjunction =
+							RestrictionsFactoryUtil.conjunction();
+
+						conjunction.add(modifiedDateCriterion);
+
+						Disjunction disjunction =
+							RestrictionsFactoryUtil.disjunction();
+
+						disjunction.add(
+							RestrictionsFactoryUtil.gtProperty(
+								"modifiedDate", "lastPublishDate"));
+
+						Property lastPublishDateProperty =
+							PropertyFactoryUtil.forName("lastPublishDate");
+
+						disjunction.add(lastPublishDateProperty.isNull());
+
+						conjunction.add(disjunction);
+
+						modifiedDateCriterion = conjunction;
+					}
+
 					Criterion statusDateCriterion =
 						portletDataContext.getDateRangeCriteria("statusDate");
 
@@ -393,6 +417,9 @@ public abstract class DataTypeLocalServiceBaseImpl
 
 		exportActionableDynamicQuery.setCompanyId(
 			portletDataContext.getCompanyId());
+
+		exportActionableDynamicQuery.setGroupId(
+			portletDataContext.getScopeGroupId());
 
 		exportActionableDynamicQuery.setPerformActionMethod(
 			new ActionableDynamicQuery.PerformActionMethod<DataType>() {

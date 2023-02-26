@@ -6,7 +6,7 @@
 <%@page import="javax.portlet.PortletURL"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
-<%@page import="com.sx.icecap.constant.IcecapDataTypeMVCCommands"%>
+<%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
 <%@page import="com.sx.icecap.constant.IcecapConstants"%>
 <%@page import="com.sx.constant.StationXWebKeys"%>
 <%@page import="com.sx.icecap.web.display.context.datatype.DataTypeManagementToolbarDisplayContext"%>
@@ -26,7 +26,7 @@
 <portlet:renderURL var="createDataTypeURL">
     <portlet:param 
     		name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
-    		value="<%= IcecapDataTypeMVCCommands.RENDER_DATATYPE_EDIT %>"/>
+    		value="<%= IcecapMVCCommands.RENDER_DATATYPE_EDIT %>"/>
     <portlet:param 
     		name="<%= StationXWebKeys.REDIRECT %>" 
     		value="<%= currentURL %>"/>
@@ -34,12 +34,12 @@
 
 <portlet:renderURL var="searchViewURL">
     <portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
-    value="<%= IcecapDataTypeMVCCommands.RENDER_DATATYPE_VIEW %>" />
+    value="<%= IcecapMVCCommands.RENDER_DATATYPE_VIEW %>" />
 </portlet:renderURL>
 
 <portlet:renderURL var="searchTermsURL">
     <portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
-    value="<%= IcecapDataTypeMVCCommands.RENDER_SEARCH_DATATYPES %>" />
+    value="<%= IcecapMVCCommands.RENDER_SEARCH_DATATYPES %>" />
 </portlet:renderURL>
 
 <clay:management-toolbar
@@ -76,7 +76,7 @@
 
 								PortletURL rowURL = renderResponse.createRenderURL();
 
-								rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapDataTypeMVCCommands.RENDER_DATATYPE_FULL_CONTENT);
+								rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_FULL_CONTENT);
 								rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
 								rowURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataType.getDataTypeId()));
 					%>
@@ -186,7 +186,7 @@ Liferay.componentReady('dataTypeManagementToolbar').then(function(
 					cmd: event.data.item.data.cmd,
 					redirect: '<%= currentURL %>'
 				},
-				url: '<portlet:actionURL name="<%=IcecapDataTypeMVCCommands.ACTION_BULK %>" />'
+				url: '<portlet:actionURL name="<%=IcecapMVCCommands.ACTION_BULK %>" />'
 			});
 		});
 	});

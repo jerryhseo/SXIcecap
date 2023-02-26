@@ -31,7 +31,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.constant.IcecapActionKeys;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
@@ -191,7 +191,7 @@ public class TermAdminDisplayContext implements Serializable{
 	public PortletURL getSearchURL( boolean hasKeywords ) {
 		PortletURL portletURL = this.getPortletURL();
 
-		portletURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST);
+		portletURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_ADMIN_TERM_LIST);
 		
 		return portletURL;
 	}

@@ -4,7 +4,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 
@@ -20,7 +20,7 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 		property = {
 				"javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-				"mvc.command.name=" + IcecapDataTypeMVCCommands.ACTION_DATATYPE_DELETE
+				"mvc.command.name=" + IcecapMVCCommands.ACTION_DATATYPE_DELETE
 		},
 		service = MVCActionCommand.class
 )

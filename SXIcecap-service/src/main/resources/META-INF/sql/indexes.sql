@@ -6,8 +6,14 @@ create index IX_ACEAE088 on SX_ICECAP_DataType (userId, status);
 create index IX_71C56B5C on SX_ICECAP_DataType (uuid_[$COLUMN_LENGTH:75$], companyId);
 create unique index IX_512918DE on SX_ICECAP_DataType (uuid_[$COLUMN_LENGTH:75$], groupId);
 
-create index IX_5E117DED on SX_ICECAP_StructuredData (crfId, patientId);
-create index IX_C3A36F91 on SX_ICECAP_StructuredData (patientId);
+create index IX_C255DF64 on SX_ICECAP_StructuredData (dataSetId);
+create index IX_CEFA032 on SX_ICECAP_StructuredData (dataTypeId);
+create index IX_41F2BDB1 on SX_ICECAP_StructuredData (groupId, status);
+create index IX_C93F40EB on SX_ICECAP_StructuredData (groupId, userId, status);
+create index IX_FD9491A5 on SX_ICECAP_StructuredData (status);
+create index IX_C97E0DF on SX_ICECAP_StructuredData (userId, status);
+create index IX_9A33B1F3 on SX_ICECAP_StructuredData (uuid_[$COLUMN_LENGTH:75$], companyId);
+create unique index IX_B0D61935 on SX_ICECAP_StructuredData (uuid_[$COLUMN_LENGTH:75$], groupId);
 
 create index IX_4883B4C0 on SX_ICECAP_Term (groupId, status);
 create index IX_F6EBB8FA on SX_ICECAP_Term (groupId, userId, status);

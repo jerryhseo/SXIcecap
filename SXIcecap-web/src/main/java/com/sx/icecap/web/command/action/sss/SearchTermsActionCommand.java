@@ -5,7 +5,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.trash.TrashHelper;
 import com.sx.constant.StationXWebKeys;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.service.TermLocalService;
 import com.sx.icecap.web.display.context.sss.TermAdminDisplayContext;
@@ -21,7 +21,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 		property = {
 				"javax.portlet.name=" + IcecapWebPortletKeys.TERM_ADMIN,
-				"mvc.command.name=" + IcecapSSSMVCCommands.ACTION_ADMIN_SEARCH_TERMS
+				"mvc.command.name=" + IcecapMVCCommands.ACTION_ADMIN_SEARCH_TERMS
 		},
 		service = MVCActionCommand.class
 )
@@ -45,7 +45,7 @@ public class SearchTermsActionCommand extends BaseMVCActionCommand {
 		RenderURL renderURL = actionResponse.createRedirectURL(Copy.ALL);
 		renderURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME, 
-				IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST);
+				IcecapMVCCommands.RENDER_ADMIN_TERM_LIST);
 		
 		actionResponse.sendRedirect(renderURL.toString());
 		

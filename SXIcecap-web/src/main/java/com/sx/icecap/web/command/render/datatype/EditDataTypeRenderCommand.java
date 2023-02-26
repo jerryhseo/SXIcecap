@@ -3,7 +3,7 @@ package com.sx.icecap.web.command.render.datatype;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.DataType;
@@ -20,7 +20,7 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RENDER_DATATYPE_EDIT
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_DATATYPE_EDIT
 	    },
 	    service = MVCRenderCommand.class
 )

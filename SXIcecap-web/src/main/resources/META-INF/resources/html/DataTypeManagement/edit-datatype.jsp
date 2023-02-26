@@ -5,7 +5,7 @@
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
 <%@page import="java.util.Locale"%>
 <%@page import="com.sx.icecap.model.DataType"%>
-<%@page import="com.sx.icecap.constant.IcecapDataTypeMVCCommands"%>
+<%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
 <%@page import="com.sx.icecap.constant.IcecapConstants"%>
 <%@page import="com.sx.constant.StationXWebKeys"%>
 <%@page import="com.liferay.portal.kernel.util.WebKeys"%>
@@ -26,30 +26,30 @@
 	Locale defaultLocale = PortalUtil.getSiteDefaultLocale(themeDisplay.getSiteGroupId());
 %>
 
-<portlet:actionURL name="<%= IcecapDataTypeMVCCommands.ACTION_DATATYPE_ADD %>" var="addActionURL">
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATATYPE_ADD %>" var="addActionURL">
 </portlet:actionURL>
-<portlet:actionURL name="<%= IcecapDataTypeMVCCommands.ACTION_DATATYPE_CREATE_AND_DEFINE_STRUCTURE %>" var="addToDefineStructureActionURL">
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATATYPE_CREATE_AND_DEFINE_STRUCTURE %>" var="addToDefineStructureActionURL">
 	<portlet:param name="<%= StationXWebKeys.CMD %>" value="<%= IcecapConstants.CMD_REDIRECT_TO_DEFINE_STRUCTURE %>"/>
 	<portlet:param name="<%= StationXWebKeys.BACK_URL %>" value="<%= currentURL %>"/>
 </portlet:actionURL>
-<portlet:actionURL name="<%= IcecapDataTypeMVCCommands.ACTION_DATATYPE_UPDATE %>" var="updateActionURL">
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATATYPE_UPDATE %>" var="updateActionURL">
 </portlet:actionURL>
-<portlet:actionURL name="<%= IcecapDataTypeMVCCommands.ACTION_DATATYPE_UPDATE_AND_DEFINE_STRUCTURE %>" var="updateToDefineStructureActionURL">
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATATYPE_UPDATE_AND_DEFINE_STRUCTURE %>" var="updateToDefineStructureActionURL">
 	<portlet:param name="<%= StationXWebKeys.CMD %>" value="<%= IcecapConstants.CMD_REDIRECT_TO_DEFINE_STRUCTURE %>"/>
 	<portlet:param name="<%= StationXWebKeys.BACK_URL %>" value="<%= currentURL %>"/>
 </portlet:actionURL>
-<portlet:actionURL name="<%= IcecapDataTypeMVCCommands.ACTION_DATATYPE_DELETE %>" var="deleteActionURL">
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATATYPE_DELETE %>" var="deleteActionURL">
 	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%= String.valueOf(dataTypeId) %>"/>
 </portlet:actionURL>
 
 <portlet:renderURL var="defineStructureRenderURL">
-	<portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" value="<%= IcecapDataTypeMVCCommands.RENDER_DEFINE_DATA_STRUCTURE %>"/>
+	<portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" value="<%= IcecapMVCCommands.RENDER_DEFINE_DATA_STRUCTURE %>"/>
 	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%= String.valueOf(dataTypeId) %>"/>
 </portlet:renderURL>
 
 
 <portlet:resourceURL 
-		id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_TERM %>" 
+		id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_RENDER_TERM %>" 
 		var="renderTermAttributes">
 </portlet:resourceURL>
 

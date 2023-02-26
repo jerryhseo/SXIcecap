@@ -16,11 +16,12 @@ package com.sx.icecap.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.LocaleException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.BaseModel;
-import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.LocalizedModel;
 import com.liferay.portal.kernel.model.ShardedModel;
-import com.liferay.portal.kernel.model.StagedAuditedModel;
+import com.liferay.portal.kernel.model.StagedGroupedModel;
+import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.model.WorkflowedModel;
 
 import java.util.Date;
@@ -42,8 +43,8 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface DataTypeModel
-	extends BaseModel<DataType>, GroupedModel, LocalizedModel, ShardedModel,
-			StagedAuditedModel, WorkflowedModel {
+	extends BaseModel<DataType>, LocalizedModel, ShardedModel,
+			StagedGroupedModel, TrashedModel, WorkflowedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -208,6 +209,22 @@ public interface DataTypeModel
 	 */
 	@Override
 	public void setModifiedDate(Date modifiedDate);
+
+	/**
+	 * Returns the last publish date of this data type.
+	 *
+	 * @return the last publish date of this data type
+	 */
+	@Override
+	public Date getLastPublishDate();
+
+	/**
+	 * Sets the last publish date of this data type.
+	 *
+	 * @param lastPublishDate the last publish date of this data type
+	 */
+	@Override
+	public void setLastPublishDate(Date lastPublishDate);
 
 	/**
 	 * Returns the status of this data type.
@@ -671,6 +688,55 @@ public interface DataTypeModel
 	 * @param hasDataStructure the has data structure of this data type
 	 */
 	public void setHasDataStructure(boolean hasDataStructure);
+
+	/**
+	 * Returns the trash entry created when this data type was moved to the Recycle Bin. The trash entry may belong to one of the ancestors of this data type.
+	 *
+	 * @return the trash entry created when this data type was moved to the Recycle Bin
+	 */
+	@Override
+	public com.liferay.trash.kernel.model.TrashEntry getTrashEntry()
+		throws PortalException;
+
+	/**
+	 * Returns the class primary key of the trash entry for this data type.
+	 *
+	 * @return the class primary key of the trash entry for this data type
+	 */
+	@Override
+	public long getTrashEntryClassPK();
+
+	/**
+	 * Returns the trash handler for this data type.
+	 *
+	 * @return the trash handler for this data type
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
+	@Override
+	public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler();
+
+	/**
+	 * Returns <code>true</code> if this data type is in the Recycle Bin.
+	 *
+	 * @return <code>true</code> if this data type is in the Recycle Bin; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInTrash();
+
+	/**
+	 * Returns <code>true</code> if the parent of this data type is in the Recycle Bin.
+	 *
+	 * @return <code>true</code> if the parent of this data type is in the Recycle Bin; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInTrashContainer();
+
+	@Override
+	public boolean isInTrashExplicitly();
+
+	@Override
+	public boolean isInTrashImplicitly();
 
 	/**
 	 * Returns <code>true</code> if this data type is approved.

@@ -26,13 +26,27 @@ public class IcecapConstants {
 		"DATATYPE_PORTLET_INSTANCE_CONFIGURATION";
 	
 	public static final String DATATYPE_SEARCH_CONTAINER_ID="searchedDataTypesContainer";
+	
+	public static final String STRUCTURED_DATA_RESOURCE_NAME = "com.sx.icecap";
+	public static final String STRUCTURED_DATA_VIEW_TEMPLATE = "/html/StructuredData/sd-list.jsp";
+	public static final String STRUCTURED_DATA_ELEMENTS_DEFAULT_EVENT_HANDLER =
+			"STRUCTURED_DATA_ELEMENTS_DEFAULT_EVENT_HANDLER";
 
+	public static final String STRUCTURED_DATA_CLASS_NAME = "com.sx.icecap.model.StructuredData";
+	public static final String STRUCTURED_DATA_ASSET_ENTRY = "STRUCTURED_DATA_ASSET_ENTRY";
+	public static final String STRUCTURED_DATA_MANAGEMENT_TOOLBAR_COMPONENT_ID = "structuredDataManagementToolbar";
+
+	public static final String STRUCTURED_DATA_PORTLET_INSTANCE_CONFIGURATION =
+		"STRUCTURED_DATA_PORTLET_INSTANCE_CONFIGURATION";
+	public static final String STRUCTURED_DATA_SEARCH_CONTAINER_ID="searchedStructuredDataContainer";
 	
 	public static final String ICECAP_API_BUNDLE_NAME="com.sx.icecap.api";
 	public static final String ICECAP_SERVICE_BUNDLE_NAME="com.sx.icecap.service";
 	public static final String ICECAP_WEB_BUNDLE_NAME="com.sx.icecap.web";
 	
 	public static final String DATATYPE_MANAGEMENT_JSP_ROOT = "/html/DataTypeManagement";
+	public static final String STRUCTURED_DATA_MANAGEMENT_JSP_ROOT = "/html/StructuredData";
+	public static final String JSP_SD_LIST_VIEW = "/html/StructuredData/sd-list.jsp";
 	public static final String JSP_DATATYPE_LIST_VIEW = "/html/DataTypeManagement/datatype-list.jsp";
 	public static final String JSP_DATATYPE_EDIT = "/html/DataTypeManagement/edit-datatype.jsp";
 	public static final String JSP_DATATYPE_DEFINE_STRUTURE = "/html/DataTypeManagement/define-data-structure.jsp";

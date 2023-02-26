@@ -13,7 +13,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.Term;
 import com.sx.icecap.service.TermLocalService;
@@ -106,7 +106,7 @@ public class TermAssetRendererFactory extends BaseAssetRendererFactory<Term> {
 					PortletRequest.RENDER_PHASE);
 			portletURL.setParameter(
 					StationXWebKeys.MVC_RENDER_COMMAND_NAME, 
-					IcecapSSSMVCCommands.RENDER_ADMIN_TERM_EDIT);
+					IcecapMVCCommands.RENDER_ADMIN_TERM_EDIT);
 			portletURL.setParameter(StationXWebKeys.SHOW_BACK, Boolean.FALSE.toString());
 		}
 		catch( PortalException e) {

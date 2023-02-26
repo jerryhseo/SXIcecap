@@ -16,17 +16,29 @@ package com.sx.icecap.model.impl;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.exception.LocaleException;
+import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
+import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
+import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.model.StructuredDataModel;
@@ -43,7 +55,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -69,18 +84,22 @@ public class StructuredDataModelImpl
 	public static final String TABLE_NAME = "SX_ICECAP_StructuredData";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"structuredDataId", Types.BIGINT}, {"groupId", Types.BIGINT},
-		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
-		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
-		{"modifiedDate", Types.TIMESTAMP}, {"dataSetId", Types.BIGINT},
-		{"dataTypeId", Types.BIGINT}, {"structuredData", Types.VARCHAR},
-		{"patientId", Types.BIGINT}, {"crfId", Types.BIGINT}
+		{"uuid_", Types.VARCHAR}, {"structuredDataId", Types.BIGINT},
+		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
+		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
+		{"status", Types.INTEGER}, {"statusByUserId", Types.BIGINT},
+		{"statusByUserName", Types.VARCHAR}, {"statusDate", Types.TIMESTAMP},
+		{"dataSetId", Types.BIGINT}, {"dataSetDisplayName", Types.VARCHAR},
+		{"dataTypeId", Types.BIGINT}, {"dataTypeDisplayName", Types.VARCHAR},
+		{"structuredData", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
 		new HashMap<String, Integer>();
 
 	static {
+		TABLE_COLUMNS_MAP.put("uuid_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("structuredDataId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -88,15 +107,19 @@ public class StructuredDataModelImpl
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
+		TABLE_COLUMNS_MAP.put("statusByUserId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("statusByUserName", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("statusDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("dataSetId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("dataSetDisplayName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("dataTypeId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("dataTypeDisplayName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("structuredData", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("patientId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("crfId", Types.BIGINT);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SX_ICECAP_StructuredData (structuredDataId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,dataSetId LONG,dataTypeId LONG,structuredData VARCHAR(75) null,patientId LONG,crfId LONG)";
+		"create table SX_ICECAP_StructuredData (uuid_ VARCHAR(75) null,structuredDataId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,dataSetId LONG,dataSetDisplayName STRING null,dataTypeId LONG,dataTypeDisplayName STRING null,structuredData VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table SX_ICECAP_StructuredData";
@@ -113,11 +136,21 @@ public class StructuredDataModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final long CRFID_COLUMN_BITMASK = 1L;
+	public static final long COMPANYID_COLUMN_BITMASK = 1L;
 
-	public static final long PATIENTID_COLUMN_BITMASK = 2L;
+	public static final long DATASETID_COLUMN_BITMASK = 2L;
 
-	public static final long STRUCTUREDDATAID_COLUMN_BITMASK = 4L;
+	public static final long DATATYPEID_COLUMN_BITMASK = 4L;
+
+	public static final long GROUPID_COLUMN_BITMASK = 8L;
+
+	public static final long STATUS_COLUMN_BITMASK = 16L;
+
+	public static final long USERID_COLUMN_BITMASK = 32L;
+
+	public static final long UUID_COLUMN_BITMASK = 64L;
+
+	public static final long STRUCTUREDDATAID_COLUMN_BITMASK = 128L;
 
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
 		_entityCacheEnabled = entityCacheEnabled;
@@ -254,6 +287,10 @@ public class StructuredDataModelImpl
 		Map<String, BiConsumer<StructuredData, ?>> attributeSetterBiConsumers =
 			new LinkedHashMap<String, BiConsumer<StructuredData, ?>>();
 
+		attributeGetterFunctions.put("uuid", StructuredData::getUuid);
+		attributeSetterBiConsumers.put(
+			"uuid",
+			(BiConsumer<StructuredData, String>)StructuredData::setUuid);
 		attributeGetterFunctions.put(
 			"structuredDataId", StructuredData::getStructuredDataId);
 		attributeSetterBiConsumers.put(
@@ -286,34 +323,84 @@ public class StructuredDataModelImpl
 		attributeSetterBiConsumers.put(
 			"modifiedDate",
 			(BiConsumer<StructuredData, Date>)StructuredData::setModifiedDate);
+		attributeGetterFunctions.put("status", StructuredData::getStatus);
+		attributeSetterBiConsumers.put(
+			"status",
+			(BiConsumer<StructuredData, Integer>)StructuredData::setStatus);
+		attributeGetterFunctions.put(
+			"statusByUserId", StructuredData::getStatusByUserId);
+		attributeSetterBiConsumers.put(
+			"statusByUserId",
+			(BiConsumer<StructuredData, Long>)
+				StructuredData::setStatusByUserId);
+		attributeGetterFunctions.put(
+			"statusByUserName", StructuredData::getStatusByUserName);
+		attributeSetterBiConsumers.put(
+			"statusByUserName",
+			(BiConsumer<StructuredData, String>)
+				StructuredData::setStatusByUserName);
+		attributeGetterFunctions.put(
+			"statusDate", StructuredData::getStatusDate);
+		attributeSetterBiConsumers.put(
+			"statusDate",
+			(BiConsumer<StructuredData, Date>)StructuredData::setStatusDate);
 		attributeGetterFunctions.put("dataSetId", StructuredData::getDataSetId);
 		attributeSetterBiConsumers.put(
 			"dataSetId",
 			(BiConsumer<StructuredData, Long>)StructuredData::setDataSetId);
+		attributeGetterFunctions.put(
+			"dataSetDisplayName", StructuredData::getDataSetDisplayName);
+		attributeSetterBiConsumers.put(
+			"dataSetDisplayName",
+			(BiConsumer<StructuredData, String>)
+				StructuredData::setDataSetDisplayName);
 		attributeGetterFunctions.put(
 			"dataTypeId", StructuredData::getDataTypeId);
 		attributeSetterBiConsumers.put(
 			"dataTypeId",
 			(BiConsumer<StructuredData, Long>)StructuredData::setDataTypeId);
 		attributeGetterFunctions.put(
+			"dataTypeDisplayName", StructuredData::getDataTypeDisplayName);
+		attributeSetterBiConsumers.put(
+			"dataTypeDisplayName",
+			(BiConsumer<StructuredData, String>)
+				StructuredData::setDataTypeDisplayName);
+		attributeGetterFunctions.put(
 			"structuredData", StructuredData::getStructuredData);
 		attributeSetterBiConsumers.put(
 			"structuredData",
 			(BiConsumer<StructuredData, String>)
 				StructuredData::setStructuredData);
-		attributeGetterFunctions.put("patientId", StructuredData::getPatientId);
-		attributeSetterBiConsumers.put(
-			"patientId",
-			(BiConsumer<StructuredData, Long>)StructuredData::setPatientId);
-		attributeGetterFunctions.put("crfId", StructuredData::getCrfId);
-		attributeSetterBiConsumers.put(
-			"crfId",
-			(BiConsumer<StructuredData, Long>)StructuredData::setCrfId);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
+	}
+
+	@Override
+	public String getUuid() {
+		if (_uuid == null) {
+			return "";
+		}
+		else {
+			return _uuid;
+		}
+	}
+
+	@Override
+	public void setUuid(String uuid) {
+		_columnBitmask |= UUID_COLUMN_BITMASK;
+
+		if (_originalUuid == null) {
+			_originalUuid = _uuid;
+		}
+
+		_uuid = uuid;
+	}
+
+	public String getOriginalUuid() {
+		return GetterUtil.getString(_originalUuid);
 	}
 
 	@Override
@@ -333,7 +420,19 @@ public class StructuredDataModelImpl
 
 	@Override
 	public void setGroupId(long groupId) {
+		_columnBitmask |= GROUPID_COLUMN_BITMASK;
+
+		if (!_setOriginalGroupId) {
+			_setOriginalGroupId = true;
+
+			_originalGroupId = _groupId;
+		}
+
 		_groupId = groupId;
+	}
+
+	public long getOriginalGroupId() {
+		return _originalGroupId;
 	}
 
 	@Override
@@ -343,7 +442,19 @@ public class StructuredDataModelImpl
 
 	@Override
 	public void setCompanyId(long companyId) {
+		_columnBitmask |= COMPANYID_COLUMN_BITMASK;
+
+		if (!_setOriginalCompanyId) {
+			_setOriginalCompanyId = true;
+
+			_originalCompanyId = _companyId;
+		}
+
 		_companyId = companyId;
+	}
+
+	public long getOriginalCompanyId() {
+		return _originalCompanyId;
 	}
 
 	@Override
@@ -353,6 +464,14 @@ public class StructuredDataModelImpl
 
 	@Override
 	public void setUserId(long userId) {
+		_columnBitmask |= USERID_COLUMN_BITMASK;
+
+		if (!_setOriginalUserId) {
+			_setOriginalUserId = true;
+
+			_originalUserId = _userId;
+		}
+
 		_userId = userId;
 	}
 
@@ -370,6 +489,10 @@ public class StructuredDataModelImpl
 
 	@Override
 	public void setUserUuid(String userUuid) {
+	}
+
+	public long getOriginalUserId() {
+		return _originalUserId;
 	}
 
 	@Override
@@ -414,13 +537,212 @@ public class StructuredDataModelImpl
 	}
 
 	@Override
+	public int getStatus() {
+		return _status;
+	}
+
+	@Override
+	public void setStatus(int status) {
+		_columnBitmask |= STATUS_COLUMN_BITMASK;
+
+		if (!_setOriginalStatus) {
+			_setOriginalStatus = true;
+
+			_originalStatus = _status;
+		}
+
+		_status = status;
+	}
+
+	public int getOriginalStatus() {
+		return _originalStatus;
+	}
+
+	@Override
+	public long getStatusByUserId() {
+		return _statusByUserId;
+	}
+
+	@Override
+	public void setStatusByUserId(long statusByUserId) {
+		_statusByUserId = statusByUserId;
+	}
+
+	@Override
+	public String getStatusByUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getStatusByUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException portalException) {
+			return "";
+		}
+	}
+
+	@Override
+	public void setStatusByUserUuid(String statusByUserUuid) {
+	}
+
+	@Override
+	public String getStatusByUserName() {
+		if (_statusByUserName == null) {
+			return "";
+		}
+		else {
+			return _statusByUserName;
+		}
+	}
+
+	@Override
+	public void setStatusByUserName(String statusByUserName) {
+		_statusByUserName = statusByUserName;
+	}
+
+	@Override
+	public Date getStatusDate() {
+		return _statusDate;
+	}
+
+	@Override
+	public void setStatusDate(Date statusDate) {
+		_statusDate = statusDate;
+	}
+
+	@Override
 	public long getDataSetId() {
 		return _dataSetId;
 	}
 
 	@Override
 	public void setDataSetId(long dataSetId) {
+		_columnBitmask |= DATASETID_COLUMN_BITMASK;
+
+		if (!_setOriginalDataSetId) {
+			_setOriginalDataSetId = true;
+
+			_originalDataSetId = _dataSetId;
+		}
+
 		_dataSetId = dataSetId;
+	}
+
+	public long getOriginalDataSetId() {
+		return _originalDataSetId;
+	}
+
+	@Override
+	public String getDataSetDisplayName() {
+		if (_dataSetDisplayName == null) {
+			return "";
+		}
+		else {
+			return _dataSetDisplayName;
+		}
+	}
+
+	@Override
+	public String getDataSetDisplayName(Locale locale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataSetDisplayName(languageId);
+	}
+
+	@Override
+	public String getDataSetDisplayName(Locale locale, boolean useDefault) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataSetDisplayName(languageId, useDefault);
+	}
+
+	@Override
+	public String getDataSetDisplayName(String languageId) {
+		return LocalizationUtil.getLocalization(
+			getDataSetDisplayName(), languageId);
+	}
+
+	@Override
+	public String getDataSetDisplayName(String languageId, boolean useDefault) {
+		return LocalizationUtil.getLocalization(
+			getDataSetDisplayName(), languageId, useDefault);
+	}
+
+	@Override
+	public String getDataSetDisplayNameCurrentLanguageId() {
+		return _dataSetDisplayNameCurrentLanguageId;
+	}
+
+	@JSON
+	@Override
+	public String getDataSetDisplayNameCurrentValue() {
+		Locale locale = getLocale(_dataSetDisplayNameCurrentLanguageId);
+
+		return getDataSetDisplayName(locale);
+	}
+
+	@Override
+	public Map<Locale, String> getDataSetDisplayNameMap() {
+		return LocalizationUtil.getLocalizationMap(getDataSetDisplayName());
+	}
+
+	@Override
+	public void setDataSetDisplayName(String dataSetDisplayName) {
+		_dataSetDisplayName = dataSetDisplayName;
+	}
+
+	@Override
+	public void setDataSetDisplayName(
+		String dataSetDisplayName, Locale locale) {
+
+		setDataSetDisplayName(
+			dataSetDisplayName, locale, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataSetDisplayName(
+		String dataSetDisplayName, Locale locale, Locale defaultLocale) {
+
+		String languageId = LocaleUtil.toLanguageId(locale);
+		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
+
+		if (Validator.isNotNull(dataSetDisplayName)) {
+			setDataSetDisplayName(
+				LocalizationUtil.updateLocalization(
+					getDataSetDisplayName(), "DataSetDisplayName",
+					dataSetDisplayName, languageId, defaultLanguageId));
+		}
+		else {
+			setDataSetDisplayName(
+				LocalizationUtil.removeLocalization(
+					getDataSetDisplayName(), "DataSetDisplayName", languageId));
+		}
+	}
+
+	@Override
+	public void setDataSetDisplayNameCurrentLanguageId(String languageId) {
+		_dataSetDisplayNameCurrentLanguageId = languageId;
+	}
+
+	@Override
+	public void setDataSetDisplayNameMap(
+		Map<Locale, String> dataSetDisplayNameMap) {
+
+		setDataSetDisplayNameMap(
+			dataSetDisplayNameMap, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataSetDisplayNameMap(
+		Map<Locale, String> dataSetDisplayNameMap, Locale defaultLocale) {
+
+		if (dataSetDisplayNameMap == null) {
+			return;
+		}
+
+		setDataSetDisplayName(
+			LocalizationUtil.updateLocalization(
+				dataSetDisplayNameMap, getDataSetDisplayName(),
+				"DataSetDisplayName", LocaleUtil.toLanguageId(defaultLocale)));
 	}
 
 	@Override
@@ -430,7 +752,136 @@ public class StructuredDataModelImpl
 
 	@Override
 	public void setDataTypeId(long dataTypeId) {
+		_columnBitmask |= DATATYPEID_COLUMN_BITMASK;
+
+		if (!_setOriginalDataTypeId) {
+			_setOriginalDataTypeId = true;
+
+			_originalDataTypeId = _dataTypeId;
+		}
+
 		_dataTypeId = dataTypeId;
+	}
+
+	public long getOriginalDataTypeId() {
+		return _originalDataTypeId;
+	}
+
+	@Override
+	public String getDataTypeDisplayName() {
+		if (_dataTypeDisplayName == null) {
+			return "";
+		}
+		else {
+			return _dataTypeDisplayName;
+		}
+	}
+
+	@Override
+	public String getDataTypeDisplayName(Locale locale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataTypeDisplayName(languageId);
+	}
+
+	@Override
+	public String getDataTypeDisplayName(Locale locale, boolean useDefault) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataTypeDisplayName(languageId, useDefault);
+	}
+
+	@Override
+	public String getDataTypeDisplayName(String languageId) {
+		return LocalizationUtil.getLocalization(
+			getDataTypeDisplayName(), languageId);
+	}
+
+	@Override
+	public String getDataTypeDisplayName(
+		String languageId, boolean useDefault) {
+
+		return LocalizationUtil.getLocalization(
+			getDataTypeDisplayName(), languageId, useDefault);
+	}
+
+	@Override
+	public String getDataTypeDisplayNameCurrentLanguageId() {
+		return _dataTypeDisplayNameCurrentLanguageId;
+	}
+
+	@JSON
+	@Override
+	public String getDataTypeDisplayNameCurrentValue() {
+		Locale locale = getLocale(_dataTypeDisplayNameCurrentLanguageId);
+
+		return getDataTypeDisplayName(locale);
+	}
+
+	@Override
+	public Map<Locale, String> getDataTypeDisplayNameMap() {
+		return LocalizationUtil.getLocalizationMap(getDataTypeDisplayName());
+	}
+
+	@Override
+	public void setDataTypeDisplayName(String dataTypeDisplayName) {
+		_dataTypeDisplayName = dataTypeDisplayName;
+	}
+
+	@Override
+	public void setDataTypeDisplayName(
+		String dataTypeDisplayName, Locale locale) {
+
+		setDataTypeDisplayName(
+			dataTypeDisplayName, locale, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataTypeDisplayName(
+		String dataTypeDisplayName, Locale locale, Locale defaultLocale) {
+
+		String languageId = LocaleUtil.toLanguageId(locale);
+		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
+
+		if (Validator.isNotNull(dataTypeDisplayName)) {
+			setDataTypeDisplayName(
+				LocalizationUtil.updateLocalization(
+					getDataTypeDisplayName(), "DataTypeDisplayName",
+					dataTypeDisplayName, languageId, defaultLanguageId));
+		}
+		else {
+			setDataTypeDisplayName(
+				LocalizationUtil.removeLocalization(
+					getDataTypeDisplayName(), "DataTypeDisplayName",
+					languageId));
+		}
+	}
+
+	@Override
+	public void setDataTypeDisplayNameCurrentLanguageId(String languageId) {
+		_dataTypeDisplayNameCurrentLanguageId = languageId;
+	}
+
+	@Override
+	public void setDataTypeDisplayNameMap(
+		Map<Locale, String> dataTypeDisplayNameMap) {
+
+		setDataTypeDisplayNameMap(
+			dataTypeDisplayNameMap, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataTypeDisplayNameMap(
+		Map<Locale, String> dataTypeDisplayNameMap, Locale defaultLocale) {
+
+		if (dataTypeDisplayNameMap == null) {
+			return;
+		}
+
+		setDataTypeDisplayName(
+			LocalizationUtil.updateLocalization(
+				dataTypeDisplayNameMap, getDataTypeDisplayName(),
+				"DataTypeDisplayName", LocaleUtil.toLanguageId(defaultLocale)));
 	}
 
 	@Override
@@ -449,47 +900,234 @@ public class StructuredDataModelImpl
 	}
 
 	@Override
-	public long getPatientId() {
-		return _patientId;
+	public StagedModelType getStagedModelType() {
+		return new StagedModelType(
+			PortalUtil.getClassNameId(StructuredData.class.getName()));
 	}
 
 	@Override
-	public void setPatientId(long patientId) {
-		_columnBitmask |= PATIENTID_COLUMN_BITMASK;
+	public com.liferay.trash.kernel.model.TrashEntry getTrashEntry()
+		throws PortalException {
 
-		if (!_setOriginalPatientId) {
-			_setOriginalPatientId = true;
-
-			_originalPatientId = _patientId;
+		if (!isInTrash()) {
+			return null;
 		}
 
-		_patientId = patientId;
-	}
+		com.liferay.trash.kernel.model.TrashEntry trashEntry =
+			com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.
+				fetchEntry(getModelClassName(), getTrashEntryClassPK());
 
-	public long getOriginalPatientId() {
-		return _originalPatientId;
-	}
-
-	@Override
-	public long getCrfId() {
-		return _crfId;
-	}
-
-	@Override
-	public void setCrfId(long crfId) {
-		_columnBitmask |= CRFID_COLUMN_BITMASK;
-
-		if (!_setOriginalCrfId) {
-			_setOriginalCrfId = true;
-
-			_originalCrfId = _crfId;
+		if (trashEntry != null) {
+			return trashEntry;
 		}
 
-		_crfId = crfId;
+		com.liferay.portal.kernel.trash.TrashHandler trashHandler =
+			getTrashHandler();
+
+		if (Validator.isNotNull(
+				trashHandler.getContainerModelClassName(getPrimaryKey()))) {
+
+			ContainerModel containerModel = null;
+
+			try {
+				containerModel = trashHandler.getParentContainerModel(this);
+			}
+			catch (NoSuchModelException noSuchModelException) {
+				return null;
+			}
+
+			while (containerModel != null) {
+				if (containerModel instanceof TrashedModel) {
+					TrashedModel trashedModel = (TrashedModel)containerModel;
+
+					return trashedModel.getTrashEntry();
+				}
+
+				trashHandler =
+					com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil.
+						getTrashHandler(
+							trashHandler.getContainerModelClassName(
+								containerModel.getContainerModelId()));
+
+				if (trashHandler == null) {
+					return null;
+				}
+
+				containerModel = trashHandler.getContainerModel(
+					containerModel.getParentContainerModelId());
+			}
+		}
+
+		return null;
 	}
 
-	public long getOriginalCrfId() {
-		return _originalCrfId;
+	@Override
+	public long getTrashEntryClassPK() {
+		return getPrimaryKey();
+	}
+
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
+	@Override
+	public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler() {
+		return com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil.
+			getTrashHandler(getModelClassName());
+	}
+
+	@Override
+	public boolean isInTrash() {
+		if (getStatus() == WorkflowConstants.STATUS_IN_TRASH) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isInTrashContainer() {
+		com.liferay.portal.kernel.trash.TrashHandler trashHandler =
+			getTrashHandler();
+
+		if ((trashHandler == null) ||
+			Validator.isNull(
+				trashHandler.getContainerModelClassName(getPrimaryKey()))) {
+
+			return false;
+		}
+
+		try {
+			ContainerModel containerModel =
+				trashHandler.getParentContainerModel(this);
+
+			if (containerModel == null) {
+				return false;
+			}
+
+			if (containerModel instanceof TrashedModel) {
+				return ((TrashedModel)containerModel).isInTrash();
+			}
+		}
+		catch (Exception exception) {
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isInTrashExplicitly() {
+		if (!isInTrash()) {
+			return false;
+		}
+
+		com.liferay.trash.kernel.model.TrashEntry trashEntry =
+			com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.
+				fetchEntry(getModelClassName(), getTrashEntryClassPK());
+
+		if (trashEntry != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isInTrashImplicitly() {
+		if (!isInTrash()) {
+			return false;
+		}
+
+		com.liferay.trash.kernel.model.TrashEntry trashEntry =
+			com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.
+				fetchEntry(getModelClassName(), getTrashEntryClassPK());
+
+		if (trashEntry != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean isApproved() {
+		if (getStatus() == WorkflowConstants.STATUS_APPROVED) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isDenied() {
+		if (getStatus() == WorkflowConstants.STATUS_DENIED) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isDraft() {
+		if (getStatus() == WorkflowConstants.STATUS_DRAFT) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isExpired() {
+		if (getStatus() == WorkflowConstants.STATUS_EXPIRED) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isInactive() {
+		if (getStatus() == WorkflowConstants.STATUS_INACTIVE) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isIncomplete() {
+		if (getStatus() == WorkflowConstants.STATUS_INCOMPLETE) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isPending() {
+		if (getStatus() == WorkflowConstants.STATUS_PENDING) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isScheduled() {
+		if (getStatus() == WorkflowConstants.STATUS_SCHEDULED) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public long getColumnBitmask() {
@@ -507,6 +1145,103 @@ public class StructuredDataModelImpl
 		ExpandoBridge expandoBridge = getExpandoBridge();
 
 		expandoBridge.setAttributes(serviceContext);
+	}
+
+	@Override
+	public String[] getAvailableLanguageIds() {
+		Set<String> availableLanguageIds = new TreeSet<String>();
+
+		Map<Locale, String> dataSetDisplayNameMap = getDataSetDisplayNameMap();
+
+		for (Map.Entry<Locale, String> entry :
+				dataSetDisplayNameMap.entrySet()) {
+
+			Locale locale = entry.getKey();
+			String value = entry.getValue();
+
+			if (Validator.isNotNull(value)) {
+				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
+			}
+		}
+
+		Map<Locale, String> dataTypeDisplayNameMap =
+			getDataTypeDisplayNameMap();
+
+		for (Map.Entry<Locale, String> entry :
+				dataTypeDisplayNameMap.entrySet()) {
+
+			Locale locale = entry.getKey();
+			String value = entry.getValue();
+
+			if (Validator.isNotNull(value)) {
+				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
+			}
+		}
+
+		return availableLanguageIds.toArray(
+			new String[availableLanguageIds.size()]);
+	}
+
+	@Override
+	public String getDefaultLanguageId() {
+		String xml = getDataSetDisplayName();
+
+		if (xml == null) {
+			return "";
+		}
+
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
+
+		return LocalizationUtil.getDefaultLanguageId(xml, defaultLocale);
+	}
+
+	@Override
+	public void prepareLocalizedFieldsForImport() throws LocaleException {
+		Locale defaultLocale = LocaleUtil.fromLanguageId(
+			getDefaultLanguageId());
+
+		Locale[] availableLocales = LocaleUtil.fromLanguageIds(
+			getAvailableLanguageIds());
+
+		Locale defaultImportLocale = LocalizationUtil.getDefaultImportLocale(
+			StructuredData.class.getName(), getPrimaryKey(), defaultLocale,
+			availableLocales);
+
+		prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
+	@Override
+	@SuppressWarnings("unused")
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
+		throws LocaleException {
+
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
+
+		String modelDefaultLanguageId = getDefaultLanguageId();
+
+		String dataSetDisplayName = getDataSetDisplayName(defaultLocale);
+
+		if (Validator.isNull(dataSetDisplayName)) {
+			setDataSetDisplayName(
+				getDataSetDisplayName(modelDefaultLanguageId), defaultLocale);
+		}
+		else {
+			setDataSetDisplayName(
+				getDataSetDisplayName(defaultLocale), defaultLocale,
+				defaultLocale);
+		}
+
+		String dataTypeDisplayName = getDataTypeDisplayName(defaultLocale);
+
+		if (Validator.isNull(dataTypeDisplayName)) {
+			setDataTypeDisplayName(
+				getDataTypeDisplayName(modelDefaultLanguageId), defaultLocale);
+		}
+		else {
+			setDataTypeDisplayName(
+				getDataTypeDisplayName(defaultLocale), defaultLocale,
+				defaultLocale);
+		}
 	}
 
 	@Override
@@ -528,6 +1263,7 @@ public class StructuredDataModelImpl
 	public Object clone() {
 		StructuredDataImpl structuredDataImpl = new StructuredDataImpl();
 
+		structuredDataImpl.setUuid(getUuid());
 		structuredDataImpl.setStructuredDataId(getStructuredDataId());
 		structuredDataImpl.setGroupId(getGroupId());
 		structuredDataImpl.setCompanyId(getCompanyId());
@@ -535,11 +1271,15 @@ public class StructuredDataModelImpl
 		structuredDataImpl.setUserName(getUserName());
 		structuredDataImpl.setCreateDate(getCreateDate());
 		structuredDataImpl.setModifiedDate(getModifiedDate());
+		structuredDataImpl.setStatus(getStatus());
+		structuredDataImpl.setStatusByUserId(getStatusByUserId());
+		structuredDataImpl.setStatusByUserName(getStatusByUserName());
+		structuredDataImpl.setStatusDate(getStatusDate());
 		structuredDataImpl.setDataSetId(getDataSetId());
+		structuredDataImpl.setDataSetDisplayName(getDataSetDisplayName());
 		structuredDataImpl.setDataTypeId(getDataTypeId());
+		structuredDataImpl.setDataTypeDisplayName(getDataTypeDisplayName());
 		structuredDataImpl.setStructuredData(getStructuredData());
-		structuredDataImpl.setPatientId(getPatientId());
-		structuredDataImpl.setCrfId(getCrfId());
 
 		structuredDataImpl.resetOriginalValues();
 
@@ -600,15 +1340,32 @@ public class StructuredDataModelImpl
 
 	@Override
 	public void resetOriginalValues() {
+		_originalUuid = _uuid;
+
+		_originalGroupId = _groupId;
+
+		_setOriginalGroupId = false;
+
+		_originalCompanyId = _companyId;
+
+		_setOriginalCompanyId = false;
+
+		_originalUserId = _userId;
+
+		_setOriginalUserId = false;
+
 		_setModifiedDate = false;
+		_originalStatus = _status;
 
-		_originalPatientId = _patientId;
+		_setOriginalStatus = false;
 
-		_setOriginalPatientId = false;
+		_originalDataSetId = _dataSetId;
 
-		_originalCrfId = _crfId;
+		_setOriginalDataSetId = false;
 
-		_setOriginalCrfId = false;
+		_originalDataTypeId = _dataTypeId;
+
+		_setOriginalDataTypeId = false;
 
 		_columnBitmask = 0;
 	}
@@ -617,6 +1374,14 @@ public class StructuredDataModelImpl
 	public CacheModel<StructuredData> toCacheModel() {
 		StructuredDataCacheModel structuredDataCacheModel =
 			new StructuredDataCacheModel();
+
+		structuredDataCacheModel.uuid = getUuid();
+
+		String uuid = structuredDataCacheModel.uuid;
+
+		if ((uuid != null) && (uuid.length() == 0)) {
+			structuredDataCacheModel.uuid = null;
+		}
 
 		structuredDataCacheModel.structuredDataId = getStructuredDataId();
 
@@ -652,9 +1417,51 @@ public class StructuredDataModelImpl
 			structuredDataCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
+		structuredDataCacheModel.status = getStatus();
+
+		structuredDataCacheModel.statusByUserId = getStatusByUserId();
+
+		structuredDataCacheModel.statusByUserName = getStatusByUserName();
+
+		String statusByUserName = structuredDataCacheModel.statusByUserName;
+
+		if ((statusByUserName != null) && (statusByUserName.length() == 0)) {
+			structuredDataCacheModel.statusByUserName = null;
+		}
+
+		Date statusDate = getStatusDate();
+
+		if (statusDate != null) {
+			structuredDataCacheModel.statusDate = statusDate.getTime();
+		}
+		else {
+			structuredDataCacheModel.statusDate = Long.MIN_VALUE;
+		}
+
 		structuredDataCacheModel.dataSetId = getDataSetId();
 
+		structuredDataCacheModel.dataSetDisplayName = getDataSetDisplayName();
+
+		String dataSetDisplayName = structuredDataCacheModel.dataSetDisplayName;
+
+		if ((dataSetDisplayName != null) &&
+			(dataSetDisplayName.length() == 0)) {
+
+			structuredDataCacheModel.dataSetDisplayName = null;
+		}
+
 		structuredDataCacheModel.dataTypeId = getDataTypeId();
+
+		structuredDataCacheModel.dataTypeDisplayName = getDataTypeDisplayName();
+
+		String dataTypeDisplayName =
+			structuredDataCacheModel.dataTypeDisplayName;
+
+		if ((dataTypeDisplayName != null) &&
+			(dataTypeDisplayName.length() == 0)) {
+
+			structuredDataCacheModel.dataTypeDisplayName = null;
+		}
 
 		structuredDataCacheModel.structuredData = getStructuredData();
 
@@ -663,10 +1470,6 @@ public class StructuredDataModelImpl
 		if ((structuredData != null) && (structuredData.length() == 0)) {
 			structuredDataCacheModel.structuredData = null;
 		}
-
-		structuredDataCacheModel.patientId = getPatientId();
-
-		structuredDataCacheModel.crfId = getCrfId();
 
 		return structuredDataCacheModel;
 	}
@@ -761,23 +1564,39 @@ public class StructuredDataModelImpl
 	private static boolean _entityCacheEnabled;
 	private static boolean _finderCacheEnabled;
 
+	private String _uuid;
+	private String _originalUuid;
 	private long _structuredDataId;
 	private long _groupId;
+	private long _originalGroupId;
+	private boolean _setOriginalGroupId;
 	private long _companyId;
+	private long _originalCompanyId;
+	private boolean _setOriginalCompanyId;
 	private long _userId;
+	private long _originalUserId;
+	private boolean _setOriginalUserId;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
+	private int _status;
+	private int _originalStatus;
+	private boolean _setOriginalStatus;
+	private long _statusByUserId;
+	private String _statusByUserName;
+	private Date _statusDate;
 	private long _dataSetId;
+	private long _originalDataSetId;
+	private boolean _setOriginalDataSetId;
+	private String _dataSetDisplayName;
+	private String _dataSetDisplayNameCurrentLanguageId;
 	private long _dataTypeId;
+	private long _originalDataTypeId;
+	private boolean _setOriginalDataTypeId;
+	private String _dataTypeDisplayName;
+	private String _dataTypeDisplayNameCurrentLanguageId;
 	private String _structuredData;
-	private long _patientId;
-	private long _originalPatientId;
-	private boolean _setOriginalPatientId;
-	private long _crfId;
-	private long _originalCrfId;
-	private boolean _setOriginalCrfId;
 	private long _columnBitmask;
 	private StructuredData _escapedModel;
 

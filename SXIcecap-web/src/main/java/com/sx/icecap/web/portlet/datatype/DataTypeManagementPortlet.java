@@ -14,7 +14,7 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"com.liferay.portlet.display-category=category.sx.datamarket",
+		"com.liferay.portlet.display-category=category.sx.icecap",
 		"com.liferay.portlet.scopeable=true",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.instanceable=true",

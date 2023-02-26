@@ -4,7 +4,7 @@
 <service-builder dependency-injector="ds" package-path="com.sx.icecap">
 	<namespace>SX_ICECAP</namespace>
 
-	<entity name="Term" local-service="true" uuid="true" remote-service="true">
+	<entity name="Term" local-service="true" uuid="true" remote-service="true" trash-enabled="true" uuid-accessor="true">
 		
 		<!-- PK fields -->
 		<column name="termId" primary="true" type="long"></column>
@@ -91,7 +91,7 @@
 		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
 	</entity>
 	
-	<entity name="DataType" local-service="true" uuid="true" remote-service="false" uuid-accessor="true">
+	<entity name="DataType" local-service="true" uuid="true" remote-service="false" uuid-accessor="true" trash-enabled="true">
 
 		<!-- PK fields -->
 		<column name="dataTypeId" primary="true" type="long"></column>
@@ -106,6 +106,9 @@
 		<column name="createDate" type="Date"></column>
 		<column name="modifiedDate" type="Date"></column>
 		
+		<!-- Field for Staging --> 
+		<column name="lastPublishDate" type="Date" />
+		
 		<!-- Status fields for workflow -->
 		<column name="status" type="int" />
 		<column name="statusByUserId" type="long" />
@@ -113,6 +116,7 @@
 		<column name="statusDate" type="Date" />
 		
 		<!--  Descriptive -->
+		
 		<column name="dataTypeName" type="String"></column>
 		<column name="dataTypeVersion" type="String"></column>
 		<column name="displayName" type="String" localized="true"></column>
@@ -123,6 +127,7 @@
 		<column name="hasDataStructure" type="boolean" ></column>
 		
 		<!-- Finders -->
+		
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId"></finder-column>
 		</finder>
@@ -171,13 +176,13 @@
 		
 	</entity>
 	
-	<entity name="DataTypeStructure" local-service="true" remote-service="false">
+	<entity name="DataTypeStructure" local-service="true" remote-service="false" uuid="false">
 		<column name="dataTypeId" primary="true" type="long"></column>
 		<column name="structure" type="String" json-enabled="true"></column><!--  typeContent: JSON -->
 	</entity>
 	
 	<entity name="StructuredData" local-service="true"
-		remote-service="false">
+		remote-service="false" uuid="true" uuid-accessor="true" trash-enabled="true">
 
 		<!-- PK fields -->
 
@@ -194,22 +199,66 @@
 		<column name="userName" type="String"></column>
 		<column name="createDate" type="Date"></column>
 		<column name="modifiedDate" type="Date"></column>
+		
+		<!-- Status fields for workflow -->
+		
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
+		
+		<!-- Foreign Fields -->
         <column name="dataSetId" type="long"></column>
+        <column localized="true" name="dataSetDisplayName" type="String"></column>
         <column name="dataTypeId" type="long"></column>
+        <column name="dataTypeDisplayName" type="String" localized="true"></column>
+
+		<!-- Descriptive -->
         <column name="structuredData" type="String"></column>
-        <column name="patientId" type="long"></column>
-        <column name="crfId" type="long"></column>
+ 
+ 		<!-- Finders -->
+ 		
+ 		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+		</finder>
+		<finder name="UserId" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="Status" return-type="Collection">
+			<finder-column name="status"></finder-column>
+		</finder>
+		
+		<finder name="G_U" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="U_S" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="G_U_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
         
-        <finder name="Crf" return-type="Collection">
-            <finder-column name="crfId"></finder-column>
+        <finder name="DataSetId" return-type="Collection">
+            <finder-column name="dataSetId"></finder-column>
         </finder>
-        <finder name="patientId" return-type="Collection">
-            <finder-column name="patientId"></finder-column>
+        <finder name="DataTypeId" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
         </finder>
-        <finder name="CP" return-type="Collection">
-            <finder-column name="crfId"></finder-column>
-            <finder-column name="patientId"></finder-column>
-        </finder>
+        
+        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
+		<reference entity="RatingsStats" package-path="com.liferay.portlet.ratings" />
+		<reference entity="TrashEntry" package-path="com.liferay.portlet.trash" />
+		<reference entity="TrashVersion" package-path="com.liferay.portlet.trash" />
+		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
         
 	</entity>
 

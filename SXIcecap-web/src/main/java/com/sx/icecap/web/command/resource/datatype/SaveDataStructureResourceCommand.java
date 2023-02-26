@@ -13,7 +13,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.search.datatype.DataTypeSearchRegistrar;
@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_SAVE_STRUCTURE
+	        "mvc.command.name="+IcecapMVCCommands.RESOURCE_DATATYPE_SAVE_STRUCTURE
 	    },
 	    service = MVCResourceCommand.class
 )

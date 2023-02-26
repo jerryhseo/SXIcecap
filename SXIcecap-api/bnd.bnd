@@ -8,6 +8,7 @@ Export-Package: \
 	com.sx.icecap.service.persistence,\
 	com.sx.icecap.util.comparator.sss,\
 	com.sx.icecap.util.comparator.datatype,\
-	com.sx.icecap.constant
+	com.sx.icecap.constant,\
+	com.sx.icecap.util.comparator.sd
 -check: EXPORTS
 -includeresource: META-INF/service.xml=../SXIcecap-service/service.xml

@@ -16,6 +16,7 @@ package com.sx.icecap.service;
 
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
@@ -44,6 +45,14 @@ public class StructuredDataLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.sx.icecap.service.impl.StructuredDataLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static StructuredData addStructuredData(
+			long dataSetId, long dataTypeId, String data, int status,
+			com.liferay.portal.kernel.service.ServiceContext sc)
+		throws PortalException {
+
+		return getService().addStructuredData(
+			dataSetId, dataTypeId, data, status, sc);
+	}
 
 	/**
 	 * Adds the structured data to the database. Also notifies the appropriate model listeners.
@@ -59,6 +68,41 @@ public class StructuredDataLocalServiceUtil {
 		StructuredData structuredData) {
 
 		return getService().addStructuredData(structuredData);
+	}
+
+	public static int countAllStructuredDatas() {
+		return getService().countAllStructuredDatas();
+	}
+
+	public static int countApprovedStructuredDatas(long groupId) {
+		return getService().countApprovedStructuredDatas(groupId);
+	}
+
+	public static int countStructuredDatasByG_S(long groupId, int status) {
+		return getService().countStructuredDatasByG_S(groupId, status);
+	}
+
+	public static int countStructuredDatasByG_U_S(
+		long groupId, long userId, int status) {
+
+		return getService().countStructuredDatasByG_U_S(
+			groupId, userId, status);
+	}
+
+	public static int countStructuredDatasByGroupId(long groupId) {
+		return getService().countStructuredDatasByGroupId(groupId);
+	}
+
+	public static int countStructuredDatasByStatus(int status) {
+		return getService().countStructuredDatasByStatus(status);
+	}
+
+	public static int countStructuredDatasByU_S(long userId, int status) {
+		return getService().countStructuredDatasByU_S(userId, status);
+	}
+
+	public static int countStructuredDatasByUserId(long userId) {
+		return getService().countStructuredDatasByUserId(userId);
 	}
 
 	/**
@@ -195,10 +239,67 @@ public class StructuredDataLocalServiceUtil {
 		return getService().fetchStructuredData(structuredDataId);
 	}
 
+	/**
+	 * Returns the structured data matching the UUID and group.
+	 *
+	 * @param uuid the structured data's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	public static StructuredData fetchStructuredDataByUuidAndGroupId(
+		String uuid, long groupId) {
+
+		return getService().fetchStructuredDataByUuidAndGroupId(uuid, groupId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
 		return getService().getActionableDynamicQuery();
+	}
+
+	public static List<StructuredData> getAllStructuredDatas() {
+		return getService().getAllStructuredDatas();
+	}
+
+	public static List<StructuredData> getAllStructuredDatas(
+		int start, int end) {
+
+		return getService().getAllStructuredDatas(start, end);
+	}
+
+	public static List<StructuredData> getAllStructuredDatas(
+		int start, int end, OrderByComparator<StructuredData> comparator) {
+
+		return getService().getAllStructuredDatas(start, end, comparator);
+	}
+
+	public static List<StructuredData> getApprovedStructuredDatas(
+		long groupId) {
+
+		return getService().getApprovedStructuredDatas(groupId);
+	}
+
+	public static List<StructuredData> getApprovedStructuredDatas(
+		long groupId, int start, int end) {
+
+		return getService().getApprovedStructuredDatas(groupId, start, end);
+	}
+
+	public static List<StructuredData> getApprovedStructuredDatas(
+		long groupId, int start, int end,
+		OrderByComparator<StructuredData> comparator) {
+
+		return getService().getApprovedStructuredDatas(
+			groupId, start, end, comparator);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return getService().getExportActionableDynamicQuery(portletDataContext);
 	}
 
 	public static
@@ -226,6 +327,15 @@ public class StructuredDataLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static com.liferay.portal.kernel.dao.search.SearchContainerResults
+		<com.liferay.asset.kernel.model.AssetEntry> getSearchContainerResults(
+				com.liferay.portal.kernel.dao.search.SearchContainer
+					<StructuredData> searchContainer)
+			throws PortalException {
+
+		return getService().getSearchContainerResults(searchContainer);
+	}
+
 	/**
 	 * Returns the structured data with the primary key.
 	 *
@@ -237,6 +347,21 @@ public class StructuredDataLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getStructuredData(structuredDataId);
+	}
+
+	/**
+	 * Returns the structured data matching the UUID and group.
+	 *
+	 * @param uuid the structured data's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching structured data
+	 * @throws PortalException if a matching structured data could not be found
+	 */
+	public static StructuredData getStructuredDataByUuidAndGroupId(
+			String uuid, long groupId)
+		throws PortalException {
+
+		return getService().getStructuredDataByUuidAndGroupId(uuid, groupId);
 	}
 
 	/**
@@ -254,6 +379,156 @@ public class StructuredDataLocalServiceUtil {
 		return getService().getStructuredDatas(start, end);
 	}
 
+	public static List<StructuredData> getStructuredDatasByG_S(
+		long groupId, int status) {
+
+		return getService().getStructuredDatasByG_S(groupId, status);
+	}
+
+	public static List<StructuredData> getStructuredDatasByG_S(
+		long groupId, int status, int start, int end) {
+
+		return getService().getStructuredDatasByG_S(
+			groupId, status, start, end);
+	}
+
+	public static List<StructuredData> getStructuredDatasByG_S(
+		long groupId, int status, int start, int end,
+		OrderByComparator<StructuredData> comparator) {
+
+		return getService().getStructuredDatasByG_S(
+			groupId, status, start, end, comparator);
+	}
+
+	public static List<StructuredData> getStructuredDatasByG_U_S(
+		long groupId, long userId, int status) {
+
+		return getService().getStructuredDatasByG_U_S(groupId, userId, status);
+	}
+
+	public static List<StructuredData> getStructuredDatasByG_U_S(
+		long groupId, long userId, int status, int start, int end) {
+
+		return getService().getStructuredDatasByG_U_S(
+			groupId, userId, status, start, end);
+	}
+
+	public static List<StructuredData> getStructuredDatasByG_U_S(
+		long groupId, long userId, int status, int start, int end,
+		OrderByComparator<StructuredData> comparator) {
+
+		return getService().getStructuredDatasByG_U_S(
+			groupId, userId, status, start, end, comparator);
+	}
+
+	public static List<StructuredData> getStructuredDatasByGroupId(
+		long groupId) {
+
+		return getService().getStructuredDatasByGroupId(groupId);
+	}
+
+	public static List<StructuredData> getStructuredDatasByGroupId(
+		long groupId, int start, int end) {
+
+		return getService().getStructuredDatasByGroupId(groupId, start, end);
+	}
+
+	public static List<StructuredData> getStructuredDatasByGroupId(
+		long groupId, int start, int end,
+		OrderByComparator<StructuredData> comparator) {
+
+		return getService().getStructuredDatasByGroupId(
+			groupId, start, end, comparator);
+	}
+
+	public static List<StructuredData> getStructuredDatasByStatus(int status) {
+		return getService().getStructuredDatasByStatus(status);
+	}
+
+	public static List<StructuredData> getStructuredDatasByStatus(
+		int status, int start, int end) {
+
+		return getService().getStructuredDatasByStatus(status, start, end);
+	}
+
+	public static List<StructuredData> getStructuredDatasByStatus(
+		int status, int start, int end,
+		OrderByComparator<StructuredData> comparator) {
+
+		return getService().getStructuredDatasByStatus(
+			status, start, end, comparator);
+	}
+
+	public static List<StructuredData> getStructuredDatasByU_S(
+		long userId, int status) {
+
+		return getService().getStructuredDatasByU_S(userId, status);
+	}
+
+	public static List<StructuredData> getStructuredDatasByU_S(
+		long userId, int status, int start, int end) {
+
+		return getService().getStructuredDatasByU_S(userId, status, start, end);
+	}
+
+	public static List<StructuredData> getStructuredDatasByU_S(
+		long userId, int status, int start, int end,
+		OrderByComparator<StructuredData> comparator) {
+
+		return getService().getStructuredDatasByU_S(
+			userId, status, start, end, comparator);
+	}
+
+	public static List<StructuredData> getStructuredDatasByUserId(long userId) {
+		return getService().getStructuredDatasByUserId(userId);
+	}
+
+	public static List<StructuredData> getStructuredDatasByUserId(
+		long userId, int start, int end) {
+
+		return getService().getStructuredDatasByUserId(userId, start, end);
+	}
+
+	public static List<StructuredData> getStructuredDatasByUserId(
+		long userId, int start, int end,
+		OrderByComparator<StructuredData> comparator) {
+
+		return getService().getStructuredDatasByUserId(
+			userId, start, end, comparator);
+	}
+
+	/**
+	 * Returns all the structured datas matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the structured datas
+	 * @param companyId the primary key of the company
+	 * @return the matching structured datas, or an empty list if no matches were found
+	 */
+	public static List<StructuredData> getStructuredDatasByUuidAndCompanyId(
+		String uuid, long companyId) {
+
+		return getService().getStructuredDatasByUuidAndCompanyId(
+			uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of structured datas matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the structured datas
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching structured datas, or an empty list if no matches were found
+	 */
+	public static List<StructuredData> getStructuredDatasByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return getService().getStructuredDatasByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
 	/**
 	 * Returns the number of structured datas.
 	 *
@@ -261,6 +536,35 @@ public class StructuredDataLocalServiceUtil {
 	 */
 	public static int getStructuredDatasCount() {
 		return getService().getStructuredDatasCount();
+	}
+
+	public static StructuredData removeStructuredData(long structuredDataId)
+		throws PortalException {
+
+		return getService().removeStructuredData(structuredDataId);
+	}
+
+	public static void removeStructuredDatas(long[] structuredDataIds)
+		throws PortalException {
+
+		getService().removeStructuredDatas(structuredDataIds);
+	}
+
+	public static StructuredData updateStatus(
+			long userId, long structuredDataId, Integer status,
+			com.liferay.portal.kernel.service.ServiceContext sc)
+		throws PortalException, SystemException {
+
+		return getService().updateStatus(userId, structuredDataId, status, sc);
+	}
+
+	public static StructuredData updateStructuredData(
+			long structuredDataId, long dataSetId, long dataTypeId, String data,
+			int status, com.liferay.portal.kernel.service.ServiceContext sc)
+		throws PortalException {
+
+		return getService().updateStructuredData(
+			structuredDataId, dataSetId, dataTypeId, data, status, sc);
 	}
 
 	/**

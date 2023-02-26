@@ -4,7 +4,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapDataTypeMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.debug.Debug;
@@ -20,7 +20,7 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
-	        "mvc.command.name="+IcecapDataTypeMVCCommands.RENDER_DATATYPE_FULL_CONTENT
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_DATATYPE_FULL_CONTENT
 	    },
 	    service = MVCRenderCommand.class
 	)

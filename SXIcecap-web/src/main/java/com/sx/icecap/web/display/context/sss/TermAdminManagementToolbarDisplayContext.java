@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.constant.IcecapActionKeys;
 import com.sx.icecap.constant.IcecapConstants;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
@@ -187,7 +187,7 @@ public class TermAdminManagementToolbarDisplayContext
 		
 		searchURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME, 
-				IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST);
+				IcecapMVCCommands.RENDER_ADMIN_TERM_LIST);
 		
 //		System.out.println("Order By Type: "+ _orderByType);
 		
@@ -201,7 +201,7 @@ public class TermAdminManagementToolbarDisplayContext
 		PortletURL filterURL =  getPortletURL();
 		filterURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME,
-				IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST);
+				IcecapMVCCommands.RENDER_ADMIN_TERM_LIST);
 
 		return filterURL;
 	}
@@ -343,7 +343,7 @@ public class TermAdminManagementToolbarDisplayContext
 	
 	public String getBulkActionURL() {
 		PortletURL actionURL = liferayPortletResponse.createActionURL();
-		actionURL.setParameter("actionName", IcecapSSSMVCCommands.ACTION_ADMIN_BULK_ACTIONS);
+		actionURL.setParameter("actionName", IcecapMVCCommands.ACTION_ADMIN_BULK_ACTIONS);
 		
 		return actionURL.toString();
 	}
@@ -357,7 +357,7 @@ public class TermAdminManagementToolbarDisplayContext
 							add(dropdownItem -> {
 								dropdownItem.setHref(
 										getPortletURL(), 
-										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapSSSMVCCommands.RENDER_ADMIN_TERM_EDIT, 
+										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_ADMIN_TERM_EDIT, 
 										Constants.CMD, Constants.UPDATE,
 										StationXWebKeys.TERM_ID, termId);
 
@@ -370,7 +370,7 @@ public class TermAdminManagementToolbarDisplayContext
 							PortletURL deleteURL = liferayPortletResponse.createActionURL();
 							
 							long[] termIds = { termId};
-							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapSSSMVCCommands.ACTION_ADMIN_TERM_DELETE);
+							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_ADMIN_TERM_DELETE);
 							deleteURL.setParameter(Constants.CMD, Constants.DELETE);
 							deleteURL.setParameter(StationXWebKeys.REDIRECT, _getRedirectURL());
 							deleteURL.setParameter(StationXWebKeys.TERM_IDS, Arrays.toString(termIds) );
@@ -407,7 +407,7 @@ public class TermAdminManagementToolbarDisplayContext
 								dropdownItem -> {
 									dropdownItem.setHref(
 											getPortletURL(),
-											StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapSSSMVCCommands.RENDER_ADMIN_TERM_EDIT,
+											StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_ADMIN_TERM_EDIT,
 											Constants.CMD, Constants.ADD);
 									dropdownItem.setLabel(
 											LanguageUtil.get(request, "add-term"));
@@ -484,9 +484,9 @@ public class TermAdminManagementToolbarDisplayContext
 		
 		RenderURL renderURL = liferayPortletResponse.createRenderURL();
 		
-		String renderCommand = IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST;
+		String renderCommand = IcecapMVCCommands.RENDER_ADMIN_TERM_LIST;
 		if( Validator.isNotNull(_keywords) && !_keywords.isEmpty() ) {
-			renderCommand = IcecapSSSMVCCommands.RENDER_ADMIN_SEARCH_TERMS;
+			renderCommand = IcecapMVCCommands.RENDER_ADMIN_SEARCH_TERMS;
 		}
 		
 		if (ArrayUtil.contains(displayViews, StationXConstants.VIEW_TYPE_CARDS)) {

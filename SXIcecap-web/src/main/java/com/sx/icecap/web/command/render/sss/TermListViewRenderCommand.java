@@ -30,7 +30,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapJsps;
-import com.sx.icecap.constant.IcecapSSSMVCCommands;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
@@ -60,8 +60,8 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.TERM_ADMIN,
-	        "mvc.command.name="+IcecapSSSMVCCommands.RENDER_ROOT,
-	        "mvc.command.name="+IcecapSSSMVCCommands.RENDER_ADMIN_TERM_LIST
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_ROOT,
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_ADMIN_TERM_LIST
 	    },
 	    service = MVCRenderCommand.class
 	)

@@ -14,10 +14,15 @@
 
 package com.sx.icecap.service;
 
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.dao.search.SearchContainerResults;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
@@ -25,6 +30,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -61,6 +67,11 @@ public interface StructuredDataLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.sx.icecap.service.impl.StructuredDataLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the structured data local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link StructuredDataLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	@Indexable(type = IndexableType.REINDEX)
+	public StructuredData addStructuredData(
+			long dataSetId, long dataTypeId, String data, int status,
+			ServiceContext sc)
+		throws PortalException;
 
 	/**
 	 * Adds the structured data to the database. Also notifies the appropriate model listeners.
@@ -74,6 +85,23 @@ public interface StructuredDataLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public StructuredData addStructuredData(StructuredData structuredData);
+
+	public int countAllStructuredDatas();
+
+	public int countApprovedStructuredDatas(long groupId);
+
+	public int countStructuredDatasByG_S(long groupId, int status);
+
+	public int countStructuredDatasByG_U_S(
+		long groupId, long userId, int status);
+
+	public int countStructuredDatasByGroupId(long groupId);
+
+	public int countStructuredDatasByStatus(int status);
+
+	public int countStructuredDatasByU_S(long userId, int status);
+
+	public int countStructuredDatasByUserId(long userId);
 
 	/**
 	 * Creates a new structured data with the primary key. Does not add the structured data to the database.
@@ -188,8 +216,45 @@ public interface StructuredDataLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public StructuredData fetchStructuredData(long structuredDataId);
 
+	/**
+	 * Returns the structured data matching the UUID and group.
+	 *
+	 * @param uuid the structured data's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StructuredData fetchStructuredDataByUuidAndGroupId(
+		String uuid, long groupId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getAllStructuredDatas();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getAllStructuredDatas(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getAllStructuredDatas(
+		int start, int end, OrderByComparator<StructuredData> comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getApprovedStructuredDatas(long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getApprovedStructuredDatas(
+		long groupId, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getApprovedStructuredDatas(
+		long groupId, int start, int end,
+		OrderByComparator<StructuredData> comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		PortletDataContext portletDataContext);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -209,6 +274,11 @@ public interface StructuredDataLocalService
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public SearchContainerResults<AssetEntry> getSearchContainerResults(
+			SearchContainer<StructuredData> searchContainer)
+		throws PortalException;
+
 	/**
 	 * Returns the structured data with the primary key.
 	 *
@@ -218,6 +288,19 @@ public interface StructuredDataLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public StructuredData getStructuredData(long structuredDataId)
+		throws PortalException;
+
+	/**
+	 * Returns the structured data matching the UUID and group.
+	 *
+	 * @param uuid the structured data's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching structured data
+	 * @throws PortalException if a matching structured data could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StructuredData getStructuredDataByUuidAndGroupId(
+			String uuid, long groupId)
 		throws PortalException;
 
 	/**
@@ -234,6 +317,107 @@ public interface StructuredDataLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<StructuredData> getStructuredDatas(int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByG_S(
+		long groupId, int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByG_S(
+		long groupId, int status, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByG_S(
+		long groupId, int status, int start, int end,
+		OrderByComparator<StructuredData> comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByG_U_S(
+		long groupId, long userId, int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByG_U_S(
+		long groupId, long userId, int status, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByG_U_S(
+		long groupId, long userId, int status, int start, int end,
+		OrderByComparator<StructuredData> comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByGroupId(long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByGroupId(
+		long groupId, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByGroupId(
+		long groupId, int start, int end,
+		OrderByComparator<StructuredData> comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByStatus(int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByStatus(
+		int status, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByStatus(
+		int status, int start, int end,
+		OrderByComparator<StructuredData> comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByU_S(
+		long userId, int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByU_S(
+		long userId, int status, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByU_S(
+		long userId, int status, int start, int end,
+		OrderByComparator<StructuredData> comparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByUserId(long userId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByUserId(
+		long userId, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByUserId(
+		long userId, int start, int end,
+		OrderByComparator<StructuredData> comparator);
+
+	/**
+	 * Returns all the structured datas matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the structured datas
+	 * @param companyId the primary key of the company
+	 * @return the matching structured datas, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByUuidAndCompanyId(
+		String uuid, long companyId);
+
+	/**
+	 * Returns a range of structured datas matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the structured datas
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching structured datas, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatasByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator);
+
 	/**
 	 * Returns the number of structured datas.
 	 *
@@ -241,6 +425,25 @@ public interface StructuredDataLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getStructuredDatasCount();
+
+	@Indexable(type = IndexableType.DELETE)
+	public StructuredData removeStructuredData(long structuredDataId)
+		throws PortalException;
+
+	public void removeStructuredDatas(long[] structuredDataIds)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public StructuredData updateStatus(
+			long userId, long structuredDataId, Integer status,
+			ServiceContext sc)
+		throws PortalException, SystemException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public StructuredData updateStructuredData(
+			long structuredDataId, long dataSetId, long dataTypeId, String data,
+			int status, ServiceContext sc)
+		throws PortalException;
 
 	/**
 	 * Updates the structured data in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

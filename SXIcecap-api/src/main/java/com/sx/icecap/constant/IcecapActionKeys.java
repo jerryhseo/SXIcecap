@@ -15,4 +15,12 @@ public class IcecapActionKeys {
 	public static final String DELETE_DATATYPES = "DELETE_DATATYPES";
 	public static final String APPROVE_DATATYPE = "APPROVE_DATATYPE";
 	public static final String REVIEW_DATATYPE = "REVIEW_DATATYPE";
+	
+	public static final String ADD_STRUCTURED_DATA = "ADD_STRUCTURED_DATA";
+	public static final String UPDATE_STRUCTURED_DATA = "UPDATE_STRUCTURED_DATA";
+	public static final String DELETE_STRUCTURED_DATA = "DELETE_STRUCTURED_DATA";
+	public static final String DELETE_STRUCTURED_DATAS = "DELETE_STRUCTURED_DATAS";
+	public static final String APPROVE_STRUCTURED_DATA = "APPROVE_STRUCTURED_DATA";
+	public static final String REVIEW_STRUCTURED_DATA = "REVIEW_STRUCTURED_DATA";
+
 }

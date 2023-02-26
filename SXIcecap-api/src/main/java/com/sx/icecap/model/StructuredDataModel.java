@@ -15,11 +15,19 @@
 package com.sx.icecap.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
+import com.liferay.portal.kernel.exception.LocaleException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.GroupedModel;
+import com.liferay.portal.kernel.model.LocalizedModel;
 import com.liferay.portal.kernel.model.ShardedModel;
+import com.liferay.portal.kernel.model.StagedAuditedModel;
+import com.liferay.portal.kernel.model.TrashedModel;
+import com.liferay.portal.kernel.model.WorkflowedModel;
 
 import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -36,7 +44,8 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface StructuredDataModel
-	extends BaseModel<StructuredData>, GroupedModel, ShardedModel {
+	extends BaseModel<StructuredData>, GroupedModel, LocalizedModel,
+			ShardedModel, StagedAuditedModel, TrashedModel, WorkflowedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -57,6 +66,23 @@ public interface StructuredDataModel
 	 * @param primaryKey the primary key of this structured data
 	 */
 	public void setPrimaryKey(long primaryKey);
+
+	/**
+	 * Returns the uuid of this structured data.
+	 *
+	 * @return the uuid of this structured data
+	 */
+	@AutoEscape
+	@Override
+	public String getUuid();
+
+	/**
+	 * Sets the uuid of this structured data.
+	 *
+	 * @param uuid the uuid of this structured data
+	 */
+	@Override
+	public void setUuid(String uuid);
 
 	/**
 	 * Returns the structured data ID of this structured data.
@@ -186,6 +212,87 @@ public interface StructuredDataModel
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
+	 * Returns the status of this structured data.
+	 *
+	 * @return the status of this structured data
+	 */
+	@Override
+	public int getStatus();
+
+	/**
+	 * Sets the status of this structured data.
+	 *
+	 * @param status the status of this structured data
+	 */
+	@Override
+	public void setStatus(int status);
+
+	/**
+	 * Returns the status by user ID of this structured data.
+	 *
+	 * @return the status by user ID of this structured data
+	 */
+	@Override
+	public long getStatusByUserId();
+
+	/**
+	 * Sets the status by user ID of this structured data.
+	 *
+	 * @param statusByUserId the status by user ID of this structured data
+	 */
+	@Override
+	public void setStatusByUserId(long statusByUserId);
+
+	/**
+	 * Returns the status by user uuid of this structured data.
+	 *
+	 * @return the status by user uuid of this structured data
+	 */
+	@Override
+	public String getStatusByUserUuid();
+
+	/**
+	 * Sets the status by user uuid of this structured data.
+	 *
+	 * @param statusByUserUuid the status by user uuid of this structured data
+	 */
+	@Override
+	public void setStatusByUserUuid(String statusByUserUuid);
+
+	/**
+	 * Returns the status by user name of this structured data.
+	 *
+	 * @return the status by user name of this structured data
+	 */
+	@AutoEscape
+	@Override
+	public String getStatusByUserName();
+
+	/**
+	 * Sets the status by user name of this structured data.
+	 *
+	 * @param statusByUserName the status by user name of this structured data
+	 */
+	@Override
+	public void setStatusByUserName(String statusByUserName);
+
+	/**
+	 * Returns the status date of this structured data.
+	 *
+	 * @return the status date of this structured data
+	 */
+	@Override
+	public Date getStatusDate();
+
+	/**
+	 * Sets the status date of this structured data.
+	 *
+	 * @param statusDate the status date of this structured data
+	 */
+	@Override
+	public void setStatusDate(Date statusDate);
+
+	/**
 	 * Returns the data set ID of this structured data.
 	 *
 	 * @return the data set ID of this structured data
@@ -200,6 +307,108 @@ public interface StructuredDataModel
 	public void setDataSetId(long dataSetId);
 
 	/**
+	 * Returns the data set display name of this structured data.
+	 *
+	 * @return the data set display name of this structured data
+	 */
+	public String getDataSetDisplayName();
+
+	/**
+	 * Returns the localized data set display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized data set display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataSetDisplayName(Locale locale);
+
+	/**
+	 * Returns the localized data set display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data set display name of this structured data. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@AutoEscape
+	public String getDataSetDisplayName(Locale locale, boolean useDefault);
+
+	/**
+	 * Returns the localized data set display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized data set display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataSetDisplayName(String languageId);
+
+	/**
+	 * Returns the localized data set display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data set display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataSetDisplayName(String languageId, boolean useDefault);
+
+	@AutoEscape
+	public String getDataSetDisplayNameCurrentLanguageId();
+
+	@AutoEscape
+	public String getDataSetDisplayNameCurrentValue();
+
+	/**
+	 * Returns a map of the locales and localized data set display names of this structured data.
+	 *
+	 * @return the locales and localized data set display names of this structured data
+	 */
+	public Map<Locale, String> getDataSetDisplayNameMap();
+
+	/**
+	 * Sets the data set display name of this structured data.
+	 *
+	 * @param dataSetDisplayName the data set display name of this structured data
+	 */
+	public void setDataSetDisplayName(String dataSetDisplayName);
+
+	/**
+	 * Sets the localized data set display name of this structured data in the language.
+	 *
+	 * @param dataSetDisplayName the localized data set display name of this structured data
+	 * @param locale the locale of the language
+	 */
+	public void setDataSetDisplayName(String dataSetDisplayName, Locale locale);
+
+	/**
+	 * Sets the localized data set display name of this structured data in the language, and sets the default locale.
+	 *
+	 * @param dataSetDisplayName the localized data set display name of this structured data
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataSetDisplayName(
+		String dataSetDisplayName, Locale locale, Locale defaultLocale);
+
+	public void setDataSetDisplayNameCurrentLanguageId(String languageId);
+
+	/**
+	 * Sets the localized data set display names of this structured data from the map of locales and localized data set display names.
+	 *
+	 * @param dataSetDisplayNameMap the locales and localized data set display names of this structured data
+	 */
+	public void setDataSetDisplayNameMap(
+		Map<Locale, String> dataSetDisplayNameMap);
+
+	/**
+	 * Sets the localized data set display names of this structured data from the map of locales and localized data set display names, and sets the default locale.
+	 *
+	 * @param dataSetDisplayNameMap the locales and localized data set display names of this structured data
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataSetDisplayNameMap(
+		Map<Locale, String> dataSetDisplayNameMap, Locale defaultLocale);
+
+	/**
 	 * Returns the data type ID of this structured data.
 	 *
 	 * @return the data type ID of this structured data
@@ -212,6 +421,109 @@ public interface StructuredDataModel
 	 * @param dataTypeId the data type ID of this structured data
 	 */
 	public void setDataTypeId(long dataTypeId);
+
+	/**
+	 * Returns the data type display name of this structured data.
+	 *
+	 * @return the data type display name of this structured data
+	 */
+	public String getDataTypeDisplayName();
+
+	/**
+	 * Returns the localized data type display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized data type display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataTypeDisplayName(Locale locale);
+
+	/**
+	 * Returns the localized data type display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data type display name of this structured data. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@AutoEscape
+	public String getDataTypeDisplayName(Locale locale, boolean useDefault);
+
+	/**
+	 * Returns the localized data type display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized data type display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataTypeDisplayName(String languageId);
+
+	/**
+	 * Returns the localized data type display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data type display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataTypeDisplayName(String languageId, boolean useDefault);
+
+	@AutoEscape
+	public String getDataTypeDisplayNameCurrentLanguageId();
+
+	@AutoEscape
+	public String getDataTypeDisplayNameCurrentValue();
+
+	/**
+	 * Returns a map of the locales and localized data type display names of this structured data.
+	 *
+	 * @return the locales and localized data type display names of this structured data
+	 */
+	public Map<Locale, String> getDataTypeDisplayNameMap();
+
+	/**
+	 * Sets the data type display name of this structured data.
+	 *
+	 * @param dataTypeDisplayName the data type display name of this structured data
+	 */
+	public void setDataTypeDisplayName(String dataTypeDisplayName);
+
+	/**
+	 * Sets the localized data type display name of this structured data in the language.
+	 *
+	 * @param dataTypeDisplayName the localized data type display name of this structured data
+	 * @param locale the locale of the language
+	 */
+	public void setDataTypeDisplayName(
+		String dataTypeDisplayName, Locale locale);
+
+	/**
+	 * Sets the localized data type display name of this structured data in the language, and sets the default locale.
+	 *
+	 * @param dataTypeDisplayName the localized data type display name of this structured data
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataTypeDisplayName(
+		String dataTypeDisplayName, Locale locale, Locale defaultLocale);
+
+	public void setDataTypeDisplayNameCurrentLanguageId(String languageId);
+
+	/**
+	 * Sets the localized data type display names of this structured data from the map of locales and localized data type display names.
+	 *
+	 * @param dataTypeDisplayNameMap the locales and localized data type display names of this structured data
+	 */
+	public void setDataTypeDisplayNameMap(
+		Map<Locale, String> dataTypeDisplayNameMap);
+
+	/**
+	 * Sets the localized data type display names of this structured data from the map of locales and localized data type display names, and sets the default locale.
+	 *
+	 * @param dataTypeDisplayNameMap the locales and localized data type display names of this structured data
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataTypeDisplayNameMap(
+		Map<Locale, String> dataTypeDisplayNameMap, Locale defaultLocale);
 
 	/**
 	 * Returns the structured data of this structured data.
@@ -229,31 +541,129 @@ public interface StructuredDataModel
 	public void setStructuredData(String structuredData);
 
 	/**
-	 * Returns the patient ID of this structured data.
+	 * Returns the trash entry created when this structured data was moved to the Recycle Bin. The trash entry may belong to one of the ancestors of this structured data.
 	 *
-	 * @return the patient ID of this structured data
+	 * @return the trash entry created when this structured data was moved to the Recycle Bin
 	 */
-	public long getPatientId();
+	@Override
+	public com.liferay.trash.kernel.model.TrashEntry getTrashEntry()
+		throws PortalException;
 
 	/**
-	 * Sets the patient ID of this structured data.
+	 * Returns the class primary key of the trash entry for this structured data.
 	 *
-	 * @param patientId the patient ID of this structured data
+	 * @return the class primary key of the trash entry for this structured data
 	 */
-	public void setPatientId(long patientId);
+	@Override
+	public long getTrashEntryClassPK();
 
 	/**
-	 * Returns the crf ID of this structured data.
+	 * Returns the trash handler for this structured data.
 	 *
-	 * @return the crf ID of this structured data
+	 * @return the trash handler for this structured data
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
 	 */
-	public long getCrfId();
+	@Deprecated
+	@Override
+	public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler();
 
 	/**
-	 * Sets the crf ID of this structured data.
+	 * Returns <code>true</code> if this structured data is in the Recycle Bin.
 	 *
-	 * @param crfId the crf ID of this structured data
+	 * @return <code>true</code> if this structured data is in the Recycle Bin; <code>false</code> otherwise
 	 */
-	public void setCrfId(long crfId);
+	@Override
+	public boolean isInTrash();
+
+	/**
+	 * Returns <code>true</code> if the parent of this structured data is in the Recycle Bin.
+	 *
+	 * @return <code>true</code> if the parent of this structured data is in the Recycle Bin; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInTrashContainer();
+
+	@Override
+	public boolean isInTrashExplicitly();
+
+	@Override
+	public boolean isInTrashImplicitly();
+
+	/**
+	 * Returns <code>true</code> if this structured data is approved.
+	 *
+	 * @return <code>true</code> if this structured data is approved; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isApproved();
+
+	/**
+	 * Returns <code>true</code> if this structured data is denied.
+	 *
+	 * @return <code>true</code> if this structured data is denied; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDenied();
+
+	/**
+	 * Returns <code>true</code> if this structured data is a draft.
+	 *
+	 * @return <code>true</code> if this structured data is a draft; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDraft();
+
+	/**
+	 * Returns <code>true</code> if this structured data is expired.
+	 *
+	 * @return <code>true</code> if this structured data is expired; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isExpired();
+
+	/**
+	 * Returns <code>true</code> if this structured data is inactive.
+	 *
+	 * @return <code>true</code> if this structured data is inactive; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInactive();
+
+	/**
+	 * Returns <code>true</code> if this structured data is incomplete.
+	 *
+	 * @return <code>true</code> if this structured data is incomplete; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isIncomplete();
+
+	/**
+	 * Returns <code>true</code> if this structured data is pending.
+	 *
+	 * @return <code>true</code> if this structured data is pending; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isPending();
+
+	/**
+	 * Returns <code>true</code> if this structured data is scheduled.
+	 *
+	 * @return <code>true</code> if this structured data is scheduled; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isScheduled();
+
+	@Override
+	public String[] getAvailableLanguageIds();
+
+	@Override
+	public String getDefaultLanguageId();
+
+	@Override
+	public void prepareLocalizedFieldsForImport() throws LocaleException;
+
+	@Override
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
+		throws LocaleException;
 
 }

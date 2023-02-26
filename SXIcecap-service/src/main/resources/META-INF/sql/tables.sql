@@ -7,6 +7,7 @@ create table SX_ICECAP_DataType (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
+	lastPublishDate DATE null,
 	status INTEGER,
 	statusByUserId LONG,
 	statusByUserName VARCHAR(75) null,
@@ -27,6 +28,7 @@ create table SX_ICECAP_DataTypeStructure (
 );
 
 create table SX_ICECAP_StructuredData (
+	uuid_ VARCHAR(75) null,
 	structuredDataId LONG not null primary key,
 	groupId LONG,
 	companyId LONG,
@@ -34,11 +36,15 @@ create table SX_ICECAP_StructuredData (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
+	status INTEGER,
+	statusByUserId LONG,
+	statusByUserName VARCHAR(75) null,
+	statusDate DATE null,
 	dataSetId LONG,
+	dataSetDisplayName STRING null,
 	dataTypeId LONG,
-	structuredData VARCHAR(75) null,
-	patientId LONG,
-	crfId LONG
+	dataTypeDisplayName STRING null,
+	structuredData VARCHAR(75) null
 );
 
 create table SX_ICECAP_Term (
