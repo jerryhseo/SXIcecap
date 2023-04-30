@@ -28,13 +28,6 @@
 <%
 	Term term = (Term)renderRequest.getAttribute(StationXWebKeys.TERM);
 
-	Locale defaultLocale = PortalUtil.getSiteDefaultLocale(themeDisplay.getScopeGroupId());
-	
-	Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
-	
-	JSONArray jsonLocales = JSONFactoryUtil.createJSONArray();
-	availableLocales.forEach( jsonLocales::put );
-
 	String cmd = Constants.ADD;
 	if( Validator.isNotNull(term) ){
 		cmd = Constants.UPDATE;

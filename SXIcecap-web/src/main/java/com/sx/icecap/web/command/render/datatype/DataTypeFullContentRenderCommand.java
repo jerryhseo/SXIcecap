@@ -4,6 +4,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.constant.IcecapConstants;
+import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.service.DataTypeLocalService;
@@ -45,7 +46,7 @@ public class DataTypeFullContentRenderCommand implements MVCRenderCommand {
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
 		Debug.printAllAttributes(renderRequest);
 		Debug.printAllParameters(renderRequest);
-		return IcecapConstants.JSP_DATATYPE_FULL_CONTENT;
+		return IcecapJsps.DATATYPE_FULL_CONTENT;
 	}
 
 }

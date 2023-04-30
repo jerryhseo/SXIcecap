@@ -95,7 +95,7 @@ public class SaveAndDefineDataStructureActionCommand extends BaseMVCActionComman
 				themeDisplay.getPortletDisplay().getId(), 
 				themeDisplay.getPlid(),
 				PortletRequest.RENDER_PHASE);
-		renderURL.setParameter(IcecapDataTypeAttributes.DATATYPE_ID, String.valueOf(dataTypeId) );
+		renderURL.setParameter(IcecapDataTypeAttributes.DATATYPE_ID, String.valueOf(savedDataType.getDataTypeId()) );
 		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, renderCommand);
 		
 		System.out.println("Render URL: "+renderURL.toString());

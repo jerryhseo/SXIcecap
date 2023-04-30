@@ -22,6 +22,9 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
@@ -41,11 +44,15 @@ import com.sx.icecap.exception.NoSuchDataTypeException;
 import com.sx.icecap.exception.NoSuchDataTypeStructureException;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.DataTypeStructure;
+import com.sx.icecap.model.StructuredData;
+import com.sx.icecap.service.StructuredDataLocalServiceUtil;
 import com.sx.icecap.service.base.DataTypeLocalServiceBaseImpl;
 import com.sx.icecap.util.comparator.datatype.DataTypeModifiedDateComparator;
 import com.sx.icecap.util.comparator.datatype.DataTypeNameComparator;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -520,6 +527,93 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		} catch (NoSuchDataTypeStructureException e) {
 			return null;
 		}
+	}
+	
+	public JSONObject getDataTypeStructureJSONObject( long dataTypeId ) throws JSONException {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+				getDataTypeStructure( dataTypeId ) );
+		
+		return jsonObject;
+	}
+	
+	public StructuredData addStructuredData(
+			long dataSetId, 
+			long dataTypeId,
+			String data,
+			int status,
+			ServiceContext sc) throws PortalException  {
+		return StructuredDataLocalServiceUtil.addStructuredData(dataSetId, dataTypeId, data, status, sc);
+	}
+
+	public StructuredData updateStructuredData(
+			long structuredDataId,
+			long dataSetId, 
+			long dataTypeId,
+			String data,
+			int status,
+			ServiceContext sc) throws PortalException  {
+		return StructuredDataLocalServiceUtil.updateStructuredData(structuredDataId, dataSetId, dataTypeId, data, status, sc);
+	}
+	
+	public StructuredData updateStructuredDataStatus(
+			long userId, 
+			long structuredDataId, 
+			Integer status,
+			ServiceContext sc) throws PortalException, SystemException {
+		return StructuredDataLocalServiceUtil.updateStatus(userId, structuredDataId, status, sc);
+	}
+	
+	public StructuredData removeStructuredData( long structuredDataId ) throws PortalException {
+		return StructuredDataLocalServiceUtil.removeStructuredData(structuredDataId);
+	}
+	
+	public void removeStructuredDatas( long[] structuredDataIds ) throws PortalException {
+		StructuredDataLocalServiceUtil.removeStructuredDatas(structuredDataIds);
+	}
+
+	public StructuredData getStructuredData( long structuredDataId ){
+		return super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
+	}
+	
+	public List<StructuredData> getStructuredDatas( long dataTypeId ){
+		return super.structuredDataPersistence.findByDataTypeId(dataTypeId);
+	}
+	public List<StructuredData> getStructuredDatas( long dataTypeId, int start, int end ){
+		return super.structuredDataPersistence.findByDataTypeId(dataTypeId, start, end);
+	}
+	
+	public JSONObject getStructuredDataWithValues( 
+			long dataTypeId, long structuredDataId ) throws JSONException {
+		DataType dataType = super.dataTypePersistence.fetchByPrimaryKey(dataTypeId);
+		String dataStructure = getDataTypeStructure( structuredDataId ); 
+		
+		JSONObject jsonData = JSONFactoryUtil.createJSONObject( dataStructure );
+		
+		StructuredData structuredData = 
+				super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
+		
+		return jsonData;
+	}
+
+	public Map<String, Object> parseStructuredData( 
+			String termDelimiter, String valueDelimiter, String structuredData ){
+		
+		Map<String, Object> valueMap = new HashMap<String, Object>();
+		
+		String[] lines = structuredData.split(termDelimiter);
+		for( int i=0; i<lines.length; i++ ) {
+			String line = lines[i].trim();
+			
+			if(! line.isEmpty() ) {
+				String[] tokens = line.split(valueDelimiter);
+				List<String> tokenList = Arrays.asList( tokens );
+				tokens = Arrays.stream(tokens).filter(token -> token.isEmpty() ).toArray(String[]::new);
+				System.out.println();
+				valueMap.put( tokens[0].trim(), tokens[2].trim() );
+			}
+		}
+		
+		return valueMap;
 	}
 	
 	public SearchContainerResults<AssetEntry> getSearchContainerResults(

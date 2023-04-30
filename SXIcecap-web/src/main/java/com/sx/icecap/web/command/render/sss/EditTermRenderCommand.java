@@ -52,7 +52,7 @@ public class EditTermRenderCommand implements MVCRenderCommand {
 		
 //		Debug.printAllParameters(renderRequest);
 		
-		return IcecapJsps.ADMIN_EDIT_TERM_JSP;
+		return IcecapJsps.TERM_EDIT;
 	}
 	
 	@Reference

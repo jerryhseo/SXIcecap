@@ -49,6 +49,6 @@ public class TermViewRenderCommand implements MVCRenderCommand {
 		renderRequest.setAttribute("term", term);
 		renderRequest.setAttribute("termHistory", history);
 		
-		return IcecapJsps.ADMIN_VIEW_TERM_JSP;
+		return IcecapJsps.TERM_FULL_CONTENT;
 	}
 }

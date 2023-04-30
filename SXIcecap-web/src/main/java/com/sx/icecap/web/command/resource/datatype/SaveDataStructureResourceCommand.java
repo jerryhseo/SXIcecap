@@ -8,15 +8,16 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
+import com.sx.icecap.exception.NoSuchTermException;
 import com.sx.icecap.service.DataTypeLocalService;
-import com.sx.icecap.search.datatype.DataTypeSearchRegistrar;
 import com.sx.icecap.model.Term;
 import com.sx.icecap.service.TermLocalService;
 
@@ -26,7 +27,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -51,7 +51,7 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		String dataStructure = ParamUtil.getString(resourceRequest, "dataStructure");
 		
 //		System.out.println("dataTypeId: " + dataTypeId);
-		System.out.println( "+++++ Data Structure Length: " + dataStructure.length() );
+		System.out.println( "+++++ Data Structure Length: \n" + dataStructure );
 		
 		JSONObject jsonDataStructure = JSONFactoryUtil.createJSONObject(dataStructure);
 
@@ -68,6 +68,13 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		
 		for( int i=0; i<terms.length(); i++ ) {
 			JSONObject term = terms.getJSONObject(i);
+			if( Validator.isNull(term) ) {
+				System.out.println("What happen to the term? : " + i );
+			}
+			System.out.println( "Dirty: " + term.getBoolean("dirty") );
+			if( ! term.getBoolean("dirty") ) {
+				continue;
+			}
 			
 			String termType = term.getString("termType");
 			String termName = term.getString("termName");
@@ -76,11 +83,11 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 				termVersion = "1.0.0";
 			}
 			
-			Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
-			
-			Map<Locale, String> displayNameMap = _jsonObject2Map( term.getJSONObject("displayName") );
-			Map<Locale, String> definitionMap = _jsonObject2Map( term.getJSONObject("definition") );
-			Map<Locale, String> tooltipMap = _jsonObject2Map( term.getJSONObject("tooltip") );
+			Map<Locale, String> displayNameMap = _jsonObject2LocaleMap( term.getJSONObject("displayName") );
+			JSONObject jsonDefinition = term.getJSONObject("definition");
+			Map<Locale, String> definitionMap = Validator.isNotNull(jsonDefinition) ? _jsonObject2LocaleMap( jsonDefinition ) : null;
+			JSONObject jsonTooltip = term.getJSONObject("tooltip");
+			Map<Locale, String> tooltipMap = Validator.isNotNull(jsonDefinition) ? _jsonObject2LocaleMap( jsonTooltip) : null ;
 			
 			String synonyms = term.getString("synonyms");
 			boolean mandatory = term.getBoolean("mandatory");
@@ -97,9 +104,21 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			
 			boolean standard = term.getBoolean(IcecapSSSTermAttributes.STANDARD);
 			
+			boolean dirty = term.getBoolean("dirty");
+			
 			_printOutTermAttributes(termType, termName, termVersion, displayNameMap, definitionMap, tooltipMap, synonyms, mandatory, value, typeAttributes, groupTermId, status);
 			
-			_termLocalService.addTerm(
+/*	 Temporarily Block out to dis-connect SSS
+			Term existTerm = null;
+			try{
+				existTerm = _termLocalService.getTerm(termName, termVersion);
+			} catch( NoSuchTermException e ) {
+				System.out.println("There is no saved term  to be added in DB...");
+			}
+
+			if( Validator.isNotNull(existTerm) && dirty == true ) {
+				_termLocalService.updateTerm(
+						existTerm.getTermId(),
 						termName, 
 						termVersion, 
 						termType, 
@@ -112,7 +131,23 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 						status,
 						standard,
 						sc);
-					
+			}
+			else if( Validator.isNull(existTerm) ){
+				_termLocalService.addTerm(
+						termName, 
+						termVersion, 
+						termType, 
+						displayNameMap, 
+						definitionMap, 
+						tooltipMap, 
+						synonyms, 
+						typeAttributes, 
+						groupTermId, 
+						status,
+						standard,
+						sc);
+			}
+ */
 		}
 		
 		_dataTypeLocalService.setDataTypeStructure(dataTypeId, dataStructure);
@@ -135,8 +170,12 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		System.out.println("******** " + termName + " v. " + termVersion + " *******");
 		System.out.println("Type: " + termType );
 		System.out.println("DisplayName: " + displayNameMap.toString() );
-		System.out.println("Definition: " + definitionMap.toString() );
-		System.out.println("Tooltip: " + tooltipMap.toString() );
+		displayNameMap.forEach((locale, val)->{ System.out.println(locale.toString() + ", " +val); }) ;
+		
+		String defStr = Validator.isNotNull( definitionMap ) ? definitionMap.toString()  : "";
+		System.out.println( "Definition: " + defStr ); 
+		String tipStr = Validator.isNotNull( tooltipMap ) ? tooltipMap.toString()  : "";
+		System.out.println("Tooltip: " + tipStr );
 		System.out.println("Synonyms: " + synonyms );
 		System.out.println("Mandatory: " + mandatory );
 		System.out.println("Value: " + value );
@@ -257,14 +296,17 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		return json.toJSONString();
 	}
 	
-	private Map<Locale, String> _jsonObject2Map( JSONObject jsonObj ){
+	private Map<Locale, String> _jsonObject2LocaleMap( JSONObject jsonObj ){
 		Map<Locale, String> map = new HashMap<Locale, String>();
+		if( Validator.isNull(jsonObj) ) {
+			return map;
+		}
+		
 		Iterator<String> keyIterator = jsonObj.keys();
 		System.out.println("_jsonObject2Map: "+jsonObj.length());
 		while( keyIterator.hasNext() ) {
 			String key = keyIterator.next();
-			String[] langCode = key.split("_");
-			map.put(new Locale(langCode[0], langCode[1]), jsonObj.getString(key));
+			map.put(LocaleUtil.fromLanguageId(key), jsonObj.getString(key));
 		}
 
 		return map;

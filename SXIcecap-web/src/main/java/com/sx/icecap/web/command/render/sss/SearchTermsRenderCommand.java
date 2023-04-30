@@ -57,7 +57,7 @@ public class SearchTermsRenderCommand implements MVCRenderCommand {
 				termAdminManagementToolbarDisplayContext );
 		*/
 		Debug.printFooter("SearchTermsRenderCommand");
-		return IcecapJsps.ADMIN_TERM_LIST_JSP;
+		return IcecapJsps.TERM_LIST;
 	}
 
 	@Reference(unbind = "-")

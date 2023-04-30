@@ -322,6 +322,16 @@ public class TermLocalServiceImpl extends TermLocalServiceBaseImpl {
 		}
 	}
 	
+	public long getTermId( String termName, String termVersion ) throws NoSuchTermException{
+		Term term = super.termPersistence.findByNameVersion(termName, termVersion);
+		
+		return term.getPrimaryKey();
+	}
+	
+	public Term getTerm( String termName, String termVersion ) throws NoSuchTermException{
+		return super.termPersistence.findByNameVersion(termName, termVersion);
+	}
+	
 	public List<Term> getAllTerms(){
 		return super.termPersistence.findAll();
 	}
@@ -389,12 +399,6 @@ public class TermLocalServiceImpl extends TermLocalServiceBaseImpl {
 
 	public List<Term> getTermsByName( String termName ){
 		return super.termPersistence.findByName(termName);
-	}
-	
-	public long getTermIdByNameVersion( String termName, String termVersion ) throws NoSuchTermException{
-		Term term = super.termPersistence.findByNameVersion(termName, termVersion);
-		
-		return term.getPrimaryKey();
 	}
 	
 	public List<Term> getTermsByG_S( long groupId, int status ){

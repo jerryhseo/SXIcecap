@@ -1,4 +1,12 @@
 
+<%@page import="com.sx.constant.StationXPropertyKeys"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.portal.kernel.security.auth.AuthTokenUtil"%>
+<%@page import="com.sx.util.SXPortalUtil"%>
+<%@page import="javax.portlet.PortletRequest"%>
+<%@page import="com.liferay.portal.kernel.service.LayoutLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.model.Layout"%>
+<%@page import="com.sx.icecap.constant.IcecapWebPortletKeys"%>
 <%@page import="com.sx.constant.StationXConstants"%>
 <%@page import="com.liferay.portal.kernel.util.DateUtil"%>
 <%@page import="com.sx.icecap.web.taglib.clay.datatype.DataTypeVerticalCard"%>
@@ -21,7 +29,14 @@
 							renderRequest, 
 							StationXWebKeys.DISPLAY_STYLE, 
 							StationXConstants.VIEW_TYPE_TABLE);
+	
+	Layout layoutStructuredDataListView = LayoutLocalServiceUtil.getFriendlyURLLayout(
+							themeDisplay.getSiteGroupId(), false, "/structured-data");
+	
+	PortletRequest portletRequest = (PortletRequest)renderRequest.getAttribute("javax.portlet.request");
+	
 %>
+
 
 <portlet:renderURL var="createDataTypeURL">
     <portlet:param 
@@ -72,14 +87,24 @@
 					<%
 						Map<String, Object> rowData = new HashMap<>();
 
-								row.setData(rowData);
+						row.setData(rowData);
 
-								PortletURL rowURL = renderResponse.createRenderURL();
+						PortletURL rowURL = renderResponse.createRenderURL();
 
-								rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_FULL_CONTENT);
-								rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
-								rowURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataType.getDataTypeId()));
+						rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_FULL_CONTENT);
+						rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
+						rowURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataType.getDataTypeId()));
+								
 					%>
+					
+					<liferay-portlet:renderURL 
+									plid="<%= layoutStructuredDataListView.getPlid() %>"
+									portletName="<%= IcecapWebPortletKeys.STRUCTURED_DATA %>"
+									varImpl="sdlViewURL">
+						<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>" />
+						<portlet:param name="mvcRenderCommandName" value="<%= IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST %>" />
+					</liferay-portlet:renderURL>
+					
 					<c:choose>
 						<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_CARDS) %>">
 							<%
@@ -92,7 +117,7 @@
 										renderResponse, 
 										rowChecker, 
 										rowURL.toString(),
-										dataTypeManagementToolbarDisplayContext.getDataTypeActionDropdownItems(dataType.getDataTypeId()));
+										dataTypeManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, dataType.getDataTypeId(), sdlViewURL.toString()));
 							%>
 							<liferay-ui:search-container-column-text>
 								<clay:vertical-card
@@ -102,11 +127,11 @@
 						</c:when>
 						<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_LIST) %>">
 							<liferay-ui:search-container-column-text href="<%=rowURL.toString() %>" >
-								<h5 class=â€œtext-defaultâ€><%= dataType.getDisplayName(locale) %></h5>
+								<h5 class="text-default"€><%= dataType.getDisplayName(locale) %></h5>
 								<h5><%= dataType.getDataTypeVersion() %></h5>
 							</liferay-ui:search-container-column-text>
 							<liferay-ui:search-container-column-text  colspan="3" >
-	  							<h6 class=â€œtext-defaultâ€>
+	  							<h6 class="text-default"€>
 	    							<%= dataType.getDataTypeName() %>
 	  							</h6>
 	  							<h6>
@@ -114,8 +139,9 @@
 	  							</h6>
 							</liferay-ui:search-container-column-text>
 							<liferay-ui:search-container-column-text>
+								
 								<clay:dropdown-actions
-									dropdownItems="<%= dataTypeManagementToolbarDisplayContext.getDataTypeActionDropdownItems(dataType.getDataTypeId()) %>"
+									dropdownItems="<%= dataTypeManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, dataType.getDataTypeId(), sdlViewURL.toString()) %>"
 								/>
 							</liferay-ui:search-container-column-text>
 						</c:when>
@@ -148,7 +174,7 @@
 			
 							<liferay-ui:search-container-column-text name="actions">
 								<clay:dropdown-actions
-									dropdownItems="<%= dataTypeManagementToolbarDisplayContext.getDataTypeActionDropdownItems(dataType.getDataTypeId()) %>"
+									dropdownItems="<%= dataTypeManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, dataType.getDataTypeId(), sdlViewURL.toString()) %>"
 								/>
 							</liferay-ui:search-container-column-text>
 						</c:otherwise>
@@ -172,7 +198,7 @@
 </div>
 
 <script type="text/javascript">
-Liferay.componentReady('dataTypeManagementToolbar').then(function(
+Liferay.componentReady('<%= IcecapConstants.DATATYPE_MANAGEMENT_TOOLBAR_COMPONENT_ID %>').then(function(
 		managementToolbar
 	) {
 

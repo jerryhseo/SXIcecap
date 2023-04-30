@@ -22,8 +22,6 @@
 	}
 	boolean isUpdate = !isAdd;
 	
-	Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
-	Locale defaultLocale = PortalUtil.getSiteDefaultLocale(themeDisplay.getSiteGroupId());
 %>
 
 <portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATATYPE_ADD %>" var="addActionURL">

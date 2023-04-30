@@ -216,6 +216,28 @@
 			</aui:fieldset>
 		</aui:fieldset-group> 
 	</div>
+	
+	<!-- 
+	<div id="<portlet:namespace/>fileAttributes" class="type-specific-attrs hide">
+		<aui:container>
+			<aui:row>
+				<aui:col>
+					<aui:select id="<portlet:namespace/>urlType" name="<portlet:namespace/>urlType">
+						<aui:option label="path" value="path"></aui:option>
+						<aui:option label="url" value="url"></aui:option>
+						<aui:option label="doi" value="doi"></aui:option>
+					</aui:select>
+				</aui:col>
+			</aui:row>
+			<aui:row>
+				<aui:col md="6">
+					<aui:button id="chooseDataType" 	value="datatype"></aui:button>
+				</aui:col>
+			</aui:row>
+		</aui:container>
+	</div>
+	 -->
+	
 	<div id="<portlet:namespace/>groupAttributes" class="type-specific-attrs hide">
 		<aui:button-row>
 			<aui:button id="btnChooseGroupTerms" value="choose-group-terms"/>

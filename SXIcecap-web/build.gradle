@@ -27,6 +27,8 @@ dependencies {
 	
 	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"
 	
+	compile project(":modules:StationX:StationX-api")
+	
 	compile project(":modules:SXIcecap:SXIcecap-api")
 	compile project(":modules:SXIcecap:SXIcecap-service")
 	compile project(":modules:StationXPanelCategories")

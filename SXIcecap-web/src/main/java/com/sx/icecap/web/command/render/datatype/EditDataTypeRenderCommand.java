@@ -3,6 +3,7 @@ package com.sx.icecap.web.command.render.datatype;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.sx.icecap.constant.IcecapConstants;
+import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
@@ -42,7 +43,7 @@ public class EditDataTypeRenderCommand implements MVCRenderCommand {
 			renderRequest.setAttribute(StationXWebKeys.DATATYPE, dataType);
 		}
 		
-		return IcecapConstants.JSP_DATATYPE_EDIT;
+		return IcecapJsps.DATATYPE_EDIT;
 	}
 
 	

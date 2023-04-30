@@ -16,6 +16,7 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 			<supports>
 				<action-key>ADD_TERM</action-key>
 				<action-key>ADD_DATATYPE</action-key>
+				<action-key>ADD_STRUCTURED_DATA</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>SUBSCRIBE</action-key>
 				<action-key>VIEW</action-key>
@@ -23,6 +24,7 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 			<site-member-defaults>
 				<action-key>ADD_TERM</action-key>
 				<action-key>ADD_DATATYPE</action-key>
+				<action-key>ADD_STRUCTURED_DATA</action-key>
 				<action-key>VIEW</action-key>
 				<action-key>SUBSCRIBE</action-key>
 			</site-member-defaults>
@@ -32,6 +34,7 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 			<guest-unsupported>
 				<action-key>ADD_TERM</action-key>
 				<action-key>ADD_DATATYPE</action-key>
+				<action-key>ADD_STRUCTURED_DATA</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>SUBSCRIBE</action-key>
 			</guest-unsupported>

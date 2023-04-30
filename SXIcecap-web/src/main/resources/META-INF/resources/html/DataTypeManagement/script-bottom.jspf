@@ -29,16 +29,17 @@ $(document).ready(function(){
 	****************************************************************/
 	let setCurrentTerm = function( term ){
 		currentTerm = term;
+		console.log( 'Current Term: ', term );
 		dataStructure.replaceVisibleTypeSpecificSection( currentTerm.termType );
 		currentTerm.setAllFormValues();
 		
 		if( currentTerm.isRendered() ){
 			dataStructure.disable(['btnAdd', 'btnClear', 'termType'], true);
-			dataStructure.disable(['btnUp', 'btnDown', 'btnNewTerm'], false);
+			dataStructure.disable(['btnUp', 'btnDown'], false);
 		}
 		else{
 			dataStructure.disable(['btnAdd', 'btnClear', 'termType'], false);
-			dataStructure.disable(['btnUp', 'btnDown', 'btnNewTerm'], true);
+			dataStructure.disable(['btnUp', 'btnDown'], true);
 		}
 		
 		if( currentTerm.isGroupTerm() ){
@@ -48,20 +49,31 @@ $(document).ready(function(){
 			dataStructure.disable(['mandatory'], false);
 		}
 		
+		console.log( 'Current term rendered: ' + currentTerm.isRendered() );
+		if( currentTerm.isRendered() ){
+			dataStructure.highlightTerm( currentTerm );
+		}
 	};
 	
 	
 	// SX.DataStructure.FORM_RENDER_URL =  '<%= renderTermResourceCommandURL.toString() %>';
 	
 	let dataStructure;
-	let jsonDataStructure = JSON.parse('<%= (dataStructure == null) ? "{}" : dataStructure.toJSONString() %>');
+	let jsonDataStructure = JSON.parse('<%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>');
 	
 	let currentTerm = null;
 	if( SX.Util.isEmptyObject(jsonDataStructure) ){
-		dataStructure =  SX.newDataStructure();
+		dataStructure =  SX.newDataStructure(
+												new Object(), 
+												SX.SXConstants.FOR_PREVIEW, 
+												$('#<portlet:namespace/>previewPanel'));
+		setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
 	}
 	else{
-		dataStructure =  SX.newDataStructure( jsonDataStructure );
+		dataStructure =  SX.newDataStructure( 
+												jsonDataStructure,
+												SX.SXConstants.FOR_PREVIEW, 
+												$('#<portlet:namespace/>previewPanel'));
 		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 		
 		setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
@@ -69,9 +81,6 @@ $(document).ready(function(){
 	}
 	
 	console.log('Data Structure: ', dataStructure);
-	
-	
-	setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>termType').val() ) );
 	
 	/**************************************************************
 	* Change Event handlers for form controls 
@@ -118,6 +127,7 @@ $(document).ready(function(){
 		}
 		else{
 			setCurrentTerm( dataStructure.createTerm( selectedTermType ) );
+			currentTerm.setDirty( true );
 		}
 	});
 	
@@ -143,7 +153,7 @@ $(document).ready(function(){
 							else{
 								if( currentTerm.validateNameExpression( changedName ) === true ){
 									currentTerm.termName = changedName;
-									
+									currentTerm.setDirty( true );
 									dataStructure.refreshTerm( currentTerm );
 								}
 								else{
@@ -178,6 +188,8 @@ $(document).ready(function(){
 		
 		if( validated === true ){
 			currentTerm.termVersion = changedVersion;
+			currentTerm.setDirty( true );
+			
 		}
 		else{
 			$.alert( changedVersion + ' ' + validated );
@@ -187,47 +199,54 @@ $(document).ready(function(){
 
 	SX.Term.$TERM_DISPLAY_NAME_FORM_CTRL.change(function(eventObj){
 		currentTerm.getDisplayNameFormValue(true);
-	
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>termDefinition').change(function(eventObj){
 		currentTerm.getDefinitionFormValue(true);
+		currentTerm.setDirty( true );
 	});
 
 	$('#<portlet:namespace/>termTooltip').change(function(eventObj){
 		currentTerm.getTooltipFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>placeHolder').change(function(eventObj){
 		currentTerm.getPlaceHolderFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>synonyms').change(function(eventObj){
 		currentTerm.getSynonymsFormValue(true);
+		currentTerm.setDirty( true );
 	});
 	
 	$('#<portlet:namespace/>mandatory').change(function(eventObj){
 		currentTerm.getMandatoryFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>value').change(function(eventObj){
 		currentTerm.getValueFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>minLength').change(function(eventObj){
 		const changedValue = Number( currentTerm.getMinLengthFormValue() );
-		console.log( 'Changed number: '+changedValue );
+		
 		if( isNaN( changedValue ) || changedValue <= 0){
 			$.alert('Minimum length should be an interger larger than 0.');
 			currentTerm.setMinLengthFormValue()
 		}
 		else{
 			currentTerm.minLength = changedValue;
+			currentTerm.setDirty( true );
 			dataStructure.refreshTerm( currentTerm );
 		}
 	});
@@ -241,23 +260,27 @@ $(document).ready(function(){
 		}
 		else{
 			currentTerm.getMaxLengthFormValue(true);
+			currentTerm.setDirty( true );
 			dataStructure.refreshTerm( currentTerm );
 		}
 	});
 
 	$('#<portlet:namespace/>multipleLine').change(function(eventObj){
 		currentTerm.getMultipleLineFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>validationRule').change(function(eventObj){
 		currentTerm.getValidationRuleFormValue(true);
+		currentTerm.setDirty( true );
 	});
 	
 	$('#<portlet:namespace/>minValue').change(function(eventObj){
 		const preValue = currentTerm.minValue;
 	
 		currentTerm.getMinValueFormValue(true);
+		currentTerm.setDirty( true );
 		
 		if( !currentTerm.minValue ){
 			currentTerm.setMinBoundaryFormValue();
@@ -276,6 +299,7 @@ $(document).ready(function(){
 
 	$('#<portlet:namespace/>minBoundary').change(function(eventObj){
 		currentTerm.getMinBoundaryFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
@@ -283,6 +307,7 @@ $(document).ready(function(){
 		const preValue = currentTerm.maxValue;
 		
 		currentTerm.getMaxValueFormValue(true);
+		currentTerm.setDirty( true );
 		
 		if( !currentTerm.maxValue ){
 			currentTerm.setMaxBoundaryFormValue();
@@ -301,25 +326,30 @@ $(document).ready(function(){
 
 	$('#<portlet:namespace/>maxBoundary').change(function(eventObj){
 		currentTerm.getMaxBoundaryFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>unit').change(function(eventObj){
 		currentTerm.getUnitFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>uncertainty').change(function(eventObj){
 		currentTerm.getUncertaintyFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>sweepable').change(function(eventObj){
 		currentTerm.getSweepableFormValue(true);
+		currentTerm.setDirty( true );
 	});
 	
 	$('input[name="<portlet:namespace/>listDisplayStyle"]').change(function(eventObj){
 		currentTerm.getDisplayStyleFormValue(true);
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
@@ -335,6 +365,7 @@ $(document).ready(function(){
 		
 		currentTerm.setOptionLabelMap( labelMap );
 		
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
@@ -350,6 +381,7 @@ $(document).ready(function(){
 		
 		currentTerm.setOptionValue( value );
 		
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
@@ -357,7 +389,7 @@ $(document).ready(function(){
 		let value = currentTerm.getOptionSelectedFormValue();
 		
 		currentTerm.setOptionSelected( value );
-		
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
@@ -365,13 +397,13 @@ $(document).ready(function(){
 		let activeTermNames = currentTerm.getActiveTermsFormValue();
 		
 		currentTerm.setActiveTerms( activeTermNames );
-		
+		currentTerm.setDirty( true );
 		console.log('active terms: ', activeTermNames);
 	});
 	
 	$('input[name="<portlet:namespace/>booleanDisplayStyle"]').change(function(event){
 		console.log( 'Boolean display style changed: ', currentTerm.getDisplayStyleFormValue( true ) );
-		
+		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 
@@ -394,17 +426,15 @@ $(document).ready(function(){
 	
 	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
 		let eventData = event.sxeventData;
-		console.log('DATATYPE_PREVIEW_TERM_SELECTED', eventData);
+		console.log('DATATYPE_PREVIEW_TERM_SELECTED', eventData, currentTerm);
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		if( currentTerm === eventData.term ){
+			console.log( 'Return by different portlet!!!' );
 			return;
 		}
 		
 		setCurrentTerm( eventData.term );
 		dataStructure.highlightTerm( currentTerm );
+		console.log( 'Selected current term: ', currentTerm );
 	});
 
 	
@@ -489,16 +519,6 @@ $(document).ready(function(){
 		}
 	});
 	
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_UNCERTAINTY_CHANGED, function( event ){
-		let eventData = event.sxeventData;
-		console.log( 'SX.SXIcecapEvents.DATATYPE_SDE_UNCERTAINTY_CHANGED received...', eventData);
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-	});
-	
-
 	/*******************************************************************************
 	* Event handlers for buttons
 	*******************************************************************************/
@@ -532,7 +552,7 @@ $(document).ready(function(){
 
 	$('#<portlet:namespace/>btnCopyTerm').click(function(){
 		// setCurrentTerm( dataStructure.copyTerm( currentTerm ) );
-		dataStructure.addTestSet( SX.SXConstants.FOR_PREVIEW );
+		dataStructure.addTestSet( SX.SXConstants.FOR_PREVIEW, $('#<portlet:namespace/>previewPanel') );
 	});
 	
 	$('#<portlet:namespace/>btnClear').click(function(){
@@ -622,27 +642,7 @@ $(document).ready(function(){
 	});
 	
 	$('#<portlet:namespace/>btnAdd').click(function(){
-		/*
-		$.ajax({
-			url: '<%= renderTermResourceCommandURL.toString() %>',
-			method: 'post',
-			dataType: 'text',
-			data: {
-				<portlet:namespace/>termType: currentTerm.termType,
-				<portlet:namespace/>mandatory: currentTerm.mandatory,
-				<portlet:namespace/>displayName: currentTerm.displayName.localizedMap['<%= locale.toString() %>'],
-				<portlet:namespace/>tooltip: currentTerm.tooltip.localizedMap['<%= locale.toString() %>']
-			},
-			success: function( result ){
-				console.log( result );
-			},
-			error: function(){
-				console.log('error');
-			}
-		});
-		*/
-		
-		if( dataStructure.addTerm( currentTerm,  SX.SXConstants.FOR_PREVIEW, true ) ){
+		if( dataStructure.addTerm( currentTerm,  0,  SX.SXConstants.FOR_PREVIEW, true ) ){
 			dataStructure.disable(['add', 'btnClear', 'termType'], true);
 			/*
 			$('#<portlet:namespace/>add').prop('disabled', true);
@@ -650,7 +650,7 @@ $(document).ready(function(){
 			*/
 		}
 		
-		console.log('currentTerm: ' + JSON.stringify( currentTerm, null, 4 ), currentTerm );
+		console.log('currentTerm: ',  currentTerm, dataStructure.terms );
 	});
 	
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
@@ -688,6 +688,7 @@ $(document).ready(function(){
 			},
 			success: function( result ){
 				console.log( result );
+				dataStructure.clearTermsDirty();
 			},
 			error: function(){
 				console.log('error');

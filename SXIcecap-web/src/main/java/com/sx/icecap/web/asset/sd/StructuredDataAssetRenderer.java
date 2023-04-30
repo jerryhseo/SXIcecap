@@ -14,6 +14,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.sx.icecap.constant.IcecapConstants;
+import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
@@ -92,7 +93,7 @@ public class StructuredDataAssetRenderer extends BaseJSPAssetRenderer<Structured
 			
 			httpServletRequest.setAttribute(StationXWebKeys.DATATYPE, _structuredData);
 			
-			return IcecapConstants.DATATYPE_MANAGEMENT_JSP_ROOT + "/" + template + ".jsp";
+			return IcecapJsps.STRUCTURED_DATA_TERMPLATE_PATH + template + ".jsp";
 		}
 		return null;
 	}

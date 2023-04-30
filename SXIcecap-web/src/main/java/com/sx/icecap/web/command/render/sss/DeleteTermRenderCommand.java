@@ -29,7 +29,7 @@ public class DeleteTermRenderCommand implements MVCRenderCommand {
 		
 		System.out.println("DELETE RENDER COMMAND");
 		
-		return IcecapJsps.ADMIN_TERM_LIST_JSP;
+		return IcecapJsps.TERM_LIST;
 	}
 	
 	@Reference

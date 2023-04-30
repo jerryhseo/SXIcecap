@@ -49,7 +49,7 @@
 
 <portlet:renderURL var="searchViewURL">
     <portlet:param name="mvcPath" 
-    value="<%=IcecapJsps.ADMIN_VIEW_SEARCH_TERMS_JSP%>" />
+    value="<%= IcecapJsps.TERM_SEARCH_VIEW %>" />
 </portlet:renderURL>
 
 <portlet:renderURL var="searchTermsURL">

@@ -394,6 +394,13 @@ public class TermLocalServiceWrapper
 		return _termLocalService.getTerm(termId);
 	}
 
+	@Override
+	public com.sx.icecap.model.Term getTerm(String termName, String termVersion)
+		throws com.sx.icecap.exception.NoSuchTermException {
+
+		return _termLocalService.getTerm(termName, termVersion);
+	}
+
 	/**
 	 * Returns the term matching the UUID and group.
 	 *
@@ -411,10 +418,10 @@ public class TermLocalServiceWrapper
 	}
 
 	@Override
-	public long getTermIdByNameVersion(String termName, String termVersion)
+	public long getTermId(String termName, String termVersion)
 		throws com.sx.icecap.exception.NoSuchTermException {
 
-		return _termLocalService.getTermIdByNameVersion(termName, termVersion);
+		return _termLocalService.getTermId(termName, termVersion);
 	}
 
 	/**

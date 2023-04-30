@@ -25,6 +25,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -38,6 +40,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import com.sx.icecap.exception.NoSuchDataTypeException;
 import com.sx.icecap.model.DataType;
+import com.sx.icecap.model.StructuredData;
 
 import java.io.Serializable;
 
@@ -90,6 +93,11 @@ public interface DataTypeLocalService
 			Map<Locale, String> displayNameMap,
 			Map<Locale, String> descriptionMap, Map<Locale, String> tooltipMap,
 			int status, ServiceContext sc)
+		throws PortalException;
+
+	public StructuredData addStructuredData(
+			long dataSetId, long dataTypeId, String data, int status,
+			ServiceContext sc)
 		throws PortalException;
 
 	public int countAllDataTypes();
@@ -402,6 +410,10 @@ public interface DataTypeLocalService
 	public String getDataTypeStructure(long dataTypeId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getDataTypeStructureJSONObject(long dataTypeId)
+		throws JSONException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
 		PortletDataContext portletDataContext);
 
@@ -436,12 +448,36 @@ public interface DataTypeLocalService
 			SearchContainer<DataType> searchContainer)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StructuredData getStructuredData(long structuredDataId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatas(long dataTypeId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StructuredData> getStructuredDatas(
+		long dataTypeId, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getStructuredDataWithValues(
+			long dataTypeId, long structuredDataId)
+		throws JSONException;
+
+	public Map<String, Object> parseStructuredData(
+		String termDelimiter, String valueDelimiter, String structuredData);
+
 	@Indexable(type = IndexableType.DELETE)
 	public DataType removeDataType(long dataTypeId) throws PortalException;
 
 	public void removeDataTypes(long[] dataTypeIds) throws PortalException;
 
 	public void removeDataTypeStructure(long dataTypeId);
+
+	public StructuredData removeStructuredData(long structuredDataId)
+		throws PortalException;
+
+	public void removeStructuredDatas(long[] structuredDataIds)
+		throws PortalException;
 
 	/**
 	 * Set the data structure for the dataType specified by dataTypeId.
@@ -480,6 +516,16 @@ public interface DataTypeLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public DataType updateStatus(
 			long userId, long dataTypeId, Integer status, ServiceContext sc)
+		throws PortalException, SystemException;
+
+	public StructuredData updateStructuredData(
+			long structuredDataId, long dataSetId, long dataTypeId, String data,
+			int status, ServiceContext sc)
+		throws PortalException;
+
+	public StructuredData updateStructuredDataStatus(
+			long userId, long structuredDataId, Integer status,
+			ServiceContext sc)
 		throws PortalException, SystemException;
 
 }

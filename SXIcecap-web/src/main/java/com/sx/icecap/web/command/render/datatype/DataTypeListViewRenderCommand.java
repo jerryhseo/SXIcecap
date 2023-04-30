@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.web.display.context.datatype.DataTypeManagementToolbarDisplayContext;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
+import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXConstants;
@@ -110,7 +111,7 @@ public class DataTypeListViewRenderCommand implements MVCRenderCommand {
 				DataTypeManagementToolbarDisplayContext.class.getName(), 
 				dataTypeManagementToolbarDisplayContext );
 		
-		return IcecapConstants.JSP_DATATYPE_LIST_VIEW;
+		return IcecapJsps.DATATYPE_LIST;
 	}
 
 	private SearchContainer<DataType> _createSearchContainer(

@@ -30,7 +30,6 @@ import com.sx.icecap.web.security.permission.resource.datatype.DataTypeResourceP
 import com.sx.icecap.web.taglib.clay.datatype.DataTypeVerticalCard;
 import com.sx.icecap.constant.IcecapActionKeys;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
-import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
@@ -45,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -345,8 +345,10 @@ public class DataTypeManagementToolbarDisplayContext
 		return actionURL.toString();
 	}
 	
-	public List<DropdownItem> getDataTypeActionDropdownItems( long dataTypeId ){
-//		Debug.printHeader("DataTypeManagementToolbarDisplayContext.getDataTypeActionDropdownItems()");
+	public List<DropdownItem> getItemActionDropdownItems( PortletRequest portletRequest, long dataTypeId, String url ){
+//		Debug.printHeader("DataTypeManagementToolbarDisplayContext.getItemActionDropdownItems()");
+		long plid = super.liferayPortletRequest.getPlid();
+		
 		List<DropdownItem> itemList = 
 				new DropdownItemList() {
 					{
@@ -358,7 +360,6 @@ public class DataTypeManagementToolbarDisplayContext
 										Constants.CMD, Constants.UPDATE,
 										StationXWebKeys.REDIRECT, _getRedirectURL(), 
 										StationXWebKeys.DATATYPE_ID, dataTypeId);
-
 									dropdownItem.setIcon("edit");
 									dropdownItem.setLabel(LanguageUtil.get(_locale, "edit"));
 							});
@@ -367,11 +368,10 @@ public class DataTypeManagementToolbarDisplayContext
 						if (_hasDeletePermission( dataTypeId )) {
 							PortletURL deleteURL = liferayPortletResponse.createActionURL();
 							
-							long[] dataTypeIds = { dataTypeId};
 							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_DATATYPE_DELETE);
 							deleteURL.setParameter(Constants.CMD, Constants.DELETE);
 							deleteURL.setParameter(StationXWebKeys.REDIRECT, _getRedirectURL());
-							deleteURL.setParameter(StationXWebKeys.DATATYPE_IDS, Arrays.toString(dataTypeIds) );
+							deleteURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataTypeId) );
 							
 							add( dropdownItem -> {
 								dropdownItem.setHref(deleteURL);
@@ -380,23 +380,22 @@ public class DataTypeManagementToolbarDisplayContext
 									LanguageUtil.get(request, "delete"));
 							});		
 						}
-
 						{
 							add(dropdownItem -> {
-								dropdownItem.setHref(
-										getPortletURL(), 
-										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_LIST, 
-										StationXWebKeys.REDIRECT, _getRedirectURL(), 
-										StationXWebKeys.DATATYPE_ID, dataTypeId);
-
-									dropdownItem.setIcon("view");
-									dropdownItem.setLabel(LanguageUtil.get(_locale, "view-data-list"));
+								PortletURL actionURL = liferayPortletResponse.createActionURL();
+								actionURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_DATATYPE_REDIRECT_TO_SD_LIST);
+								actionURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataTypeId));
+								actionURL.setParameter(StationXWebKeys.BACK_URL, _themeDisplay.getURLCurrent());
+								
+								dropdownItem.setHref(actionURL);
+								dropdownItem.setIcon("view");
+								dropdownItem.setLabel(LanguageUtil.get(_locale, "view-data-list"));
 							});	
 						}
 					}
 				};
 				
-//		Debug.printFooter("DataTypeManagementToolbarDisplayContext.getDataTypeActionDropdownItems()");
+//		Debug.printFooter("DataTypeManagementToolbarDisplayContext.getItemActionDropdownItems()");
 		return itemList;
 	}
 
@@ -438,13 +437,14 @@ public class DataTypeManagementToolbarDisplayContext
 			RowChecker rowChecker,
 			String dataTypeViewURL) {
 		
+		PortletRequest portletRequest = (PortletRequest)renderRequest.getAttribute("javax.portlet.request");
 		return new DataTypeVerticalCard(
 				dataType, 
 				renderRequest, 
 				renderResponse, 
 				rowChecker, 
 				dataTypeViewURL, 
-				getDataTypeActionDropdownItems(dataType.getDataTypeId()));
+				getItemActionDropdownItems(portletRequest, dataType.getDataTypeId(), ""));
 	}
 
 	private boolean _hasDeletePermission( long dataTypeId ) {
@@ -478,11 +478,6 @@ public class DataTypeManagementToolbarDisplayContext
 		PortletURL redirectURL = getPortletURL();
 
 		return redirectURL.toString();
-	}
-
-	@Override
-	public int getItemsTotal() {
-		return searchContainer.getTotal();
 	}
 
 	@Override

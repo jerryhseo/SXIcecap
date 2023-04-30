@@ -36,7 +36,9 @@ public class IcecapMVCCommands {
 	public static final String ACTION_DATATYPE_UPDATE_AND_DEFINE_STRUCTURE = "/html/DataTypeManagement/update-and-define-structure";
 	public static final String ACTION_DATATYPE_DELETE = "/html/DataTypeManagement/delete-datatype";
 	public static final String ACTION_DATATYPE_PUBLISH = "/html/DataTypeManagement/publish-datatype";
+	public static final String ACTION_DATATYPE_REDIRECT_TO_SD_LIST = "/html/DataTypeManagement/redirect-to-sd-list";
 	public static final String ACTION_BULK = "/html/DataTypeManagement/bulk-actions";
+	public static final String ACTION_DATA_STRUCTURE_DELETE = "/html/DataTypeManagement/delete-data-structure";
 
 	public static final String RESOURCE_DATATYPE_RENDER_TERM = "/html/DataTypeManagement/render-term";
 	public static final String RESOURCE_DATATYPE_RENDER_DATATYPE = "/html/DataTypeManagement/render-datatype";
@@ -46,11 +48,18 @@ public class IcecapMVCCommands {
 	public static final String RENDER_STRUCTURED_DATA_LIST = "/html/StructuredData/structured-data-list";
 	public static final String RENDER_STRUCTURED_DATA_EDIT = "/html/StructuredData/edit-structured-data";
 	public static final String RENDER_STRUCTURED_DATA_VIEW = "/html/StructuredData/view-structured-data";
+	public static final String RENDER_STRUCTURED_DATA_FULL_CONTENT = "/html/StructuredData/full-content";
 	public static final String RENDER_SEARCH_STRUCTURED_DATA= "/html/StructuredData/search-structured-data";
 
 	public static final String ACTION_STRUCTURED_DATA_ADD = "/html/StructuredData/add-structured-data";
 	public static final String ACTION_STRUCTURED_DATA_UPDATE = "/html/StructuredData/update-structured-data";
 	public static final String ACTION_STRUCTURED_DATA_DELETE = "/html/StructuredData/delete-structured-data";
 	public static final String ACTION_STRUCTURED_DATA_PUBLISH = "/html/StructuredData/publish-structured-data";
+	
+	public static final String RESOURCE_STRUCTURED_DATA_ADD = "/html/StructuredData/ajax/add-structured-data";
+	public static final String RESOURCE_STRUCTURED_DATA_UPDATE = "/html/StructuredData/ajax/update-structured-data";
+	public static final String RESOURCE_TEMP_STRUCTURED_DATA_DELETE = "/html/StructuredData/ajax/delete-structured-data-temp-file";
+	public static final String RESOURCE_STRUCTURED_DATA_SAVE = "/html/StructuredData/ajax/save-structured-data";
+	public static final String RESOURCE_STRUCTURED_DATA_UPLOAD_FILE = "/html/StructuredData/ajax/upload-structured-data-file";
 
 }

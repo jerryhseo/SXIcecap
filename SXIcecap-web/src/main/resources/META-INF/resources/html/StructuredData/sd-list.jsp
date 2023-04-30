@@ -1,4 +1,10 @@
 
+<%@page import="java.util.Iterator"%>
+<%@page import="com.liferay.portal.kernel.json.JSONObject"%>
+<%@page import="com.sx.icecap.model.StructuredData"%>
+<%@page import="javax.portlet.PortletRequest"%>
+<%@page import="com.sx.icecap.model.DataType"%>
+<%@page import="com.liferay.portal.kernel.util.Validator"%>
 <%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
 <%@page import="com.sx.constant.StationXConstants"%>
 <%@page import="com.liferay.portal.kernel.util.DateUtil"%>
@@ -14,17 +20,21 @@
 <%@ include file="../init.jsp" %>
 
 <%
+	DataType dataType = (DataType)renderRequest.getAttribute(StationXWebKeys.DATATYPE);
+
 	StructuredDataManagementToolbarDisplayContext structuredDataManagementToolbarDisplayContext = 
 		(StructuredDataManagementToolbarDisplayContext)renderRequest.getAttribute(
-		StructuredDataManagementToolbarDisplayContext.class.getName());
+									StationXWebKeys.MANAGEMENT_TOOLBAR_DISPLAY_CONTEXT);
 
 	String viewStyle = ParamUtil.getString(
 							renderRequest, 
 							StationXWebKeys.DISPLAY_STYLE, 
 							StationXConstants.VIEW_TYPE_TABLE);
+	
+	PortletRequest portletRequest = (PortletRequest)renderRequest.getAttribute("javax.portlet.request");
 %>
 
-<portlet:renderURL var="editStructuredStructuredDataURL">
+<portlet:renderURL var="editStructuredDataURL">
     <portlet:param 
     		name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
     		value="<%= IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT %>"/>
@@ -60,8 +70,8 @@
 			<aui:input name="cmd" type="hidden"></aui:input>
 			<aui:input name="redirect" type="hidden"></aui:input>
 		
-		 	<liferay-ui:search-container 
-				 		id="<%= IcecapConstants.DATATYPE_SEARCH_CONTAINER_ID %>"
+			<liferay-ui:search-container 
+				 		id="<%= IcecapConstants.STRUCTURED_DATA_SEARCH_CONTAINER_ID %>"
 					    searchContainer="<%= structuredDataManagementToolbarDisplayContext.getSearchContainer() %>" >
 		    
 		        <liferay-ui:search-container-row
@@ -69,54 +79,61 @@
 							keyProperty="structuredDataId" 
 							modelVar="structuredData"
 							escapedModel="<%=true%>">
-							
 					<%
 						Map<String, Object> rowData = new HashMap<>();
 
-								row.setData(rowData);
+						row.setData(rowData);
 
-								PortletURL rowURL = renderResponse.createRenderURL();
+						PortletURL rowURL = renderResponse.createRenderURL();
 
-								rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_FULL_CONTENT);
-								rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
-								rowURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(structuredData.getStructuredDataId()));
+						rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_FULL_CONTENT);
+						rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
+						rowURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredData.getPrimaryKey()));
 					%>
+					
 					<c:choose>
 						<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_CARDS) %>">
 							<%
 								row.setCssClass("lfr-asset-item col-md-3 col-sm-4 col-xs-6");
 								RowChecker rowChecker = searchContainer.getRowChecker();
+								if( Validator.isNull(rowChecker) ){
+									out.println("<h1>rowChecker is null...</h1>" );
+								}
+								/*
 								rowChecker.setData( rowData );
-								StructuredDataVerticalCard structuredDataVerticalCard = new StructuredDataVerticalCard(
+								*/
+								StructuredDataVerticalCard dataTypeVerticalCard = new StructuredDataVerticalCard(
 										structuredData, 
 										renderRequest, 
 										renderResponse, 
 										rowChecker, 
 										rowURL.toString(),
-										structuredDataManagementToolbarDisplayContext.getStructuredDataActionDropdownItems(structuredData.getStructuredDataId()));
+										structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()));
 							%>
-							<liferay-ui:search-container-column-text>
-								<clay:vertical-card
-										verticalCard="<%= structuredDataVerticalCard %>"
-								/>
-							</liferay-ui:search-container-column-text>
 						</c:when>
 						<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_LIST) %>">
 							<liferay-ui:search-container-column-text href="<%=rowURL.toString() %>" >
-								<h5 class=â€œtext-defaultâ€><%= structuredData.getDisplayName(locale) %></h5>
-								<h5><%= structuredData.getStructuredDataVersion() %></h5>
+								<h5 class="€œtext-default"€><%= structuredData.getStructuredDataId() %></h5>
 							</liferay-ui:search-container-column-text>
-							<liferay-ui:search-container-column-text  colspan="3" >
-	  							<h6 class=â€œtext-defaultâ€>
-	    							<%= structuredData.getStructuredDataName() %>
+							<liferay-ui:search-container-column-text >
+	  							<h6 class="text-default"€>
+	    							<%
+	    								JSONObject jsonData = JSONFactoryUtil.createJSONObject( structuredData.getStructuredData() );
+	    								int i = 0;
+	    								Iterator<String> keys = jsonData.keys();
+	    								while( keys.hasNext() && i<5 ){
+	    									String key = keys.next();
+		    								out.println( key +" = " + jsonData.getString(key) );
+		    							}
+	    							%>
 	  							</h6>
 	  							<h6>
-	  								<%= structuredData.getDescription(locale) %>
+	  								<%= dataType.getDescription(locale) %>
 	  							</h6>
 							</liferay-ui:search-container-column-text>
 							<liferay-ui:search-container-column-text>
 								<clay:dropdown-actions
-									dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getStructuredDataActionDropdownItems(structuredData.getStructuredDataId()) %>"
+									dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()) %>"
 								/>
 							</liferay-ui:search-container-column-text>
 						</c:when>
@@ -125,37 +142,19 @@
 								row.setCssClass("col-md-12 "+row.getCssClass() );
 							%>
 							<liferay-ui:search-container-column-text
-							 			name="display-name"
+							 			name="id"
 							 			href="<%=rowURL.toString() %>"
-										value="<%=structuredData.getDisplayName(locale)%>"/>
-							<liferay-ui:search-container-column-text 
-										name="parameter-name" 
-										property="structuredDataName" />
-							<liferay-ui:search-container-column-text 
-										name="version" 
-										property="structuredDataVersion"/>
-			
-							<liferay-ui:search-container-column-text 
-										name="description" 
-										value="<%= structuredData.getDescription(locale)%>" />
-							
-							<liferay-ui:search-container-column-text 
-										name="modified-date"
-										value="<%= DateUtil.getDate(structuredData.getModifiedDate(), "yyyy-MM-dd", locale) %>"/>
-							
-							<liferay-ui:search-container-column-status 
-										name="status" 
-										property="status" />
+										value="<%=structuredData.getStructuredData()%>"/>
 			
 							<liferay-ui:search-container-column-text name="actions">
 								<clay:dropdown-actions
-									dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getStructuredDataActionDropdownItems(structuredData.getStructuredDataId()) %>"
+									dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()) %>"
 								/>
 							</liferay-ui:search-container-column-text>
 						</c:otherwise>
 					</c:choose>
 				</liferay-ui:search-container-row>
-					
+				
 				<c:choose>
 					<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_TABLE) %>">
 						<liferay-ui:search-iterator
@@ -168,12 +167,13 @@
 					</c:otherwise>
 				</c:choose>
 			</liferay-ui:search-container>
+			
 		</aui:form>
 	</div>
 </div>
 
 <script type="text/javascript">
-Liferay.componentReady('structuredDataManagementToolbar').then(function(
+Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_COMPONENT_ID %>').then(function(
 		managementToolbar
 	) {
 

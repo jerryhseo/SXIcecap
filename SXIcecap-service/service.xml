@@ -173,6 +173,9 @@
 		<reference entity="TrashEntry" package-path="com.liferay.portlet.trash" />
 		<reference entity="TrashVersion" package-path="com.liferay.portlet.trash" />
 		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
+		<reference entity="DataTypeStructure" package-path="com.sx.icecap" />
+		<reference entity="StructuredData" package-path="com.sx.icecap" />
+		<reference entity="Term" package-path="com.sx.icecap" />
 		
 	</entity>
 	
@@ -252,6 +255,41 @@
         <finder name="DataTypeId" return-type="Collection">
             <finder-column name="dataTypeId"></finder-column>
         </finder>
+
+ 		<finder name="DataTypeId_G" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
+			<finder-column name="groupId"></finder-column>
+		</finder>
+		<finder name="DataTypeId_U" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="DataTypeId_S" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		
+		<finder name="DataTypeId_G_U" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="DataTypeId_G_S" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="DataTypeId_U_S" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="DataTypeId_G_U_S" return-type="Collection">
+            <finder-column name="dataTypeId"></finder-column>
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
         
         <reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
 		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />

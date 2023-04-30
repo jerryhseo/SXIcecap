@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.sx.icecap.constant.IcecapConstants;
+import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
@@ -61,7 +62,7 @@ public class DefineDataStructureRenderCommand implements MVCRenderCommand {
 			renderRequest.setAttribute(StationXWebKeys.DATA_STRUCTURE, jsonDataStructure);
 		}
 
-		return IcecapConstants.JSP_DATATYPE_DEFINE_STRUTURE;
+		return IcecapJsps.DATATYPE_DEFINE_DATA_STRUCTURE;
 	}
 
 	@Reference

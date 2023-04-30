@@ -11,4 +11,11 @@ public class IcecapDataTypeAttributes {
 	public static final String SAMPLE_FILE_ID = "sampleFileId";
 	public static final String STATUS = "status";
 	public static final String TOOLTIP = "tooltip";
+	public static final String TERM_DELIMITER = "termDelimiter";
+	public static final String TERM_DELIMITER_POSITION  = "termDelimiterPosition";
+	public static final String TERM_VALUE_DELIMITER = "termValueDelimiter";
+	public static final String TERMS = "terms";
+	public static final String COMMENT_CHAR = "commentChar";
+	public static final String MATRIX_BRACKET_TYPE = "matrixBracketType";
+	public static final String MATRIX_ELEMENT_DELIMITER = "matrixElementDelimiter";
 }

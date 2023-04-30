@@ -29,6 +29,7 @@ public class IcecapSSSTermAttributes {
 	public static final String OPTION_VALUE = "optionValue";
 	public static final String OPTION_SELECTED = "optionSelected";
 	public static final String OPTION_ACTIVE_TERMS = "optionActiveTerms";
+	public static final String ORDER = "order";
 	public static final String PARAMETERS = "parameters";
 	public static final String PLACE_HOLDER = "placeHolder";
 	public static final String REF_DATABASES = "refDatabases";

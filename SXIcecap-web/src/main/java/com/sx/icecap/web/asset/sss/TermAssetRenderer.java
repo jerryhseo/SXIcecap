@@ -113,7 +113,7 @@ public class TermAssetRenderer extends BaseJSPAssetRenderer<Term> {
 		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
                 getControlPanelPlid(liferayPortletRequest), IcecapWebPortletKeys.TERM_ADMIN,
                 PortletRequest.RENDER_PHASE);
-        portletURL.setParameter(StationXWebKeys.MVC_PATH, IcecapJsps.ADMIN_EDIT_TERM_JSP);
+        portletURL.setParameter(StationXWebKeys.MVC_PATH, IcecapJsps.TERM_EDIT);
         portletURL.setParameter(StationXWebKeys.TERM_ID, String.valueOf(_term.getTermId()));
         portletURL.setParameter(StationXWebKeys.SHOW_BACK, Boolean.FALSE.toString());
 
@@ -147,7 +147,7 @@ public class TermAssetRenderer extends BaseJSPAssetRenderer<Term> {
                 		PortletRequest.RENDER_PHASE);
             }
 
-            portletURL.setParameter(StationXWebKeys.MVC_PATH, IcecapJsps.ADMIN_VIEW_TERM_JSP);
+            portletURL.setParameter(StationXWebKeys.MVC_PATH, IcecapJsps.TERM_FULL_CONTENT);
             portletURL.setParameter(StationXWebKeys.TERM_ID, String.valueOf(_term.getTermId()));
 
             String currentUrl = PortalUtil.getCurrentURL(liferayPortletRequest);

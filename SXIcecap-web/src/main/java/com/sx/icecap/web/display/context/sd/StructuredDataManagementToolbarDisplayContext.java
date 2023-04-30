@@ -6,15 +6,12 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownGroupItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
-import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -22,18 +19,16 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.trash.TrashHelper;
+import com.sx.icecap.web.security.permission.resource.datatype.DataTypeResourcePermissionHelper;
 import com.sx.icecap.web.security.permission.resource.sd.StructuredDataModelPermissionHelper;
-import com.sx.icecap.web.security.permission.resource.sd.StructuredDataResourcePermissionHelper;
-import com.sx.icecap.web.taglib.clay.sd.StructuredDataVerticalCard;
 import com.sx.icecap.constant.IcecapActionKeys;
-import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapSDSearchFields;
-import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
 import com.sx.debug.Debug;
@@ -47,9 +42,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.MimeResponse.Copy;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.portlet.RenderURL;
 import javax.servlet.http.HttpServletRequest;
 
@@ -76,6 +71,8 @@ public class StructuredDataManagementToolbarDisplayContext
 	private final TrashHelper _trashHelper;
 	
 	private final Locale _locale;
+	
+	private final long _dataTypeId;
 
 	public StructuredDataManagementToolbarDisplayContext(
 			LiferayPortletRequest liferayPortletRequest,
@@ -125,55 +122,40 @@ public class StructuredDataManagementToolbarDisplayContext
 		_permissionChecker = _themeDisplay.getPermissionChecker();
 		_trashHelper = trashHelper;
 		
+		_dataTypeId = ParamUtil.getLong(_httpServletRequest, StationXWebKeys.DATATYPE_ID);
+		
 	}
 	
 	@Override
-	protected PortletURL getPortletURL() {
-		PortletURL portletURL = super.liferayPortletResponse.createRenderURL();
+	public CreationMenu getCreationMenu() {
 		
-		portletURL.setParameter(StationXWebKeys.GROUP_ID, String.valueOf(_groupId));
-
-		if (_getListable() != null) {
-			portletURL.setParameter(StationXWebKeys.LISTABLE, String.valueOf(_getListable()));
+		if( !DataTypeResourcePermissionHelper.contains(
+				_permissionChecker, 
+				_themeDisplay.getScopeGroupId(), 
+				"ADD_STRUCTURED_DATA")) {
+			
+			System.out.println("Do not have ADD_STRUCTURED_DATA permission");
+			return null;
 		}
-
-		portletURL.setParameter( 
-				StationXWebKeys.MULTIPLE_SELECTION, 
-				String.valueOf(_multipleSelection));
-
-		portletURL.setParameter(StationXWebKeys.SHOW_ADD_BUTTON, String.valueOf(_showAddButton));
-
-		portletURL.setParameter(
-				StationXWebKeys.SHOW_SCHEDULED, String.valueOf(_showScheduled));
-
-		portletURL.setParameter(StationXWebKeys.EVENT_NAME, _eventName);
 		
-		portletURL.setParameter(StationXWebKeys.DISPLAY_STYLE, _displayStyle);
-		portletURL.setParameter(StationXWebKeys.ORDER_BY_COL, _orderByCol);
-		portletURL.setParameter(StationXWebKeys.ORDER_BY_TYPE, _orderByType);
-		portletURL.setParameter(StationXWebKeys.NAVIGATION, _navigation);
-		portletURL.setParameter(StationXWebKeys.KEYWORDS, _keywords);
+		CreationMenu menu = 
+				new CreationMenu() {
+					{
+						addDropdownItem(
+								dropdownItem -> {
+									PortletURL renderURL = liferayPortletResponse.createRenderURL(Copy.ALL);
+									renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT);
+									renderURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(_dataTypeId) );
+									renderURL.setParameter(StationXWebKeys.BACK_URL, currentURLObj.toString());
+									
+									dropdownItem.setHref( renderURL );
+									dropdownItem.setLabel(
+											LanguageUtil.get(request, "add-data"));
+								});
+					}
+				};
 		
-		return portletURL;
-	}
-
-	@Override
-	public String getClearResultsURL() {
-//		Debug.printHeader("StructuredDataManagementToolbarDisplayContext.getClearResultsURL()");
-		PortletURL clearResultsURL = getPortletURL();
-		clearResultsURL.setParameter(StationXWebKeys.KEYWORDS, StringPool.BLANK);
-//		Debug.printFooter("StructuredDataManagementToolbarDisplayContext.getClearResultsURL()");
-		return clearResultsURL.toString();
-	}
-	
-	@Override
-	public String getSearchContainerId() {
-		Debug.printHeader("StructuredDataManagementToolbarDisplayContext.getSearchContainerId()");
-//		String searchContainerId = _structuredDataAdminDisplayContext.getSearchContainerId();
-		String searchContainerId = super.searchContainer.getId( _httpServletRequest, _namespace);
-		
-		Debug.printFooter("StructuredDataManagementToolbarDisplayContext.getSearchContainerId()");
-		return searchContainerId;
+		return menu;
 	}
 	
 	public SearchContainer<StructuredData> getSearchContainer(){
@@ -182,104 +164,33 @@ public class StructuredDataManagementToolbarDisplayContext
 	
 	@Override
 	public String getSearchActionURL() {
-		Debug.printHeader("StructuredDataManagementToolbarDisplayContext.getSearchActionURL()");
 		PortletURL searchURL =  getPortletURL();
 		
 		searchURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME, 
-				IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
+				IcecapMVCCommands.RENDER_DATATYPE_LIST);
 		
-		Debug.printFooter("StructuredDataManagementToolbarDisplayContext.getSearchActionURL()");
-
 		return searchURL.toString();
-	}
-	
-	public PortletURL getFilterURL() {
-		PortletURL filterURL =  getPortletURL();
-		filterURL.setParameter(
-				StationXWebKeys.MVC_RENDER_COMMAND_NAME,
-				IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
-
-		return filterURL;
 	}
 	
 	@Override
 	protected String[] getDisplayViews() {
-//		Debug.printHeader("StructuredDataManagementToolbarDisplayContext.getDisplayViews()");
 		String[] viewTypes = new String[] { 
 				StationXConstants.VIEW_TYPE_CARDS, 
 				StationXConstants.VIEW_TYPE_LIST,
 				StationXConstants.VIEW_TYPE_TABLE};
-//		Debug.printFooter("StructuredDataManagementToolbarDisplayContext.getDisplayViews()");
 		return viewTypes;
 	}
 	
 	@Override
 	protected String[] getNavigationKeys() {
-//		Debug.printHeader("StructuredDataManagementToolbarDisplayContext.getNavigationKeys()");
-//		System.out.println("Default NavigationKeys are define in StationXConstants");
-//		Debug.printFooter("StructuredDataManagementToolbarDisplayContext.getNavigationKeys()");
 		return StationXConstants.NAVIGATION_KEYS();
-	}
-	
-	protected Map<String, Integer> getStatusMap(){
-
-		Map<String, Integer> statusMap = new LinkedHashMap<>();
-
-		statusMap.put("Any", Integer.valueOf(WorkflowConstants.STATUS_ANY));
-		statusMap.put("Pending", Integer.valueOf(WorkflowConstants.STATUS_PENDING));
-		statusMap.put("Approved", Integer.valueOf(WorkflowConstants.STATUS_APPROVED));
-//		statusMap.put("Draft", Integer.valueOf(WorkflowConstants.STATUS_DRAFT));
-//		statusMap.put("Denied", Integer.valueOf(WorkflowConstants.STATUS_DENIED));
-//		statusMap.put("Scheduled", Integer.valueOf(WorkflowConstants.STATUS_SCHEDULED));
-//		statusMap.put("Expired", Integer.valueOf(WorkflowConstants.STATUS_EXPIRED));
-
-		return statusMap;
-	}
-	
-	protected List<DropdownItem> getFilterByStatusDropdownItems() {
-		return getStatusDropdownItems(
-						getStatusMap(), 
-						getFilterURL(), 
-						getStatusParam(),
-						getFilterStatus());
-	}
-	
-	protected List<DropdownItem> getStatusDropdownItems(
-			Map<String, Integer> statusMap, 
-			PortletURL filterURL,
-			String parameterName, 
-			int parameterValue){
-		return new DropdownItemList() {
-			{
-				for (Map.Entry<String, Integer> entry : statusMap.entrySet()) {
-					add(
-						dropdownItem -> {
-							dropdownItem.setActive(parameterValue == entry.getValue());
-							dropdownItem.setHref(
-									filterURL, parameterName, entry.getValue());
-							dropdownItem.setLabel(
-								LanguageUtil.get(request, entry.getKey()));
-						});
-				}
-			}
-		};
-	}
-	
-	protected int getFilterStatus() {
-		return ParamUtil.getInteger(
-			super.liferayPortletRequest, getStatusParam(), WorkflowConstants.STATUS_ANY);
-	}
-	
-	protected String getStatusParam() {
-		return "status";
 	}
 	
 	// Dropdown Items for management toolbar. multi selection.
 	// These items appear on the management toolbar.
 	@Override
 	public List<DropdownItem> getActionDropdownItems() {
-//		Debug.printHeader("StructuredDataManagementToolbarDisplayContext.getActionDropdownItems()");
 		List<DropdownItem> itemList = 
 					new DropdownItemList() {
 						{
@@ -295,200 +206,9 @@ public class StructuredDataManagementToolbarDisplayContext
 						}
 					};
 					
-//		Debug.printFooter("StructuredDataManagementToolbarDisplayContext.getActionDropdownItems()");
 		return itemList;
 	}
 	
-	public List<String> getAvailableActions( StructuredData structuredData ) throws PortalException{
-		
-		List<String> availableActions = new ArrayList<>();
-
-		PermissionChecker permissionChecker =
-			_themeDisplay.getPermissionChecker();
-
-		if (StructuredDataModelPermissionHelper.contains(
-				permissionChecker, structuredData, IcecapActionKeys.DELETE_STRUCTURED_DATA)) {
-
-			availableActions.add(IcecapActionKeys.DELETE_STRUCTURED_DATA);
-		}
-		
-		if (StructuredDataModelPermissionHelper.contains(
-				permissionChecker, structuredData, IcecapActionKeys.UPDATE_STRUCTURED_DATA)) {
-
-			availableActions.add(IcecapActionKeys.UPDATE_STRUCTURED_DATA);
-		}
-		
-		if (StructuredDataModelPermissionHelper.contains(
-				permissionChecker, structuredData, IcecapActionKeys.ADD_STRUCTURED_DATA)) {
-
-			availableActions.add(IcecapActionKeys.ADD_STRUCTURED_DATA);
-		}
-
-		if (StructuredDataModelPermissionHelper.contains(
-				permissionChecker, structuredData, IcecapActionKeys.REVIEW_STRUCTURED_DATA)) {
-
-			availableActions.add(IcecapActionKeys.REVIEW_STRUCTURED_DATA);
-		}
-
-		if (StructuredDataModelPermissionHelper.contains(
-				permissionChecker, structuredData, IcecapActionKeys.APPROVE_STRUCTURED_DATA)) {
-
-			availableActions.add(IcecapActionKeys.APPROVE_STRUCTURED_DATA);
-		}
-		
-		return availableActions;
-
-	}
-	
-	public String getBulkActionURL() {
-		PortletURL actionURL = liferayPortletResponse.createActionURL();
-		actionURL.setParameter("actionName", IcecapMVCCommands.ACTION_BULK);
-		
-		return actionURL.toString();
-	}
-	
-	public List<DropdownItem> getStructuredDataActionDropdownItems( long structuredDataId ){
-//		Debug.printHeader("StructuredDataManagementToolbarDisplayContext.getStructuredDataActionDropdownItems()");
-		List<DropdownItem> itemList = 
-				new DropdownItemList() {
-					{
-						if (_hasUpdatePermission( structuredDataId )) {
-							add(dropdownItem -> {
-								dropdownItem.setHref(
-										getPortletURL(), 
-										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT, 
-										Constants.CMD, Constants.UPDATE,
-										StationXWebKeys.REDIRECT, _getRedirectURL(), 
-										StationXWebKeys.STRUCTURED_DATA_ID, structuredDataId);
-
-									dropdownItem.setIcon("edit");
-									dropdownItem.setLabel(LanguageUtil.get(_locale, "edit"));
-							});
-						}
-
-						if (_hasDeletePermission( structuredDataId )) {
-							PortletURL deleteURL = liferayPortletResponse.createActionURL();
-							
-							long[] structuredDataIds = { structuredDataId};
-							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_STRUCTURED_DATA_DELETE);
-							deleteURL.setParameter(Constants.CMD, Constants.DELETE);
-							deleteURL.setParameter(StationXWebKeys.REDIRECT, _getRedirectURL());
-							deleteURL.setParameter(StationXWebKeys.STRUCTURED_DATA_IDS, Arrays.toString(structuredDataIds) );
-							
-							add( dropdownItem -> {
-								dropdownItem.setHref(deleteURL);
-								dropdownItem.setIcon("delete");
-								dropdownItem.setLabel(
-									LanguageUtil.get(request, "delete"));
-							});		
-						}
-
-						{
-							add(dropdownItem -> {
-								LiferayPortletURL renderURL = liferayPortletResponse.createRenderURL(IcecapWebPortletKeys.STRUCTURED_DATA);
-								
-								dropdownItem.setHref(
-										renderURL, 
-										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST, 
-										StationXWebKeys.REDIRECT, _getRedirectURL(), 
-										StationXWebKeys.STRUCTURED_DATA_ID, structuredDataId);
-
-									dropdownItem.setIcon("view");
-									dropdownItem.setLabel(LanguageUtil.get(_locale, "view-structured-data-list"));
-							});	
-						}
-					}
-				};
-				
-//		Debug.printFooter("StructuredDataManagementToolbarDisplayContext.getStructuredDataActionDropdownItems()");
-		return itemList;
-	}
-
-	@Override
-	public CreationMenu getCreationMenu() {
-		
-		if( !StructuredDataResourcePermissionHelper.contains(
-				_permissionChecker, 
-				_themeDisplay.getScopeGroupId(), 
-				"ADD_STRUCTURED_DATA")) {
-			
-			System.out.println("Do not have ADD_STRUCTURED_DATA permission");
-			return null;
-		}
-		
-		CreationMenu menu = 
-				new CreationMenu() {
-					{
-						addDropdownItem(
-								dropdownItem -> {
-									dropdownItem.setHref(
-											getPortletURL(),
-											StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT,
-											StationXWebKeys.REDIRECT, currentURLObj.toString(),
-											Constants.CMD, Constants.ADD);
-									dropdownItem.setLabel(
-											LanguageUtil.get(request, "add-structuredData"));
-								});
-					}
-				};
-		
-		return menu;
-	}
-	
-	public StructuredDataVerticalCard getVerticalCard( 
-			StructuredData structuredData, 
-			RenderRequest renderRequest,
-			RenderResponse renderResponse,
-			RowChecker rowChecker,
-			String structuredDataViewURL) {
-		
-		return new StructuredDataVerticalCard(
-				structuredData, 
-				renderRequest, 
-				renderResponse, 
-				rowChecker, 
-				structuredDataViewURL, 
-				getStructuredDataActionDropdownItems(structuredData.getStructuredDataId()));
-	}
-
-	private boolean _hasDeletePermission( long structuredDataId ) {
-		boolean hasPermission = false;
-		try {
-			hasPermission = StructuredDataModelPermissionHelper.contains(
-						_permissionChecker, structuredDataId, ActionKeys.DELETE);
-		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-//		System.out.println("Delete Permission: "+hasPermission);
-		return hasPermission;
-	}
-	
-	private boolean _hasUpdatePermission( long structuredDataId ) {
-		boolean hasPermission = false;
-		try {
-			hasPermission = StructuredDataModelPermissionHelper.contains(
-				_permissionChecker, structuredDataId, ActionKeys.UPDATE);
-		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-//		System.out.println("Update Permission: "+hasPermission);
-		return hasPermission;
-	}
-	
-	private String _getRedirectURL() {
-		PortletURL redirectURL = getPortletURL();
-
-		return redirectURL.toString();
-	}
-
-	@Override
-	public int getItemsTotal() {
-		return searchContainer.getTotal();
-	}
-
 	@Override
 	public List<ViewTypeItem> getViewTypeItems() {
 		if (ArrayUtil.isEmpty(getDisplayViews())) {
@@ -499,21 +219,19 @@ public class StructuredDataManagementToolbarDisplayContext
 
 		String[] displayViews = getDisplayViews();
 		
-		RenderURL renderURL = liferayPortletResponse.createRenderURL();
-		
 		String renderCommand = IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST;
-		if( Validator.isNotNull(_keywords) && !_keywords.isEmpty() ) {
-			renderCommand = IcecapMVCCommands.RENDER_SEARCH_STRUCTURED_DATA;
-		}
+		
+		RenderURL renderURL = liferayPortletResponse.createRenderURL();
+		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, renderCommand);
+		renderURL.setParameter(StationXWebKeys.KEYWORDS, _keywords);
+		renderURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(_dataTypeId) );
 		
 		if (ArrayUtil.contains(displayViews, StationXConstants.VIEW_TYPE_CARDS)) {
 			ViewTypeItem viewType = new ViewTypeItem();
 			
 			viewType.setActive( _displayStyle.equals(StationXConstants.VIEW_TYPE_CARDS) );
-			viewType.setHref(renderURL,
-						StationXWebKeys.MVC_RENDER_COMMAND_NAME, renderCommand,
-						StationXWebKeys.DISPLAY_STYLE, StationXConstants.VIEW_TYPE_CARDS,
-						StationXWebKeys.KEYWORDS, _keywords);
+			renderURL.setParameter(StationXWebKeys.DISPLAY_STYLE, StationXConstants.VIEW_TYPE_CARDS);
+			viewType.setHref(renderURL);
 			viewType.setIcon("cards2");
 			viewType.setLabel(LanguageUtil.get(LocaleUtil.getMostRelevantLocale(), "cards"));
 			viewTypeItemList.add(viewType);
@@ -523,10 +241,8 @@ public class StructuredDataManagementToolbarDisplayContext
 			ViewTypeItem viewType = new ViewTypeItem();
 			
 			viewType.setActive( _displayStyle.equals(StationXConstants.VIEW_TYPE_LIST) );
-			viewType.setHref(renderURL,
-						StationXWebKeys.MVC_RENDER_COMMAND_NAME, renderCommand,
-						StationXWebKeys.DISPLAY_STYLE, StationXConstants.VIEW_TYPE_LIST,
-						StationXWebKeys.KEYWORDS, _keywords);
+			renderURL.setParameter(StationXWebKeys.DISPLAY_STYLE, StationXConstants.VIEW_TYPE_LIST);
+			viewType.setHref(renderURL);
 			viewType.setIcon("list");
 			viewType.setLabel(LanguageUtil.get(LocaleUtil.getMostRelevantLocale(), "list"));
 			viewTypeItemList.add(viewType);
@@ -536,10 +252,8 @@ public class StructuredDataManagementToolbarDisplayContext
 			ViewTypeItem viewType = new ViewTypeItem();
 			
 			viewType.setActive( _displayStyle.equals(StationXConstants.VIEW_TYPE_TABLE) );
-			viewType.setHref(renderURL,
-						StationXWebKeys.MVC_RENDER_COMMAND_NAME, renderCommand,
-						StationXWebKeys.DISPLAY_STYLE, StationXConstants.VIEW_TYPE_TABLE,
-						StationXWebKeys.KEYWORDS, _keywords);
+			renderURL.setParameter(StationXWebKeys.DISPLAY_STYLE, StationXConstants.VIEW_TYPE_TABLE);
+			viewType.setHref(renderURL);
 			viewType.setIcon("table");
 			viewType.setLabel(LanguageUtil.get(LocaleUtil.getMostRelevantLocale(), "table"));
 			viewTypeItemList.add(viewType);
@@ -547,17 +261,17 @@ public class StructuredDataManagementToolbarDisplayContext
 		
 		return viewTypeItemList;
 	}
-
+	
 	@Override
 	protected String getDefaultDisplayStyle() {
 		return StationXConstants.VIEW_TYPE_TABLE;
 	}
-
+	
 	@Override
 	protected String getDisplayStyle() {
 		return _displayStyle;
 	}
-
+	
 	@Override
 	public String getSortingURL() {
 		Debug.printHeader("getSortingURL");
@@ -574,6 +288,21 @@ public class StructuredDataManagementToolbarDisplayContext
 		return portletURL.toString();
 	}
 
+	private Map<String, Integer> _getStatusMap(){
+
+		Map<String, Integer> statusMap = new LinkedHashMap<>();
+
+		statusMap.put("Any", Integer.valueOf(WorkflowConstants.STATUS_ANY));
+		statusMap.put("Pending", Integer.valueOf(WorkflowConstants.STATUS_PENDING));
+		statusMap.put("Approved", Integer.valueOf(WorkflowConstants.STATUS_APPROVED));
+//		statusMap.put("Draft", Integer.valueOf(WorkflowConstants.STATUS_DRAFT));
+//		statusMap.put("Denied", Integer.valueOf(WorkflowConstants.STATUS_DENIED));
+//		statusMap.put("Scheduled", Integer.valueOf(WorkflowConstants.STATUS_SCHEDULED));
+//		statusMap.put("Expired", Integer.valueOf(WorkflowConstants.STATUS_EXPIRED));
+
+		return statusMap;
+	}
+	
 	@Override
 	protected List<DropdownItem> getFilterNavigationDropdownItems() {
 
@@ -585,13 +314,98 @@ public class StructuredDataManagementToolbarDisplayContext
 		filterByScopeGroup.setDropdownItems(filterByScopeDropdownItemList);
 		filterNavigationDropdownItems.add(filterByScopeGroup);
 		
-		List<DropdownItem> filterByStatusDropdownItemList = getFilterByStatusDropdownItems();
+		Map<String, Integer> statusMap = _getStatusMap();
+		PortletURL filterURL =  getPortletURL();
+		filterURL.setParameter(
+				StationXWebKeys.MVC_RENDER_COMMAND_NAME,
+				IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
+		
+		List<DropdownItem> filterByStatusDropdownItemList =  new DropdownItemList() {
+			{
+				for (Map.Entry<String, Integer> entry : statusMap.entrySet()) {
+					add(
+						dropdownItem -> {
+							dropdownItem.setActive(_status == entry.getValue());
+							dropdownItem.setHref(
+									filterURL, StationXWebKeys.STATUS, entry.getValue());
+							dropdownItem.setLabel(
+								LanguageUtil.get(request, entry.getKey()));
+						});
+				}
+			}
+		};
 		DropdownGroupItem filterByStatusGroup = new DropdownGroupItem();
 		filterByStatusGroup.setLabel("Filter By Status");
 		filterByStatusGroup.setDropdownItems(filterByStatusDropdownItemList);
 		filterNavigationDropdownItems.add(filterByStatusGroup);
 		
 		return filterNavigationDropdownItems;
+	}
+	
+	public List<DropdownItem> getItemActionDropdownItems( PortletRequest portletRequest, long structuredDataId ){
+
+		long plid = super.liferayPortletRequest.getPlid();
+		
+		String currentURL = PortalUtil.getCurrentURL(portletRequest);
+		
+		List<DropdownItem> itemList = 
+				new DropdownItemList() {
+					{
+						if (_hasUpdatePermission( structuredDataId )) {
+							PortletURL updateURL = liferayPortletResponse.createActionURL();
+							updateURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT);
+							updateURL.setParameter(Constants.CMD, Constants.UPDATE);
+							updateURL.setParameter(StationXWebKeys.BACK_URL, currentURL);
+							updateURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredDataId) );
+							
+							add(dropdownItem -> {
+								dropdownItem.setHref( updateURL );
+									dropdownItem.setIcon("edit");
+									dropdownItem.setLabel(LanguageUtil.get(_locale, "edit"));
+							});
+						}
+
+						if (_hasDeletePermission( structuredDataId )) {
+							PortletURL deleteURL = liferayPortletResponse.createActionURL();
+							
+							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_STRUCTURED_DATA_DELETE);
+							deleteURL.setParameter(StationXWebKeys.BACK_URL, currentURL);
+							deleteURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredDataId) );
+							
+							add( dropdownItem -> {
+								dropdownItem.setHref(deleteURL);
+								dropdownItem.setIcon("delete");
+								dropdownItem.setLabel(
+									LanguageUtil.get(request, "delete"));
+							});		
+						}
+					}
+				};
+				
+		return itemList;
+	}
+
+	private boolean _hasDeletePermission( long structuredDataId ) {
+		boolean hasPermission = false;
+		try {
+			hasPermission = StructuredDataModelPermissionHelper.contains(
+						_permissionChecker, structuredDataId, ActionKeys.DELETE);
+		} catch (PortalException e) {
+			e.printStackTrace();
+		}
+		return hasPermission;
+	}
+	
+	private boolean _hasUpdatePermission( long structuredDataId ) {
+		boolean hasPermission = false;
+		try {
+			hasPermission = StructuredDataModelPermissionHelper.contains(
+				_permissionChecker, structuredDataId, ActionKeys.UPDATE);
+		} catch (PortalException e) {
+			e.printStackTrace();
+		}
+		
+		return hasPermission;
 	}
 	
 	@Override
@@ -621,7 +435,7 @@ public class StructuredDataManagementToolbarDisplayContext
 
 	@Override
 	public String getComponentId() {
-		return "structuredDataManagementToolbar";
+		return "dataTypeManagementToolbar";
 	}
 
 	@Override
@@ -665,19 +479,4 @@ public class StructuredDataManagementToolbarDisplayContext
 		}
 		return super.getDefaultEventHandler();
 	}
-	
-	private Boolean _getListable() {
-		Boolean listable = null;
-
-		String listableValue = ParamUtil.getString(
-			super.liferayPortletRequest, StationXWebKeys.LISTABLE, null);
-
-		if (Validator.isNotNull(listableValue)) {
-			listable = ParamUtil.getBoolean(
-					super.liferayPortletRequest, StationXWebKeys.LISTABLE, true);
-		}
-
-		return listable;
-	}
-
 }

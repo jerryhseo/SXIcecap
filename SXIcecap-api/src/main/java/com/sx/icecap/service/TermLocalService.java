@@ -298,6 +298,10 @@ public interface TermLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Term getTerm(long termId) throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Term getTerm(String termName, String termVersion)
+		throws NoSuchTermException;
+
 	/**
 	 * Returns the term matching the UUID and group.
 	 *
@@ -311,7 +315,7 @@ public interface TermLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getTermIdByNameVersion(String termName, String termVersion)
+	public long getTermId(String termName, String termVersion)
 		throws NoSuchTermException;
 
 	/**

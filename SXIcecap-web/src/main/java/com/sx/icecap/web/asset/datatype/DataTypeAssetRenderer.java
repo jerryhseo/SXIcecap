@@ -14,6 +14,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.sx.icecap.constant.IcecapConstants;
+import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
@@ -92,7 +93,7 @@ public class DataTypeAssetRenderer extends BaseJSPAssetRenderer<DataType> {
 			
 			httpServletRequest.setAttribute(StationXWebKeys.DATATYPE, _dataType);
 			
-			return IcecapConstants.DATATYPE_MANAGEMENT_JSP_ROOT + "/" + template + ".jsp";
+			return IcecapJsps.DATATYPE_MANAGEMENT_TERMPLATE_PATH +  template + ".jsp";
 		}
 		return null;
 	}

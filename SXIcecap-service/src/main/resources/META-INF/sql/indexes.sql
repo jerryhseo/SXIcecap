@@ -7,7 +7,10 @@ create index IX_71C56B5C on SX_ICECAP_DataType (uuid_[$COLUMN_LENGTH:75$], compa
 create unique index IX_512918DE on SX_ICECAP_DataType (uuid_[$COLUMN_LENGTH:75$], groupId);
 
 create index IX_C255DF64 on SX_ICECAP_StructuredData (dataSetId);
-create index IX_CEFA032 on SX_ICECAP_StructuredData (dataTypeId);
+create index IX_6E43F39E on SX_ICECAP_StructuredData (dataTypeId, groupId, status);
+create index IX_82E639D8 on SX_ICECAP_StructuredData (dataTypeId, groupId, userId, status);
+create index IX_F0EB8D18 on SX_ICECAP_StructuredData (dataTypeId, status);
+create index IX_FD81B952 on SX_ICECAP_StructuredData (dataTypeId, userId, status);
 create index IX_41F2BDB1 on SX_ICECAP_StructuredData (groupId, status);
 create index IX_C93F40EB on SX_ICECAP_StructuredData (groupId, userId, status);
 create index IX_FD9491A5 on SX_ICECAP_StructuredData (status);

@@ -16,7 +16,6 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchContextFactory;
 import com.liferay.portal.kernel.search.SearchResult;
-import com.liferay.portal.kernel.search.SearchResultUtil;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.SortFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -51,7 +50,6 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -112,7 +110,7 @@ public class TermListViewRenderCommand implements MVCRenderCommand {
 		Debug.printHeader("TermListViewRenderCommand.render()");
 		Debug.printAllParameters(renderRequest);
 		Debug.printFooter("TermListViewRenderCommand.render()");
-		return IcecapJsps.ADMIN_TERM_LIST_JSP;
+		return IcecapJsps.TERM_LIST;
 	}
 
 	private SearchContainer<Term> _createSearchContainer(

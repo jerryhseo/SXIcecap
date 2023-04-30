@@ -349,6 +349,12 @@ public class TermLocalServiceUtil {
 		return getService().getTerm(termId);
 	}
 
+	public static Term getTerm(String termName, String termVersion)
+		throws com.sx.icecap.exception.NoSuchTermException {
+
+		return getService().getTerm(termName, termVersion);
+	}
+
 	/**
 	 * Returns the term matching the UUID and group.
 	 *
@@ -363,11 +369,10 @@ public class TermLocalServiceUtil {
 		return getService().getTermByUuidAndGroupId(uuid, groupId);
 	}
 
-	public static long getTermIdByNameVersion(
-			String termName, String termVersion)
+	public static long getTermId(String termName, String termVersion)
 		throws com.sx.icecap.exception.NoSuchTermException {
 
-		return getService().getTermIdByNameVersion(termName, termVersion);
+		return getService().getTermId(termName, termVersion);
 	}
 
 	/**

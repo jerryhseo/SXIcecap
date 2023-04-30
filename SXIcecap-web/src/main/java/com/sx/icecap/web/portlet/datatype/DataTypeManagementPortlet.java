@@ -1,6 +1,7 @@
 package com.sx.icecap.web.portlet.datatype;
 
 import com.sx.icecap.constant.IcecapConstants;
+import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
@@ -19,8 +20,8 @@ import org.osgi.service.component.annotations.Component;
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=DataType Management",
-		"javax.portlet.init-param.template-path=/",
-		"javax.portlet.init-param.view-template=" + IcecapConstants.DATATYPE_VIEW_TEMPLATE,
+		"javax.portlet.init-param.template-path="+IcecapJsps.DATATYPE_MANAGEMENT_TERMPLATE_PATH,
+		"javax.portlet.init-param.view-template=" + IcecapJsps.DATATYPE_LIST,
 		"javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user",

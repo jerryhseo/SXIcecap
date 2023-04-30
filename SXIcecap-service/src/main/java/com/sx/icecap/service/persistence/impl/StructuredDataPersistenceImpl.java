@@ -7800,6 +7800,5729 @@ public class StructuredDataPersistenceImpl
 	private static final String _FINDER_COLUMN_DATATYPEID_DATATYPEID_2 =
 		"structuredData.dataTypeId = ?";
 
+	private FinderPath _finderPathWithPaginationFindByDataTypeId_G;
+	private FinderPath _finderPathWithoutPaginationFindByDataTypeId_G;
+	private FinderPath _finderPathCountByDataTypeId_G;
+
+	/**
+	 * Returns all the structured datas where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G(
+		long dataTypeId, long groupId) {
+
+		return findByDataTypeId_G(
+			dataTypeId, groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G(
+		long dataTypeId, long groupId, int start, int end) {
+
+		return findByDataTypeId_G(dataTypeId, groupId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G(
+		long dataTypeId, long groupId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataTypeId_G(
+			dataTypeId, groupId, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G(
+		long dataTypeId, long groupId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataTypeId_G;
+				finderArgs = new Object[] {dataTypeId, groupId};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataTypeId_G;
+			finderArgs = new Object[] {
+				dataTypeId, groupId, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if ((dataTypeId != structuredData.getDataTypeId()) ||
+						(groupId != structuredData.getGroupId())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					4 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(4);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_GROUPID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_First(
+			long dataTypeId, long groupId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_First(
+			dataTypeId, groupId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_First(
+		long dataTypeId, long groupId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataTypeId_G(
+			dataTypeId, groupId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_Last(
+			long dataTypeId, long groupId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_Last(
+			dataTypeId, groupId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_Last(
+		long dataTypeId, long groupId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataTypeId_G(dataTypeId, groupId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataTypeId_G(
+			dataTypeId, groupId, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataTypeId_G_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataTypeId_G_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, orderByComparator,
+				true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataTypeId_G_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, orderByComparator,
+				false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataTypeId_G_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, OrderByComparator<StructuredData> orderByComparator,
+		boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_GROUPID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @return the matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G(
+		long dataTypeId, long groupId) {
+
+		return filterFindByDataTypeId_G(
+			dataTypeId, groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G(
+		long dataTypeId, long groupId, int start, int end) {
+
+		return filterFindByDataTypeId_G(dataTypeId, groupId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas that the user has permissions to view where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G(
+		long dataTypeId, long groupId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G(
+				dataTypeId, groupId, start, end, orderByComparator);
+		}
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				4 + (orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			sb = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_GROUPID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_TABLE, orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+			}
+			else {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+			}
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			return (List<StructuredData>)QueryUtil.list(
+				sqlQuery, getDialect(), start, end);
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] filterFindByDataTypeId_G_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G_PrevAndNext(
+				structuredDataId, dataTypeId, groupId, orderByComparator);
+		}
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = filterGetByDataTypeId_G_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, orderByComparator,
+				true);
+
+			array[1] = structuredData;
+
+			array[2] = filterGetByDataTypeId_G_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, orderByComparator,
+				false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData filterGetByDataTypeId_G_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, OrderByComparator<StructuredData> orderByComparator,
+		boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				6 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_GROUPID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByConditionFields[i],
+							true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByConditionFields[i],
+							true));
+				}
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByFields[i], true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByFields[i], true));
+				}
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+		sqlQuery.setFirstResult(0);
+		sqlQuery.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+		}
+		else {
+			sqlQuery.addEntity(_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+		}
+
+		QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = sqlQuery.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataTypeId = &#63; and groupId = &#63; from the database.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 */
+	@Override
+	public void removeByDataTypeId_G(long dataTypeId, long groupId) {
+		for (StructuredData structuredData :
+				findByDataTypeId_G(
+					dataTypeId, groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataTypeId_G(long dataTypeId, long groupId) {
+		FinderPath finderPath = _finderPathCountByDataTypeId_G;
+
+		Object[] finderArgs = new Object[] {dataTypeId, groupId};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_GROUPID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @return the number of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public int filterCountByDataTypeId_G(long dataTypeId, long groupId) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByDataTypeId_G(dataTypeId, groupId);
+		}
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(_FILTER_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_GROUPID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			sqlQuery.addScalar(
+				COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			Long count = (Long)sqlQuery.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_DATATYPEID_2 =
+		"structuredData.dataTypeId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_GROUPID_2 =
+		"structuredData.groupId = ?";
+
+	private FinderPath _finderPathWithPaginationFindByDataTypeId_U;
+	private FinderPath _finderPathWithoutPaginationFindByDataTypeId_U;
+	private FinderPath _finderPathCountByDataTypeId_U;
+
+	/**
+	 * Returns all the structured datas where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U(
+		long dataTypeId, long userId) {
+
+		return findByDataTypeId_U(
+			dataTypeId, userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U(
+		long dataTypeId, long userId, int start, int end) {
+
+		return findByDataTypeId_U(dataTypeId, userId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U(
+		long dataTypeId, long userId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataTypeId_U(
+			dataTypeId, userId, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U(
+		long dataTypeId, long userId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataTypeId_U;
+				finderArgs = new Object[] {dataTypeId, userId};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataTypeId_U;
+			finderArgs = new Object[] {
+				dataTypeId, userId, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if ((dataTypeId != structuredData.getDataTypeId()) ||
+						(userId != structuredData.getUserId())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					4 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(4);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_USERID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(userId);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_U_First(
+			long dataTypeId, long userId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_U_First(
+			dataTypeId, userId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_U_First(
+		long dataTypeId, long userId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataTypeId_U(
+			dataTypeId, userId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_U_Last(
+			long dataTypeId, long userId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_U_Last(
+			dataTypeId, userId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_U_Last(
+		long dataTypeId, long userId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataTypeId_U(dataTypeId, userId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataTypeId_U(
+			dataTypeId, userId, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataTypeId_U_PrevAndNext(
+			long structuredDataId, long dataTypeId, long userId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataTypeId_U_PrevAndNext(
+				session, structuredData, dataTypeId, userId, orderByComparator,
+				true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataTypeId_U_PrevAndNext(
+				session, structuredData, dataTypeId, userId, orderByComparator,
+				false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataTypeId_U_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long userId, OrderByComparator<StructuredData> orderByComparator,
+		boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_U_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_U_USERID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(userId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataTypeId = &#63; and userId = &#63; from the database.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 */
+	@Override
+	public void removeByDataTypeId_U(long dataTypeId, long userId) {
+		for (StructuredData structuredData :
+				findByDataTypeId_U(
+					dataTypeId, userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataTypeId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataTypeId_U(long dataTypeId, long userId) {
+		FinderPath finderPath = _finderPathCountByDataTypeId_U;
+
+		Object[] finderArgs = new Object[] {dataTypeId, userId};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_USERID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(userId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_DATATYPEID_U_DATATYPEID_2 =
+		"structuredData.dataTypeId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_U_USERID_2 =
+		"structuredData.userId = ?";
+
+	private FinderPath _finderPathWithPaginationFindByDataTypeId_S;
+	private FinderPath _finderPathWithoutPaginationFindByDataTypeId_S;
+	private FinderPath _finderPathCountByDataTypeId_S;
+
+	/**
+	 * Returns all the structured datas where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_S(
+		long dataTypeId, int status) {
+
+		return findByDataTypeId_S(
+			dataTypeId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_S(
+		long dataTypeId, int status, int start, int end) {
+
+		return findByDataTypeId_S(dataTypeId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_S(
+		long dataTypeId, int status, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataTypeId_S(
+			dataTypeId, status, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_S(
+		long dataTypeId, int status, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataTypeId_S;
+				finderArgs = new Object[] {dataTypeId, status};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataTypeId_S;
+			finderArgs = new Object[] {
+				dataTypeId, status, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if ((dataTypeId != structuredData.getDataTypeId()) ||
+						(status != structuredData.getStatus())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					4 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(4);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(status);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_S_First(
+			long dataTypeId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_S_First(
+			dataTypeId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_S_First(
+		long dataTypeId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataTypeId_S(
+			dataTypeId, status, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_S_Last(
+			long dataTypeId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_S_Last(
+			dataTypeId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_S_Last(
+		long dataTypeId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataTypeId_S(dataTypeId, status);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataTypeId_S(
+			dataTypeId, status, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataTypeId_S_PrevAndNext(
+			long structuredDataId, long dataTypeId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataTypeId_S_PrevAndNext(
+				session, structuredData, dataTypeId, status, orderByComparator,
+				true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataTypeId_S_PrevAndNext(
+				session, structuredData, dataTypeId, status, orderByComparator,
+				false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataTypeId_S_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		int status, OrderByComparator<StructuredData> orderByComparator,
+		boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(status);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataTypeId = &#63; and status = &#63; from the database.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 */
+	@Override
+	public void removeByDataTypeId_S(long dataTypeId, int status) {
+		for (StructuredData structuredData :
+				findByDataTypeId_S(
+					dataTypeId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataTypeId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param status the status
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataTypeId_S(long dataTypeId, int status) {
+		FinderPath finderPath = _finderPathCountByDataTypeId_S;
+
+		Object[] finderArgs = new Object[] {dataTypeId, status};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_S_STATUS_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(status);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_DATATYPEID_S_DATATYPEID_2 =
+		"structuredData.dataTypeId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_S_STATUS_2 =
+		"structuredData.status = ?";
+
+	private FinderPath _finderPathWithPaginationFindByDataTypeId_G_U;
+	private FinderPath _finderPathWithoutPaginationFindByDataTypeId_G_U;
+	private FinderPath _finderPathCountByDataTypeId_G_U;
+
+	/**
+	 * Returns all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId) {
+
+		return findByDataTypeId_G_U(
+			dataTypeId, groupId, userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId, int start, int end) {
+
+		return findByDataTypeId_G_U(
+			dataTypeId, groupId, userId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataTypeId_G_U(
+			dataTypeId, groupId, userId, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataTypeId_G_U;
+				finderArgs = new Object[] {dataTypeId, groupId, userId};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataTypeId_G_U;
+			finderArgs = new Object[] {
+				dataTypeId, groupId, userId, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if ((dataTypeId != structuredData.getDataTypeId()) ||
+						(groupId != structuredData.getGroupId()) ||
+						(userId != structuredData.getUserId())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					5 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(5);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_GROUPID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_USERID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				queryPos.add(userId);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_U_First(
+			long dataTypeId, long groupId, long userId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_U_First(
+			dataTypeId, groupId, userId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_U_First(
+		long dataTypeId, long groupId, long userId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataTypeId_G_U(
+			dataTypeId, groupId, userId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_U_Last(
+			long dataTypeId, long groupId, long userId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_U_Last(
+			dataTypeId, groupId, userId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_U_Last(
+		long dataTypeId, long groupId, long userId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataTypeId_G_U(dataTypeId, groupId, userId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataTypeId_G_U(
+			dataTypeId, groupId, userId, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataTypeId_G_U_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId, long userId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataTypeId_G_U_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId,
+				orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataTypeId_G_U_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataTypeId_G_U_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, long userId,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				6 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(5);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_USERID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		queryPos.add(userId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @return the matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId) {
+
+		return filterFindByDataTypeId_G_U(
+			dataTypeId, groupId, userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId, int start, int end) {
+
+		return filterFindByDataTypeId_G_U(
+			dataTypeId, groupId, userId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas that the user has permissions to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G_U(
+				dataTypeId, groupId, userId, start, end, orderByComparator);
+		}
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			sb = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_USERID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_TABLE, orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+			}
+			else {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+			}
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			queryPos.add(userId);
+
+			return (List<StructuredData>)QueryUtil.list(
+				sqlQuery, getDialect(), start, end);
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] filterFindByDataTypeId_G_U_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId, long userId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G_U_PrevAndNext(
+				structuredDataId, dataTypeId, groupId, userId,
+				orderByComparator);
+		}
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = filterGetByDataTypeId_G_U_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId,
+				orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = filterGetByDataTypeId_G_U_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData filterGetByDataTypeId_G_U_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, long userId,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				7 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_USERID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByConditionFields[i],
+							true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByConditionFields[i],
+							true));
+				}
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByFields[i], true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByFields[i], true));
+				}
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+		sqlQuery.setFirstResult(0);
+		sqlQuery.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+		}
+		else {
+			sqlQuery.addEntity(_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+		}
+
+		QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		queryPos.add(userId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = sqlQuery.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63; from the database.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 */
+	@Override
+	public void removeByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId) {
+
+		for (StructuredData structuredData :
+				findByDataTypeId_G_U(
+					dataTypeId, groupId, userId, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId) {
+
+		FinderPath finderPath = _finderPathCountByDataTypeId_G_U;
+
+		Object[] finderArgs = new Object[] {dataTypeId, groupId, userId};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_GROUPID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_USERID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				queryPos.add(userId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @return the number of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public int filterCountByDataTypeId_G_U(
+		long dataTypeId, long groupId, long userId) {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByDataTypeId_G_U(dataTypeId, groupId, userId);
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_FILTER_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_USERID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			sqlQuery.addScalar(
+				COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			queryPos.add(userId);
+
+			Long count = (Long)sqlQuery.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_U_DATATYPEID_2 =
+		"structuredData.dataTypeId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_U_GROUPID_2 =
+		"structuredData.groupId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_U_USERID_2 =
+		"structuredData.userId = ?";
+
+	private FinderPath _finderPathWithPaginationFindByDataTypeId_G_S;
+	private FinderPath _finderPathWithoutPaginationFindByDataTypeId_G_S;
+	private FinderPath _finderPathCountByDataTypeId_G_S;
+
+	/**
+	 * Returns all the structured datas where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status) {
+
+		return findByDataTypeId_G_S(
+			dataTypeId, groupId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status, int start, int end) {
+
+		return findByDataTypeId_G_S(
+			dataTypeId, groupId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataTypeId_G_S(
+			dataTypeId, groupId, status, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataTypeId_G_S;
+				finderArgs = new Object[] {dataTypeId, groupId, status};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataTypeId_G_S;
+			finderArgs = new Object[] {
+				dataTypeId, groupId, status, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if ((dataTypeId != structuredData.getDataTypeId()) ||
+						(groupId != structuredData.getGroupId()) ||
+						(status != structuredData.getStatus())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					5 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(5);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_S_GROUPID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				queryPos.add(status);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_S_First(
+			long dataTypeId, long groupId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_S_First(
+			dataTypeId, groupId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_S_First(
+		long dataTypeId, long groupId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataTypeId_G_S(
+			dataTypeId, groupId, status, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_S_Last(
+			long dataTypeId, long groupId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_S_Last(
+			dataTypeId, groupId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_S_Last(
+		long dataTypeId, long groupId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataTypeId_G_S(dataTypeId, groupId, status);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataTypeId_G_S(
+			dataTypeId, groupId, status, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataTypeId_G_S_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataTypeId_G_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, status,
+				orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataTypeId_G_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, status,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataTypeId_G_S_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, int status,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				6 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(5);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		queryPos.add(status);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @return the matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status) {
+
+		return filterFindByDataTypeId_G_S(
+			dataTypeId, groupId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status, int start, int end) {
+
+		return filterFindByDataTypeId_G_S(
+			dataTypeId, groupId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas that the user has permissions to view where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G_S(
+				dataTypeId, groupId, status, start, end, orderByComparator);
+		}
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			sb = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_TABLE, orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+			}
+			else {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+			}
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			queryPos.add(status);
+
+			return (List<StructuredData>)QueryUtil.list(
+				sqlQuery, getDialect(), start, end);
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] filterFindByDataTypeId_G_S_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G_S_PrevAndNext(
+				structuredDataId, dataTypeId, groupId, status,
+				orderByComparator);
+		}
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = filterGetByDataTypeId_G_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, status,
+				orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = filterGetByDataTypeId_G_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, status,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData filterGetByDataTypeId_G_S_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, int status,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				7 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByConditionFields[i],
+							true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByConditionFields[i],
+							true));
+				}
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByFields[i], true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByFields[i], true));
+				}
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+		sqlQuery.setFirstResult(0);
+		sqlQuery.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+		}
+		else {
+			sqlQuery.addEntity(_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+		}
+
+		QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		queryPos.add(status);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = sqlQuery.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataTypeId = &#63; and groupId = &#63; and status = &#63; from the database.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 */
+	@Override
+	public void removeByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status) {
+
+		for (StructuredData structuredData :
+				findByDataTypeId_G_S(
+					dataTypeId, groupId, status, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status) {
+
+		FinderPath finderPath = _finderPathCountByDataTypeId_G_S;
+
+		Object[] finderArgs = new Object[] {dataTypeId, groupId, status};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_S_GROUPID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_S_STATUS_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				queryPos.add(status);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @return the number of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public int filterCountByDataTypeId_G_S(
+		long dataTypeId, long groupId, int status) {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByDataTypeId_G_S(dataTypeId, groupId, status);
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_FILTER_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_S_STATUS_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			sqlQuery.addScalar(
+				COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			queryPos.add(status);
+
+			Long count = (Long)sqlQuery.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_S_DATATYPEID_2 =
+		"structuredData.dataTypeId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_S_GROUPID_2 =
+		"structuredData.groupId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_S_STATUS_2 =
+		"structuredData.status = ?";
+
+	private FinderPath _finderPathWithPaginationFindByDataTypeId_U_S;
+	private FinderPath _finderPathWithoutPaginationFindByDataTypeId_U_S;
+	private FinderPath _finderPathCountByDataTypeId_U_S;
+
+	/**
+	 * Returns all the structured datas where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U_S(
+		long dataTypeId, long userId, int status) {
+
+		return findByDataTypeId_U_S(
+			dataTypeId, userId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U_S(
+		long dataTypeId, long userId, int status, int start, int end) {
+
+		return findByDataTypeId_U_S(
+			dataTypeId, userId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U_S(
+		long dataTypeId, long userId, int status, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataTypeId_U_S(
+			dataTypeId, userId, status, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_U_S(
+		long dataTypeId, long userId, int status, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataTypeId_U_S;
+				finderArgs = new Object[] {dataTypeId, userId, status};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataTypeId_U_S;
+			finderArgs = new Object[] {
+				dataTypeId, userId, status, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if ((dataTypeId != structuredData.getDataTypeId()) ||
+						(userId != structuredData.getUserId()) ||
+						(status != structuredData.getStatus())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					5 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(5);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_S_USERID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(userId);
+
+				queryPos.add(status);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_U_S_First(
+			long dataTypeId, long userId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_U_S_First(
+			dataTypeId, userId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_U_S_First(
+		long dataTypeId, long userId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataTypeId_U_S(
+			dataTypeId, userId, status, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_U_S_Last(
+			long dataTypeId, long userId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_U_S_Last(
+			dataTypeId, userId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_U_S_Last(
+		long dataTypeId, long userId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataTypeId_U_S(dataTypeId, userId, status);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataTypeId_U_S(
+			dataTypeId, userId, status, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataTypeId_U_S_PrevAndNext(
+			long structuredDataId, long dataTypeId, long userId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataTypeId_U_S_PrevAndNext(
+				session, structuredData, dataTypeId, userId, status,
+				orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataTypeId_U_S_PrevAndNext(
+				session, structuredData, dataTypeId, userId, status,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataTypeId_U_S_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long userId, int status,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				6 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(5);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_U_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_U_S_USERID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_U_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(userId);
+
+		queryPos.add(status);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataTypeId = &#63; and userId = &#63; and status = &#63; from the database.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 */
+	@Override
+	public void removeByDataTypeId_U_S(
+		long dataTypeId, long userId, int status) {
+
+		for (StructuredData structuredData :
+				findByDataTypeId_U_S(
+					dataTypeId, userId, status, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataTypeId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataTypeId_U_S(long dataTypeId, long userId, int status) {
+		FinderPath finderPath = _finderPathCountByDataTypeId_U_S;
+
+		Object[] finderArgs = new Object[] {dataTypeId, userId, status};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_S_USERID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_U_S_STATUS_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(userId);
+
+				queryPos.add(status);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_DATATYPEID_U_S_DATATYPEID_2 =
+		"structuredData.dataTypeId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_U_S_USERID_2 =
+		"structuredData.userId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_U_S_STATUS_2 =
+		"structuredData.status = ?";
+
+	private FinderPath _finderPathWithPaginationFindByDataTypeId_G_U_S;
+	private FinderPath _finderPathWithoutPaginationFindByDataTypeId_G_U_S;
+	private FinderPath _finderPathCountByDataTypeId_G_U_S;
+
+	/**
+	 * Returns all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status) {
+
+		return findByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status, int start,
+		int end) {
+
+		return findByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status, int start,
+		int end, OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status, start, end, orderByComparator,
+			true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status, int start,
+		int end, OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataTypeId_G_U_S;
+				finderArgs = new Object[] {dataTypeId, groupId, userId, status};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataTypeId_G_U_S;
+			finderArgs = new Object[] {
+				dataTypeId, groupId, userId, status, start, end,
+				orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if ((dataTypeId != structuredData.getDataTypeId()) ||
+						(groupId != structuredData.getGroupId()) ||
+						(userId != structuredData.getUserId()) ||
+						(status != structuredData.getStatus())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					6 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(6);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_GROUPID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_USERID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_STATUS_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				queryPos.add(userId);
+
+				queryPos.add(status);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_U_S_First(
+			long dataTypeId, long groupId, long userId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_U_S_First(
+			dataTypeId, groupId, userId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(10);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_U_S_First(
+		long dataTypeId, long groupId, long userId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataTypeId_G_U_S_Last(
+			long dataTypeId, long groupId, long userId, int status,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataTypeId_G_U_S_Last(
+			dataTypeId, groupId, userId, status, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(10);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataTypeId=");
+		sb.append(dataTypeId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
+
+		sb.append(", userId=");
+		sb.append(userId);
+
+		sb.append(", status=");
+		sb.append(status);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataTypeId_G_U_S_Last(
+		long dataTypeId, long groupId, long userId, int status,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status, count - 1, count,
+			orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataTypeId_G_U_S_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId, long userId,
+			int status, OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataTypeId_G_U_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId, status,
+				orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataTypeId_G_U_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId, status,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataTypeId_G_U_S_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, long userId, int status,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				7 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(6);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_USERID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_STATUS_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		queryPos.add(userId);
+
+		queryPos.add(status);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @return the matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status) {
+
+		return filterFindByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status, int start,
+		int end) {
+
+		return filterFindByDataTypeId_G_U_S(
+			dataTypeId, groupId, userId, status, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas that the user has permissions to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public List<StructuredData> filterFindByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status, int start,
+		int end, OrderByComparator<StructuredData> orderByComparator) {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G_U_S(
+				dataTypeId, groupId, userId, status, start, end,
+				orderByComparator);
+		}
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				6 + (orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			sb = new StringBundler(7);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_USERID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_TABLE, orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+			}
+			else {
+				sqlQuery.addEntity(
+					_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+			}
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			queryPos.add(userId);
+
+			queryPos.add(status);
+
+			return (List<StructuredData>)QueryUtil.list(
+				sqlQuery, getDialect(), start, end);
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] filterFindByDataTypeId_G_U_S_PrevAndNext(
+			long structuredDataId, long dataTypeId, long groupId, long userId,
+			int status, OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByDataTypeId_G_U_S_PrevAndNext(
+				structuredDataId, dataTypeId, groupId, userId, status,
+				orderByComparator);
+		}
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = filterGetByDataTypeId_G_U_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId, status,
+				orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = filterGetByDataTypeId_G_U_S_PrevAndNext(
+				session, structuredData, dataTypeId, groupId, userId, status,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData filterGetByDataTypeId_G_U_S_PrevAndNext(
+		Session session, StructuredData structuredData, long dataTypeId,
+		long groupId, long userId, int status,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				8 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(7);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_STRUCTUREDDATA_WHERE);
+		}
+		else {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_USERID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_STATUS_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(
+				_FILTER_SQL_SELECT_STRUCTUREDDATA_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByConditionFields[i],
+							true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByConditionFields[i],
+							true));
+				}
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByFields[i], true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByFields[i], true));
+				}
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+		sqlQuery.setFirstResult(0);
+		sqlQuery.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, StructuredDataImpl.class);
+		}
+		else {
+			sqlQuery.addEntity(_FILTER_ENTITY_TABLE, StructuredDataImpl.class);
+		}
+
+		QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+		queryPos.add(dataTypeId);
+
+		queryPos.add(groupId);
+
+		queryPos.add(userId);
+
+		queryPos.add(status);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = sqlQuery.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63; from the database.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 */
+	@Override
+	public void removeByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status) {
+
+		for (StructuredData structuredData :
+				findByDataTypeId_G_U_S(
+					dataTypeId, groupId, userId, status, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status) {
+
+		FinderPath finderPath = _finderPathCountByDataTypeId_G_U_S;
+
+		Object[] finderArgs = new Object[] {
+			dataTypeId, groupId, userId, status
+		};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_DATATYPEID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_GROUPID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_USERID_2);
+
+			sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_STATUS_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataTypeId);
+
+				queryPos.add(groupId);
+
+				queryPos.add(userId);
+
+				queryPos.add(status);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of structured datas that the user has permission to view where dataTypeId = &#63; and groupId = &#63; and userId = &#63; and status = &#63;.
+	 *
+	 * @param dataTypeId the data type ID
+	 * @param groupId the group ID
+	 * @param userId the user ID
+	 * @param status the status
+	 * @return the number of matching structured datas that the user has permission to view
+	 */
+	@Override
+	public int filterCountByDataTypeId_G_U_S(
+		long dataTypeId, long groupId, long userId, int status) {
+
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByDataTypeId_G_U_S(dataTypeId, groupId, userId, status);
+		}
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(_FILTER_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_DATATYPEID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_GROUPID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_USERID_2);
+
+		sb.append(_FINDER_COLUMN_DATATYPEID_G_U_S_STATUS_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), StructuredData.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			sqlQuery.addScalar(
+				COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(dataTypeId);
+
+			queryPos.add(groupId);
+
+			queryPos.add(userId);
+
+			queryPos.add(status);
+
+			Long count = (Long)sqlQuery.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_U_S_DATATYPEID_2 =
+		"structuredData.dataTypeId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_U_S_GROUPID_2 =
+		"structuredData.groupId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_U_S_USERID_2 =
+		"structuredData.userId = ? AND ";
+
+	private static final String _FINDER_COLUMN_DATATYPEID_G_U_S_STATUS_2 =
+		"structuredData.status = ?";
+
 	public StructuredDataPersistenceImpl() {
 		Map<String, String> dbColumnNames = new HashMap<String, String>();
 
@@ -8236,6 +13959,74 @@ public class StructuredDataPersistenceImpl
 			finderCache.removeResult(
 				_finderPathWithoutPaginationFindByDataTypeId, args);
 
+			args = new Object[] {
+				structuredDataModelImpl.getDataTypeId(),
+				structuredDataModelImpl.getGroupId()
+			};
+
+			finderCache.removeResult(_finderPathCountByDataTypeId_G, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataTypeId_G, args);
+
+			args = new Object[] {
+				structuredDataModelImpl.getDataTypeId(),
+				structuredDataModelImpl.getUserId()
+			};
+
+			finderCache.removeResult(_finderPathCountByDataTypeId_U, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataTypeId_U, args);
+
+			args = new Object[] {
+				structuredDataModelImpl.getDataTypeId(),
+				structuredDataModelImpl.getStatus()
+			};
+
+			finderCache.removeResult(_finderPathCountByDataTypeId_S, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataTypeId_S, args);
+
+			args = new Object[] {
+				structuredDataModelImpl.getDataTypeId(),
+				structuredDataModelImpl.getGroupId(),
+				structuredDataModelImpl.getUserId()
+			};
+
+			finderCache.removeResult(_finderPathCountByDataTypeId_G_U, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataTypeId_G_U, args);
+
+			args = new Object[] {
+				structuredDataModelImpl.getDataTypeId(),
+				structuredDataModelImpl.getGroupId(),
+				structuredDataModelImpl.getStatus()
+			};
+
+			finderCache.removeResult(_finderPathCountByDataTypeId_G_S, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataTypeId_G_S, args);
+
+			args = new Object[] {
+				structuredDataModelImpl.getDataTypeId(),
+				structuredDataModelImpl.getUserId(),
+				structuredDataModelImpl.getStatus()
+			};
+
+			finderCache.removeResult(_finderPathCountByDataTypeId_U_S, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataTypeId_U_S, args);
+
+			args = new Object[] {
+				structuredDataModelImpl.getDataTypeId(),
+				structuredDataModelImpl.getGroupId(),
+				structuredDataModelImpl.getUserId(),
+				structuredDataModelImpl.getStatus()
+			};
+
+			finderCache.removeResult(_finderPathCountByDataTypeId_G_U_S, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataTypeId_G_U_S, args);
+
 			finderCache.removeResult(_finderPathCountAll, FINDER_ARGS_EMPTY);
 			finderCache.removeResult(
 				_finderPathWithoutPaginationFindAll, FINDER_ARGS_EMPTY);
@@ -8470,6 +14261,185 @@ public class StructuredDataPersistenceImpl
 				finderCache.removeResult(_finderPathCountByDataTypeId, args);
 				finderCache.removeResult(
 					_finderPathWithoutPaginationFindByDataTypeId, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataTypeId_G.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataTypeId(),
+					structuredDataModelImpl.getOriginalGroupId()
+				};
+
+				finderCache.removeResult(_finderPathCountByDataTypeId_G, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataTypeId(),
+					structuredDataModelImpl.getGroupId()
+				};
+
+				finderCache.removeResult(_finderPathCountByDataTypeId_G, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataTypeId_U.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataTypeId(),
+					structuredDataModelImpl.getOriginalUserId()
+				};
+
+				finderCache.removeResult(_finderPathCountByDataTypeId_U, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_U, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataTypeId(),
+					structuredDataModelImpl.getUserId()
+				};
+
+				finderCache.removeResult(_finderPathCountByDataTypeId_U, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_U, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataTypeId_S.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataTypeId(),
+					structuredDataModelImpl.getOriginalStatus()
+				};
+
+				finderCache.removeResult(_finderPathCountByDataTypeId_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_S, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataTypeId(),
+					structuredDataModelImpl.getStatus()
+				};
+
+				finderCache.removeResult(_finderPathCountByDataTypeId_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_S, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataTypeId_G_U.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataTypeId(),
+					structuredDataModelImpl.getOriginalGroupId(),
+					structuredDataModelImpl.getOriginalUserId()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_G_U, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G_U, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataTypeId(),
+					structuredDataModelImpl.getGroupId(),
+					structuredDataModelImpl.getUserId()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_G_U, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G_U, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataTypeId_G_S.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataTypeId(),
+					structuredDataModelImpl.getOriginalGroupId(),
+					structuredDataModelImpl.getOriginalStatus()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_G_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G_S, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataTypeId(),
+					structuredDataModelImpl.getGroupId(),
+					structuredDataModelImpl.getStatus()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_G_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G_S, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataTypeId_U_S.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataTypeId(),
+					structuredDataModelImpl.getOriginalUserId(),
+					structuredDataModelImpl.getOriginalStatus()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_U_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_U_S, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataTypeId(),
+					structuredDataModelImpl.getUserId(),
+					structuredDataModelImpl.getStatus()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_U_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_U_S, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataTypeId_G_U_S.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataTypeId(),
+					structuredDataModelImpl.getOriginalGroupId(),
+					structuredDataModelImpl.getOriginalUserId(),
+					structuredDataModelImpl.getOriginalStatus()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_G_U_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G_U_S, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataTypeId(),
+					structuredDataModelImpl.getGroupId(),
+					structuredDataModelImpl.getUserId(),
+					structuredDataModelImpl.getStatus()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataTypeId_G_U_S, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataTypeId_G_U_S, args);
 			}
 		}
 
@@ -9009,6 +14979,182 @@ public class StructuredDataPersistenceImpl
 			entityCacheEnabled, finderCacheEnabled, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataTypeId",
 			new String[] {Long.class.getName()});
+
+		_finderPathWithPaginationFindByDataTypeId_G = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataTypeId_G",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataTypeId_G = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataTypeId_G",
+			new String[] {Long.class.getName(), Long.class.getName()},
+			StructuredDataModelImpl.DATATYPEID_COLUMN_BITMASK |
+			StructuredDataModelImpl.GROUPID_COLUMN_BITMASK);
+
+		_finderPathCountByDataTypeId_G = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataTypeId_G",
+			new String[] {Long.class.getName(), Long.class.getName()});
+
+		_finderPathWithPaginationFindByDataTypeId_U = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataTypeId_U",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataTypeId_U = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataTypeId_U",
+			new String[] {Long.class.getName(), Long.class.getName()},
+			StructuredDataModelImpl.DATATYPEID_COLUMN_BITMASK |
+			StructuredDataModelImpl.USERID_COLUMN_BITMASK);
+
+		_finderPathCountByDataTypeId_U = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataTypeId_U",
+			new String[] {Long.class.getName(), Long.class.getName()});
+
+		_finderPathWithPaginationFindByDataTypeId_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataTypeId_S",
+			new String[] {
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataTypeId_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataTypeId_S",
+			new String[] {Long.class.getName(), Integer.class.getName()},
+			StructuredDataModelImpl.DATATYPEID_COLUMN_BITMASK |
+			StructuredDataModelImpl.STATUS_COLUMN_BITMASK);
+
+		_finderPathCountByDataTypeId_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataTypeId_S",
+			new String[] {Long.class.getName(), Integer.class.getName()});
+
+		_finderPathWithPaginationFindByDataTypeId_G_U = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataTypeId_G_U",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataTypeId_G_U = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataTypeId_G_U",
+			new String[] {
+				Long.class.getName(), Long.class.getName(), Long.class.getName()
+			},
+			StructuredDataModelImpl.DATATYPEID_COLUMN_BITMASK |
+			StructuredDataModelImpl.GROUPID_COLUMN_BITMASK |
+			StructuredDataModelImpl.USERID_COLUMN_BITMASK);
+
+		_finderPathCountByDataTypeId_G_U = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataTypeId_G_U",
+			new String[] {
+				Long.class.getName(), Long.class.getName(), Long.class.getName()
+			});
+
+		_finderPathWithPaginationFindByDataTypeId_G_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataTypeId_G_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataTypeId_G_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataTypeId_G_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			},
+			StructuredDataModelImpl.DATATYPEID_COLUMN_BITMASK |
+			StructuredDataModelImpl.GROUPID_COLUMN_BITMASK |
+			StructuredDataModelImpl.STATUS_COLUMN_BITMASK);
+
+		_finderPathCountByDataTypeId_G_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataTypeId_G_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			});
+
+		_finderPathWithPaginationFindByDataTypeId_U_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataTypeId_U_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataTypeId_U_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataTypeId_U_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			},
+			StructuredDataModelImpl.DATATYPEID_COLUMN_BITMASK |
+			StructuredDataModelImpl.USERID_COLUMN_BITMASK |
+			StructuredDataModelImpl.STATUS_COLUMN_BITMASK);
+
+		_finderPathCountByDataTypeId_U_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataTypeId_U_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Integer.class.getName()
+			});
+
+		_finderPathWithPaginationFindByDataTypeId_G_U_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataTypeId_G_U_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataTypeId_G_U_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataTypeId_G_U_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Long.class.getName(), Integer.class.getName()
+			},
+			StructuredDataModelImpl.DATATYPEID_COLUMN_BITMASK |
+			StructuredDataModelImpl.GROUPID_COLUMN_BITMASK |
+			StructuredDataModelImpl.USERID_COLUMN_BITMASK |
+			StructuredDataModelImpl.STATUS_COLUMN_BITMASK);
+
+		_finderPathCountByDataTypeId_G_U_S = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByDataTypeId_G_U_S",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Long.class.getName(), Integer.class.getName()
+			});
 
 		_setStructuredDataUtilPersistence(this);
 	}

@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.Validator"%>
+<%@page import="com.sx.constant.StationXConstants"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
@@ -21,20 +23,10 @@
 	JSONObject dataStructure = null;
 	boolean hasDataStructure = dataType.getHasDataStructure();
 	
-	System.out.println( "hasDataStructure: " + hasDataStructure );
 	if( hasDataStructure ){
 		System.out.println("Dropped here...");
 		dataStructure = (JSONObject)renderRequest.getAttribute(StationXWebKeys.DATA_STRUCTURE);
 	}
-	
-	Locale defaultLocale = PortalUtil.getSiteDefaultLocale(themeDisplay.getScopeGroupId());
-	
-	Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
-	
-	JSONArray jsonLocales = JSONFactoryUtil.createJSONArray();
-	availableLocales.forEach( jsonLocales::put );
-	
-	System.out.println("Available Locales: " + jsonLocales.toJSONString());
 %>
 
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/main.css">
@@ -52,7 +44,12 @@
 </portlet:resourceURL>
 
 <portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_SAVE_STRUCTURE %>" var="saveDataStructureResourceCommandURL">
+	<portlet:param name="cmd" value="<%= hasDataStructure?StationXConstants.CMD_UPDATE:StationXConstants.CMD_ADD %>"/>
 </portlet:resourceURL>
+
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATA_STRUCTURE_DELETE %>" var="removeDataStructureURL">
+	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
+</portlet:actionURL>
 
 
 <portlet:renderURL var="templateEditListOptionDlg">
@@ -276,7 +273,7 @@
 	<aui:button-row>
 		<aui:button id="btnSave" value="save"></aui:button>
 		<aui:button id="btnSaveAndViewDataTypeList" value="save-and-view-datatype-list"></aui:button>
-		<aui:button id="btnRemoveDataStructure" value="remove-data-structure"></aui:button>
+		<aui:button id="btnRemoveDataStructure" value="remove-data-structure" href="<%= removeDataStructureURL %>"></aui:button>
 	</aui:button-row>
 
 </aui:container>
