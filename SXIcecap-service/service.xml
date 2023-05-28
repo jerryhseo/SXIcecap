@@ -215,8 +215,18 @@
         <column localized="true" name="dataSetDisplayName" type="String"></column>
         <column name="dataTypeId" type="long"></column>
         <column name="dataTypeDisplayName" type="String" localized="true"></column>
+        <column name="dataSetFolderId" type="long"></column>
+        <column name="dataSetFolderName" type="String" localized="true"></column>
+        <column name="dataPackId" type="long"></column>
+        <column name="dataPackDisplayName" type="String" localized="true"></column>
 
 		<!-- Descriptive -->
+        <column name="recordType" type="String"></column>
+        <column name="recordDelimiter" type="String"></column>
+        <column name="recordFormat" type="String"></column>
+        <column name="entryCount" type="int"></column>
+        <column name="startEntryNo" type="int"></column>
+        <column name="endEntryNo" type="int"></column>
         <column name="structuredData" type="String"></column>
  
  		<!-- Finders -->
@@ -251,6 +261,12 @@
         
         <finder name="DataSetId" return-type="Collection">
             <finder-column name="dataSetId"></finder-column>
+        </finder>
+        <finder name="DataSetFolderId" return-type="Collection">
+            <finder-column name="dataSetFolderId"></finder-column>
+        </finder>
+        <finder name="DataPackId" return-type="Collection">
+            <finder-column name="dataPackId"></finder-column>
         </finder>
         <finder name="DataTypeId" return-type="Collection">
             <finder-column name="dataTypeId"></finder-column>
@@ -299,11 +315,275 @@
 		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
         
 	</entity>
+	
+	<entity name="DataSet" local-service="true" uuid="true" remote-service="false" uuid-accessor="true" trash-enabled="true">
+
+		<!-- PK fields -->
+		<column name="dataSetId" primary="true" type="long"></column>
+		
+		<!-- Group Instance -->
+		<column name="companyId" type="long"></column>
+		<column name="groupId" type="long"></column>
+		
+		<!-- Audit fields -->
+		<column name="userId" type="long"></column>
+		<column name="userName" type="String"></column>
+		<column name="createDate" type="Date"></column>
+		<column name="modifiedDate" type="Date"></column>
+		
+		<!-- Field for Staging --> 
+		<column name="lastPublishDate" type="Date" />
+		
+		<!-- Status fields for workflow -->
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
+		
+		<!--  Descriptive -->
+		
+		<column name="dataSetName" type="String"></column>
+		<column name="dataSetVersion" type="String"></column>
+		<column name="displayName" type="String" localized="true"></column>
+		<column name="description" type="String" localized="true"></column>
+		
+		<!-- Finders -->
+		
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+		</finder>
+		<finder name="UserId" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="Status" return-type="Collection">
+			<finder-column name="status"></finder-column>
+		</finder>
+		
+		<finder name="G_U" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="U_S" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="G_U_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		
+		<finder name="Name" return-type="Collection">
+			<finder-column name="dataSetName" ></finder-column>
+		</finder>
+
+		<finder name="NameVersion" return-type="DataSet">
+			<finder-column name="dataSetName" ></finder-column>
+			<finder-column name="dataSetVersion" ></finder-column>
+		</finder>
+		
+		<!-- finder with groupId -->
+		
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
+		<reference entity="RatingsStats" package-path="com.liferay.portlet.ratings" />
+		<reference entity="TrashEntry" package-path="com.liferay.portlet.trash" />
+		<reference entity="TrashVersion" package-path="com.liferay.portlet.trash" />
+		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
+	</entity>
+	
+	<entity name="DataPack" local-service="true" uuid="true" remote-service="false" uuid-accessor="true" trash-enabled="true">
+
+		<!-- PK fields -->
+		<column name="dataPackId" primary="true" type="long"></column>
+		
+		<!-- Group Instance -->
+		<column name="companyId" type="long"></column>
+		<column name="groupId" type="long"></column>
+		
+		<!-- Audit fields -->
+		<column name="userId" type="long"></column>
+		<column name="userName" type="String"></column>
+		<column name="createDate" type="Date"></column>
+		<column name="modifiedDate" type="Date"></column>
+		
+		<!-- Field for Staging --> 
+		<column name="lastPublishDate" type="Date" />
+		
+		<!-- Status fields for workflow -->
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
+		
+		<!-- Foreign Keys -->
+		<column name="dataSetId" type="long" />
+		<column name="dataSetFolderId" type="long" />
+		
+		<!--  Descriptive -->
+		
+		<column name="dataPackName" type="String"></column>
+		<column name="dataPackVersion" type="String"></column>
+		<column name="displayName" type="String" localized="true"></column>
+		<column name="description" type="String" localized="true"></column>
+		
+		<!-- Finders -->
+		
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+		</finder>
+		<finder name="UserId" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="Status" return-type="Collection">
+			<finder-column name="status"></finder-column>
+		</finder>
+		
+		<finder name="G_U" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="U_S" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="G_U_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		
+		<finder name="Name" return-type="Collection">
+			<finder-column name="dataPackName" ></finder-column>
+		</finder>
+
+		<finder name="NameVersion" return-type="DataPack">
+			<finder-column name="dataPackName" ></finder-column>
+			<finder-column name="dataPackVersion" ></finder-column>
+		</finder>
+        <finder name="DataSet" return-type="Collection">
+            <finder-column name="dataSetId"></finder-column>
+        </finder>
+        <finder name="Folder" return-type="Collection">
+            <finder-column name="dataSetId"></finder-column>
+            <finder-column name="dataSetFolderId"></finder-column>
+        </finder>
+		
+		<!-- finder with groupId -->
+		
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
+		<reference entity="RatingsStats" package-path="com.liferay.portlet.ratings" />
+		<reference entity="TrashEntry" package-path="com.liferay.portlet.trash" />
+		<reference entity="TrashVersion" package-path="com.liferay.portlet.trash" />
+		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
+	</entity>
+	
+	<entity name="DataPackStructure" local-service="true" remote-service="false" uuid="false">
+		<column name="dataPackId" primary="true" type="long"></column>
+		<column name="structure" type="String" json-enabled="true"></column><!--  typeContent: JSON -->
+	</entity>
+	
+	<entity name="DataPackEntry" local-service="true"
+		remote-service="false" uuid="true" uuid-accessor="true" trash-enabled="true">
+
+		<!-- PK fields -->
+
+		<column name="dataPackEntryId" primary="true" type="long"></column>
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long"></column>
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long"></column>
+		<column name="userId" type="long"></column>
+		<column name="userName" type="String"></column>
+		<column name="createDate" type="Date"></column>
+		<column name="modifiedDate" type="Date"></column>
+		
+		<!-- Status fields for workflow -->
+		
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
+		
+		<!-- Foreign Fields -->
+        <column name="dataSetId" type="long"></column>
+        <column name="dataSetFolderId" type="long"></column>
+        <column name="dataPackId" type="long"></column>
+
+		<!-- Descriptive -->
+        <column name="entryData" type="String"></column>
+ 
+ 		<!-- Finders -->
+ 		
+ 		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+		</finder>
+		<finder name="UserId" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="Status" return-type="Collection">
+			<finder-column name="status"></finder-column>
+		</finder>
+		
+		<finder name="G_U" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+		</finder>
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="U_S" return-type="Collection">
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+		<finder name="G_U_S" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+			<finder-column name="userId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+        
+        <finder name="DataSetId" return-type="Collection">
+            <finder-column name="dataSetId"></finder-column>
+        </finder>
+        <finder name="DataSetFolderId" return-type="Collection">
+            <finder-column name="dataSetFolderId"></finder-column>
+        </finder>
+        <finder name="DataPackId" return-type="Collection">
+            <finder-column name="dataPackId"></finder-column>
+        </finder>
+        
+        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
+		<reference entity="RatingsStats" package-path="com.liferay.portlet.ratings" />
+		<reference entity="TrashEntry" package-path="com.liferay.portlet.trash" />
+		<reference entity="TrashVersion" package-path="com.liferay.portlet.trash" />
+		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
+        
+	</entity>
+	
 
 	<exceptions>
+        <exception>DuplicatedDataSetName</exception>
+        <exception>DuplicatedDataPackName</exception>
         <exception>DuplicatedTermName</exception>
         <exception>InvalidTermName</exception>
         <exception>DuplicatedDataTypeName</exception>
+        <exception>InvalidDataSetName</exception>
+        <exception>InvalidDataPackName</exception>
         <exception>InvalidDataTypeName</exception>
 	</exceptions>
 </service-builder>

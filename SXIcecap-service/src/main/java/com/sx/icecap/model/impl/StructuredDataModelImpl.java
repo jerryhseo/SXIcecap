@@ -92,6 +92,11 @@ public class StructuredDataModelImpl
 		{"statusByUserName", Types.VARCHAR}, {"statusDate", Types.TIMESTAMP},
 		{"dataSetId", Types.BIGINT}, {"dataSetDisplayName", Types.VARCHAR},
 		{"dataTypeId", Types.BIGINT}, {"dataTypeDisplayName", Types.VARCHAR},
+		{"dataSetFolderId", Types.BIGINT}, {"dataSetFolderName", Types.VARCHAR},
+		{"dataPackId", Types.BIGINT}, {"dataPackDisplayName", Types.VARCHAR},
+		{"recordType", Types.VARCHAR}, {"recordDelimiter", Types.VARCHAR},
+		{"recordFormat", Types.VARCHAR}, {"entryCount", Types.INTEGER},
+		{"startEntryNo", Types.INTEGER}, {"endEntryNo", Types.INTEGER},
 		{"structuredData", Types.VARCHAR}
 	};
 
@@ -115,11 +120,21 @@ public class StructuredDataModelImpl
 		TABLE_COLUMNS_MAP.put("dataSetDisplayName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("dataTypeId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("dataTypeDisplayName", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("dataSetFolderId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("dataSetFolderName", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("dataPackId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("dataPackDisplayName", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("recordType", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("recordDelimiter", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("recordFormat", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("entryCount", Types.INTEGER);
+		TABLE_COLUMNS_MAP.put("startEntryNo", Types.INTEGER);
+		TABLE_COLUMNS_MAP.put("endEntryNo", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("structuredData", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SX_ICECAP_StructuredData (uuid_ VARCHAR(75) null,structuredDataId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,dataSetId LONG,dataSetDisplayName STRING null,dataTypeId LONG,dataTypeDisplayName STRING null,structuredData VARCHAR(75) null)";
+		"create table SX_ICECAP_StructuredData (uuid_ VARCHAR(75) null,structuredDataId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,dataSetId LONG,dataSetDisplayName STRING null,dataTypeId LONG,dataTypeDisplayName STRING null,dataSetFolderId LONG,dataSetFolderName STRING null,dataPackId LONG,dataPackDisplayName STRING null,recordType VARCHAR(75) null,recordDelimiter VARCHAR(75) null,recordFormat VARCHAR(75) null,entryCount INTEGER,startEntryNo INTEGER,endEntryNo INTEGER,structuredData TEXT null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table SX_ICECAP_StructuredData";
@@ -138,19 +153,23 @@ public class StructuredDataModelImpl
 
 	public static final long COMPANYID_COLUMN_BITMASK = 1L;
 
-	public static final long DATASETID_COLUMN_BITMASK = 2L;
+	public static final long DATAPACKID_COLUMN_BITMASK = 2L;
 
-	public static final long DATATYPEID_COLUMN_BITMASK = 4L;
+	public static final long DATASETFOLDERID_COLUMN_BITMASK = 4L;
 
-	public static final long GROUPID_COLUMN_BITMASK = 8L;
+	public static final long DATASETID_COLUMN_BITMASK = 8L;
 
-	public static final long STATUS_COLUMN_BITMASK = 16L;
+	public static final long DATATYPEID_COLUMN_BITMASK = 16L;
 
-	public static final long USERID_COLUMN_BITMASK = 32L;
+	public static final long GROUPID_COLUMN_BITMASK = 32L;
 
-	public static final long UUID_COLUMN_BITMASK = 64L;
+	public static final long STATUS_COLUMN_BITMASK = 64L;
 
-	public static final long STRUCTUREDDATAID_COLUMN_BITMASK = 128L;
+	public static final long USERID_COLUMN_BITMASK = 128L;
+
+	public static final long UUID_COLUMN_BITMASK = 256L;
+
+	public static final long STRUCTUREDDATAID_COLUMN_BITMASK = 512L;
 
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
 		_entityCacheEnabled = entityCacheEnabled;
@@ -365,6 +384,62 @@ public class StructuredDataModelImpl
 			"dataTypeDisplayName",
 			(BiConsumer<StructuredData, String>)
 				StructuredData::setDataTypeDisplayName);
+		attributeGetterFunctions.put(
+			"dataSetFolderId", StructuredData::getDataSetFolderId);
+		attributeSetterBiConsumers.put(
+			"dataSetFolderId",
+			(BiConsumer<StructuredData, Long>)
+				StructuredData::setDataSetFolderId);
+		attributeGetterFunctions.put(
+			"dataSetFolderName", StructuredData::getDataSetFolderName);
+		attributeSetterBiConsumers.put(
+			"dataSetFolderName",
+			(BiConsumer<StructuredData, String>)
+				StructuredData::setDataSetFolderName);
+		attributeGetterFunctions.put(
+			"dataPackId", StructuredData::getDataPackId);
+		attributeSetterBiConsumers.put(
+			"dataPackId",
+			(BiConsumer<StructuredData, Long>)StructuredData::setDataPackId);
+		attributeGetterFunctions.put(
+			"dataPackDisplayName", StructuredData::getDataPackDisplayName);
+		attributeSetterBiConsumers.put(
+			"dataPackDisplayName",
+			(BiConsumer<StructuredData, String>)
+				StructuredData::setDataPackDisplayName);
+		attributeGetterFunctions.put(
+			"recordType", StructuredData::getRecordType);
+		attributeSetterBiConsumers.put(
+			"recordType",
+			(BiConsumer<StructuredData, String>)StructuredData::setRecordType);
+		attributeGetterFunctions.put(
+			"recordDelimiter", StructuredData::getRecordDelimiter);
+		attributeSetterBiConsumers.put(
+			"recordDelimiter",
+			(BiConsumer<StructuredData, String>)
+				StructuredData::setRecordDelimiter);
+		attributeGetterFunctions.put(
+			"recordFormat", StructuredData::getRecordFormat);
+		attributeSetterBiConsumers.put(
+			"recordFormat",
+			(BiConsumer<StructuredData, String>)
+				StructuredData::setRecordFormat);
+		attributeGetterFunctions.put(
+			"entryCount", StructuredData::getEntryCount);
+		attributeSetterBiConsumers.put(
+			"entryCount",
+			(BiConsumer<StructuredData, Integer>)StructuredData::setEntryCount);
+		attributeGetterFunctions.put(
+			"startEntryNo", StructuredData::getStartEntryNo);
+		attributeSetterBiConsumers.put(
+			"startEntryNo",
+			(BiConsumer<StructuredData, Integer>)
+				StructuredData::setStartEntryNo);
+		attributeGetterFunctions.put(
+			"endEntryNo", StructuredData::getEndEntryNo);
+		attributeSetterBiConsumers.put(
+			"endEntryNo",
+			(BiConsumer<StructuredData, Integer>)StructuredData::setEndEntryNo);
 		attributeGetterFunctions.put(
 			"structuredData", StructuredData::getStructuredData);
 		attributeSetterBiConsumers.put(
@@ -885,6 +960,354 @@ public class StructuredDataModelImpl
 	}
 
 	@Override
+	public long getDataSetFolderId() {
+		return _dataSetFolderId;
+	}
+
+	@Override
+	public void setDataSetFolderId(long dataSetFolderId) {
+		_columnBitmask |= DATASETFOLDERID_COLUMN_BITMASK;
+
+		if (!_setOriginalDataSetFolderId) {
+			_setOriginalDataSetFolderId = true;
+
+			_originalDataSetFolderId = _dataSetFolderId;
+		}
+
+		_dataSetFolderId = dataSetFolderId;
+	}
+
+	public long getOriginalDataSetFolderId() {
+		return _originalDataSetFolderId;
+	}
+
+	@Override
+	public String getDataSetFolderName() {
+		if (_dataSetFolderName == null) {
+			return "";
+		}
+		else {
+			return _dataSetFolderName;
+		}
+	}
+
+	@Override
+	public String getDataSetFolderName(Locale locale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataSetFolderName(languageId);
+	}
+
+	@Override
+	public String getDataSetFolderName(Locale locale, boolean useDefault) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataSetFolderName(languageId, useDefault);
+	}
+
+	@Override
+	public String getDataSetFolderName(String languageId) {
+		return LocalizationUtil.getLocalization(
+			getDataSetFolderName(), languageId);
+	}
+
+	@Override
+	public String getDataSetFolderName(String languageId, boolean useDefault) {
+		return LocalizationUtil.getLocalization(
+			getDataSetFolderName(), languageId, useDefault);
+	}
+
+	@Override
+	public String getDataSetFolderNameCurrentLanguageId() {
+		return _dataSetFolderNameCurrentLanguageId;
+	}
+
+	@JSON
+	@Override
+	public String getDataSetFolderNameCurrentValue() {
+		Locale locale = getLocale(_dataSetFolderNameCurrentLanguageId);
+
+		return getDataSetFolderName(locale);
+	}
+
+	@Override
+	public Map<Locale, String> getDataSetFolderNameMap() {
+		return LocalizationUtil.getLocalizationMap(getDataSetFolderName());
+	}
+
+	@Override
+	public void setDataSetFolderName(String dataSetFolderName) {
+		_dataSetFolderName = dataSetFolderName;
+	}
+
+	@Override
+	public void setDataSetFolderName(String dataSetFolderName, Locale locale) {
+		setDataSetFolderName(
+			dataSetFolderName, locale, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataSetFolderName(
+		String dataSetFolderName, Locale locale, Locale defaultLocale) {
+
+		String languageId = LocaleUtil.toLanguageId(locale);
+		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
+
+		if (Validator.isNotNull(dataSetFolderName)) {
+			setDataSetFolderName(
+				LocalizationUtil.updateLocalization(
+					getDataSetFolderName(), "DataSetFolderName",
+					dataSetFolderName, languageId, defaultLanguageId));
+		}
+		else {
+			setDataSetFolderName(
+				LocalizationUtil.removeLocalization(
+					getDataSetFolderName(), "DataSetFolderName", languageId));
+		}
+	}
+
+	@Override
+	public void setDataSetFolderNameCurrentLanguageId(String languageId) {
+		_dataSetFolderNameCurrentLanguageId = languageId;
+	}
+
+	@Override
+	public void setDataSetFolderNameMap(
+		Map<Locale, String> dataSetFolderNameMap) {
+
+		setDataSetFolderNameMap(
+			dataSetFolderNameMap, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataSetFolderNameMap(
+		Map<Locale, String> dataSetFolderNameMap, Locale defaultLocale) {
+
+		if (dataSetFolderNameMap == null) {
+			return;
+		}
+
+		setDataSetFolderName(
+			LocalizationUtil.updateLocalization(
+				dataSetFolderNameMap, getDataSetFolderName(),
+				"DataSetFolderName", LocaleUtil.toLanguageId(defaultLocale)));
+	}
+
+	@Override
+	public long getDataPackId() {
+		return _dataPackId;
+	}
+
+	@Override
+	public void setDataPackId(long dataPackId) {
+		_columnBitmask |= DATAPACKID_COLUMN_BITMASK;
+
+		if (!_setOriginalDataPackId) {
+			_setOriginalDataPackId = true;
+
+			_originalDataPackId = _dataPackId;
+		}
+
+		_dataPackId = dataPackId;
+	}
+
+	public long getOriginalDataPackId() {
+		return _originalDataPackId;
+	}
+
+	@Override
+	public String getDataPackDisplayName() {
+		if (_dataPackDisplayName == null) {
+			return "";
+		}
+		else {
+			return _dataPackDisplayName;
+		}
+	}
+
+	@Override
+	public String getDataPackDisplayName(Locale locale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataPackDisplayName(languageId);
+	}
+
+	@Override
+	public String getDataPackDisplayName(Locale locale, boolean useDefault) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDataPackDisplayName(languageId, useDefault);
+	}
+
+	@Override
+	public String getDataPackDisplayName(String languageId) {
+		return LocalizationUtil.getLocalization(
+			getDataPackDisplayName(), languageId);
+	}
+
+	@Override
+	public String getDataPackDisplayName(
+		String languageId, boolean useDefault) {
+
+		return LocalizationUtil.getLocalization(
+			getDataPackDisplayName(), languageId, useDefault);
+	}
+
+	@Override
+	public String getDataPackDisplayNameCurrentLanguageId() {
+		return _dataPackDisplayNameCurrentLanguageId;
+	}
+
+	@JSON
+	@Override
+	public String getDataPackDisplayNameCurrentValue() {
+		Locale locale = getLocale(_dataPackDisplayNameCurrentLanguageId);
+
+		return getDataPackDisplayName(locale);
+	}
+
+	@Override
+	public Map<Locale, String> getDataPackDisplayNameMap() {
+		return LocalizationUtil.getLocalizationMap(getDataPackDisplayName());
+	}
+
+	@Override
+	public void setDataPackDisplayName(String dataPackDisplayName) {
+		_dataPackDisplayName = dataPackDisplayName;
+	}
+
+	@Override
+	public void setDataPackDisplayName(
+		String dataPackDisplayName, Locale locale) {
+
+		setDataPackDisplayName(
+			dataPackDisplayName, locale, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataPackDisplayName(
+		String dataPackDisplayName, Locale locale, Locale defaultLocale) {
+
+		String languageId = LocaleUtil.toLanguageId(locale);
+		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
+
+		if (Validator.isNotNull(dataPackDisplayName)) {
+			setDataPackDisplayName(
+				LocalizationUtil.updateLocalization(
+					getDataPackDisplayName(), "DataPackDisplayName",
+					dataPackDisplayName, languageId, defaultLanguageId));
+		}
+		else {
+			setDataPackDisplayName(
+				LocalizationUtil.removeLocalization(
+					getDataPackDisplayName(), "DataPackDisplayName",
+					languageId));
+		}
+	}
+
+	@Override
+	public void setDataPackDisplayNameCurrentLanguageId(String languageId) {
+		_dataPackDisplayNameCurrentLanguageId = languageId;
+	}
+
+	@Override
+	public void setDataPackDisplayNameMap(
+		Map<Locale, String> dataPackDisplayNameMap) {
+
+		setDataPackDisplayNameMap(
+			dataPackDisplayNameMap, LocaleUtil.getSiteDefault());
+	}
+
+	@Override
+	public void setDataPackDisplayNameMap(
+		Map<Locale, String> dataPackDisplayNameMap, Locale defaultLocale) {
+
+		if (dataPackDisplayNameMap == null) {
+			return;
+		}
+
+		setDataPackDisplayName(
+			LocalizationUtil.updateLocalization(
+				dataPackDisplayNameMap, getDataPackDisplayName(),
+				"DataPackDisplayName", LocaleUtil.toLanguageId(defaultLocale)));
+	}
+
+	@Override
+	public String getRecordType() {
+		if (_recordType == null) {
+			return "";
+		}
+		else {
+			return _recordType;
+		}
+	}
+
+	@Override
+	public void setRecordType(String recordType) {
+		_recordType = recordType;
+	}
+
+	@Override
+	public String getRecordDelimiter() {
+		if (_recordDelimiter == null) {
+			return "";
+		}
+		else {
+			return _recordDelimiter;
+		}
+	}
+
+	@Override
+	public void setRecordDelimiter(String recordDelimiter) {
+		_recordDelimiter = recordDelimiter;
+	}
+
+	@Override
+	public String getRecordFormat() {
+		if (_recordFormat == null) {
+			return "";
+		}
+		else {
+			return _recordFormat;
+		}
+	}
+
+	@Override
+	public void setRecordFormat(String recordFormat) {
+		_recordFormat = recordFormat;
+	}
+
+	@Override
+	public int getEntryCount() {
+		return _entryCount;
+	}
+
+	@Override
+	public void setEntryCount(int entryCount) {
+		_entryCount = entryCount;
+	}
+
+	@Override
+	public int getStartEntryNo() {
+		return _startEntryNo;
+	}
+
+	@Override
+	public void setStartEntryNo(int startEntryNo) {
+		_startEntryNo = startEntryNo;
+	}
+
+	@Override
+	public int getEndEntryNo() {
+		return _endEntryNo;
+	}
+
+	@Override
+	public void setEndEntryNo(int endEntryNo) {
+		_endEntryNo = endEntryNo;
+	}
+
+	@Override
 	public String getStructuredData() {
 		if (_structuredData == null) {
 			return "";
@@ -1178,6 +1601,33 @@ public class StructuredDataModelImpl
 			}
 		}
 
+		Map<Locale, String> dataSetFolderNameMap = getDataSetFolderNameMap();
+
+		for (Map.Entry<Locale, String> entry :
+				dataSetFolderNameMap.entrySet()) {
+
+			Locale locale = entry.getKey();
+			String value = entry.getValue();
+
+			if (Validator.isNotNull(value)) {
+				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
+			}
+		}
+
+		Map<Locale, String> dataPackDisplayNameMap =
+			getDataPackDisplayNameMap();
+
+		for (Map.Entry<Locale, String> entry :
+				dataPackDisplayNameMap.entrySet()) {
+
+			Locale locale = entry.getKey();
+			String value = entry.getValue();
+
+			if (Validator.isNotNull(value)) {
+				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
+			}
+		}
+
 		return availableLanguageIds.toArray(
 			new String[availableLanguageIds.size()]);
 	}
@@ -1242,6 +1692,30 @@ public class StructuredDataModelImpl
 				getDataTypeDisplayName(defaultLocale), defaultLocale,
 				defaultLocale);
 		}
+
+		String dataSetFolderName = getDataSetFolderName(defaultLocale);
+
+		if (Validator.isNull(dataSetFolderName)) {
+			setDataSetFolderName(
+				getDataSetFolderName(modelDefaultLanguageId), defaultLocale);
+		}
+		else {
+			setDataSetFolderName(
+				getDataSetFolderName(defaultLocale), defaultLocale,
+				defaultLocale);
+		}
+
+		String dataPackDisplayName = getDataPackDisplayName(defaultLocale);
+
+		if (Validator.isNull(dataPackDisplayName)) {
+			setDataPackDisplayName(
+				getDataPackDisplayName(modelDefaultLanguageId), defaultLocale);
+		}
+		else {
+			setDataPackDisplayName(
+				getDataPackDisplayName(defaultLocale), defaultLocale,
+				defaultLocale);
+		}
 	}
 
 	@Override
@@ -1279,6 +1753,16 @@ public class StructuredDataModelImpl
 		structuredDataImpl.setDataSetDisplayName(getDataSetDisplayName());
 		structuredDataImpl.setDataTypeId(getDataTypeId());
 		structuredDataImpl.setDataTypeDisplayName(getDataTypeDisplayName());
+		structuredDataImpl.setDataSetFolderId(getDataSetFolderId());
+		structuredDataImpl.setDataSetFolderName(getDataSetFolderName());
+		structuredDataImpl.setDataPackId(getDataPackId());
+		structuredDataImpl.setDataPackDisplayName(getDataPackDisplayName());
+		structuredDataImpl.setRecordType(getRecordType());
+		structuredDataImpl.setRecordDelimiter(getRecordDelimiter());
+		structuredDataImpl.setRecordFormat(getRecordFormat());
+		structuredDataImpl.setEntryCount(getEntryCount());
+		structuredDataImpl.setStartEntryNo(getStartEntryNo());
+		structuredDataImpl.setEndEntryNo(getEndEntryNo());
 		structuredDataImpl.setStructuredData(getStructuredData());
 
 		structuredDataImpl.resetOriginalValues();
@@ -1366,6 +1850,14 @@ public class StructuredDataModelImpl
 		_originalDataTypeId = _dataTypeId;
 
 		_setOriginalDataTypeId = false;
+
+		_originalDataSetFolderId = _dataSetFolderId;
+
+		_setOriginalDataSetFolderId = false;
+
+		_originalDataPackId = _dataPackId;
+
+		_setOriginalDataPackId = false;
 
 		_columnBitmask = 0;
 	}
@@ -1462,6 +1954,59 @@ public class StructuredDataModelImpl
 
 			structuredDataCacheModel.dataTypeDisplayName = null;
 		}
+
+		structuredDataCacheModel.dataSetFolderId = getDataSetFolderId();
+
+		structuredDataCacheModel.dataSetFolderName = getDataSetFolderName();
+
+		String dataSetFolderName = structuredDataCacheModel.dataSetFolderName;
+
+		if ((dataSetFolderName != null) && (dataSetFolderName.length() == 0)) {
+			structuredDataCacheModel.dataSetFolderName = null;
+		}
+
+		structuredDataCacheModel.dataPackId = getDataPackId();
+
+		structuredDataCacheModel.dataPackDisplayName = getDataPackDisplayName();
+
+		String dataPackDisplayName =
+			structuredDataCacheModel.dataPackDisplayName;
+
+		if ((dataPackDisplayName != null) &&
+			(dataPackDisplayName.length() == 0)) {
+
+			structuredDataCacheModel.dataPackDisplayName = null;
+		}
+
+		structuredDataCacheModel.recordType = getRecordType();
+
+		String recordType = structuredDataCacheModel.recordType;
+
+		if ((recordType != null) && (recordType.length() == 0)) {
+			structuredDataCacheModel.recordType = null;
+		}
+
+		structuredDataCacheModel.recordDelimiter = getRecordDelimiter();
+
+		String recordDelimiter = structuredDataCacheModel.recordDelimiter;
+
+		if ((recordDelimiter != null) && (recordDelimiter.length() == 0)) {
+			structuredDataCacheModel.recordDelimiter = null;
+		}
+
+		structuredDataCacheModel.recordFormat = getRecordFormat();
+
+		String recordFormat = structuredDataCacheModel.recordFormat;
+
+		if ((recordFormat != null) && (recordFormat.length() == 0)) {
+			structuredDataCacheModel.recordFormat = null;
+		}
+
+		structuredDataCacheModel.entryCount = getEntryCount();
+
+		structuredDataCacheModel.startEntryNo = getStartEntryNo();
+
+		structuredDataCacheModel.endEntryNo = getEndEntryNo();
 
 		structuredDataCacheModel.structuredData = getStructuredData();
 
@@ -1596,6 +2141,22 @@ public class StructuredDataModelImpl
 	private boolean _setOriginalDataTypeId;
 	private String _dataTypeDisplayName;
 	private String _dataTypeDisplayNameCurrentLanguageId;
+	private long _dataSetFolderId;
+	private long _originalDataSetFolderId;
+	private boolean _setOriginalDataSetFolderId;
+	private String _dataSetFolderName;
+	private String _dataSetFolderNameCurrentLanguageId;
+	private long _dataPackId;
+	private long _originalDataPackId;
+	private boolean _setOriginalDataPackId;
+	private String _dataPackDisplayName;
+	private String _dataPackDisplayNameCurrentLanguageId;
+	private String _recordType;
+	private String _recordDelimiter;
+	private String _recordFormat;
+	private int _entryCount;
+	private int _startEntryNo;
+	private int _endEntryNo;
 	private String _structuredData;
 	private long _columnBitmask;
 	private StructuredData _escapedModel;

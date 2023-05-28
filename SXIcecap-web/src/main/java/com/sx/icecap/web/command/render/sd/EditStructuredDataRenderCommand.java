@@ -1,5 +1,7 @@
 package com.sx.icecap.web.command.render.sd;
 
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -18,6 +20,8 @@ import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -113,9 +117,38 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 	private JSONObject setStructuredDataValues( 
 			JSONObject dataStructure, String structuredData ){
 		
-		String termDelimiter = dataStructure.getString(IcecapDataTypeAttributes.TERM_DELIMITER);
+		String valueDelimiter = dataStructure.getString(IcecapDataTypeAttributes.TERM_VALUE_DELIMITER);
+
+		JSONObject jsonData = null;
+		try {
+			jsonData = JSONFactoryUtil.createJSONObject(structuredData);
+		} 
+		catch( Exception e ) {
+			e.printStackTrace();
+			return null;
+		}
 		
-		System.out.println("Term Delimiter: " + termDelimiter);
+		JSONArray terms = dataStructure.getJSONArray("terms");
+		JSONArray valuedTerms = JSONFactoryUtil.createJSONArray();
+		Set<String> keySet = jsonData.keySet();
+		for( int i=0; i<terms.length(); i++ ) {
+			JSONObject term = terms.getJSONObject(i);
+			String termName = term.getString("termName");
+			if( keySet.contains( termName ) ) {
+				System.out.println("Valued term name: " + termName);
+				term.put("value",jsonData.getString(termName));
+			}
+		}
+		
+		try {
+			System.out.println(dataStructure.toString(4));
+		}
+		catch( Exception e ) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		/*
 		String[] lines = structuredData.split(termDelimiter);
 		
 		System.out.println("Line count: " + lines.length);
@@ -135,7 +168,7 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 				System.out.println("Key: " + tokens[0] + ", Value: "+tokens[1]);
 			}
 			
-		});
+		});*/
 		
 		return dataStructure;
 	}

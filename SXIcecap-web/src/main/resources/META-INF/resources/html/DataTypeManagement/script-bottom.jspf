@@ -54,10 +54,7 @@ $(document).ready(function(){
 			dataStructure.highlightTerm( currentTerm );
 		}
 	};
-	
-	
-	// SX.DataStructure.FORM_RENDER_URL =  '<%= renderTermResourceCommandURL.toString() %>';
-	
+
 	let dataStructure;
 	let jsonDataStructure = JSON.parse('<%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>');
 	
@@ -109,8 +106,9 @@ $(document).ready(function(){
 			dataStructure.getCommentCharFormValue( true );
 	});
 	
-	SX.Term.$TERM_TYPE_FORM_CTRL.change(function(eventObj){
+	SX.Term.$DEFAULT_TERM_TYPE_FORM_CTRL.change(function(eventObj){
 		let selectedTermType = currentTerm.getTermTypeFormValue();
+		console.log('Term Type changed: ' + selectedTermType);
 		
 		if( selectedTermType === currentTerm.termType ){
 			// Do nothing
@@ -131,7 +129,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	SX.Term.$TERM_NAME_FORM_CTRL.change(function(eventObj){
+	SX.Term.$DEFAULT_TERM_NAME_FORM_CTRL.change(function(eventObj){
 		if( currentTerm.$rendered ){
 			// It means the current term is one of the data structure and previewed on the preview panel.
 			// Therefore, we must confirm that the term's name be changed before the preview changed.
@@ -175,7 +173,7 @@ $(document).ready(function(){
 		}
 	});
 
-	SX.Term.$TERM_VERSION_FORM_CTRL.change(function(eventObj){
+	SX.Term.$DEFAULT_TERM_VERSION_FORM_CTRL.change(function(eventObj){
 		const changedVersion = currentTerm.getTermVersionFormValue();
 		
 		let validated;
@@ -197,7 +195,7 @@ $(document).ready(function(){
 		} 
 	});
 
-	SX.Term.$TERM_DISPLAY_NAME_FORM_CTRL.change(function(eventObj){
+	SX.Term.$DEFAULT_TERM_DISPLAY_NAME_FORM_CTRL.change(function(eventObj){
 		currentTerm.getDisplayNameFormValue(true);
 		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
@@ -205,6 +203,11 @@ $(document).ready(function(){
 	
 	$('#<portlet:namespace/>termDefinition').change(function(eventObj){
 		currentTerm.getDefinitionFormValue(true);
+		currentTerm.setDirty( true );
+	});
+	
+	$('#<portlet:namespace/>abstractKey').change(function(eventObj){
+		currentTerm.getAbstractKeyFormValue(true);
 		currentTerm.setDirty( true );
 	});
 
@@ -406,6 +409,12 @@ $(document).ready(function(){
 		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
+	
+	SX.DateTerm.$DEFAULT_ENABLE_TIME_FORM_CTRL.change(function(event){
+		currentTerm.getEnableTimeFormValue();
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
 
 
 	/**************************************************************

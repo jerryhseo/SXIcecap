@@ -1,3 +1,69 @@
+create table SX_ICECAP_DataPack (
+	uuid_ VARCHAR(75) null,
+	dataPackId LONG not null primary key,
+	companyId LONG,
+	groupId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
+	lastPublishDate DATE null,
+	status INTEGER,
+	statusByUserId LONG,
+	statusByUserName VARCHAR(75) null,
+	statusDate DATE null,
+	dataSetId LONG,
+	dataSetFolderId LONG,
+	dataPackName VARCHAR(75) null,
+	dataPackVersion VARCHAR(75) null,
+	displayName STRING null,
+	description STRING null
+);
+
+create table SX_ICECAP_DataPackEntry (
+	uuid_ VARCHAR(75) null,
+	dataPackEntryId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
+	status INTEGER,
+	statusByUserId LONG,
+	statusByUserName VARCHAR(75) null,
+	statusDate DATE null,
+	dataSetId LONG,
+	dataSetFolderId LONG,
+	dataPackId LONG,
+	entryData VARCHAR(75) null
+);
+
+create table SX_ICECAP_DataPackStructure (
+	dataPackId LONG not null primary key,
+	structure TEXT null
+);
+
+create table SX_ICECAP_DataSet (
+	uuid_ VARCHAR(75) null,
+	dataSetId LONG not null primary key,
+	companyId LONG,
+	groupId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
+	lastPublishDate DATE null,
+	status INTEGER,
+	statusByUserId LONG,
+	statusByUserName VARCHAR(75) null,
+	statusDate DATE null,
+	dataSetName VARCHAR(75) null,
+	dataSetVersion VARCHAR(75) null,
+	displayName STRING null,
+	description STRING null
+);
+
 create table SX_ICECAP_DataType (
 	uuid_ VARCHAR(75) null,
 	dataTypeId LONG not null primary key,
@@ -44,7 +110,17 @@ create table SX_ICECAP_StructuredData (
 	dataSetDisplayName STRING null,
 	dataTypeId LONG,
 	dataTypeDisplayName STRING null,
-	structuredData VARCHAR(75) null
+	dataSetFolderId LONG,
+	dataSetFolderName STRING null,
+	dataPackId LONG,
+	dataPackDisplayName STRING null,
+	recordType VARCHAR(75) null,
+	recordDelimiter VARCHAR(75) null,
+	recordFormat VARCHAR(75) null,
+	entryCount INTEGER,
+	startEntryNo INTEGER,
+	endEntryNo INTEGER,
+	structuredData TEXT null
 );
 
 create table SX_ICECAP_Term (

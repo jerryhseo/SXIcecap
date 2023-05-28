@@ -59,6 +59,16 @@ public class StructuredDataWrapper
 		attributes.put("dataSetDisplayName", getDataSetDisplayName());
 		attributes.put("dataTypeId", getDataTypeId());
 		attributes.put("dataTypeDisplayName", getDataTypeDisplayName());
+		attributes.put("dataSetFolderId", getDataSetFolderId());
+		attributes.put("dataSetFolderName", getDataSetFolderName());
+		attributes.put("dataPackId", getDataPackId());
+		attributes.put("dataPackDisplayName", getDataPackDisplayName());
+		attributes.put("recordType", getRecordType());
+		attributes.put("recordDelimiter", getRecordDelimiter());
+		attributes.put("recordFormat", getRecordFormat());
+		attributes.put("entryCount", getEntryCount());
+		attributes.put("startEntryNo", getStartEntryNo());
+		attributes.put("endEntryNo", getEndEntryNo());
 		attributes.put("structuredData", getStructuredData());
 
 		return attributes;
@@ -164,6 +174,67 @@ public class StructuredDataWrapper
 			setDataTypeDisplayName(dataTypeDisplayName);
 		}
 
+		Long dataSetFolderId = (Long)attributes.get("dataSetFolderId");
+
+		if (dataSetFolderId != null) {
+			setDataSetFolderId(dataSetFolderId);
+		}
+
+		String dataSetFolderName = (String)attributes.get("dataSetFolderName");
+
+		if (dataSetFolderName != null) {
+			setDataSetFolderName(dataSetFolderName);
+		}
+
+		Long dataPackId = (Long)attributes.get("dataPackId");
+
+		if (dataPackId != null) {
+			setDataPackId(dataPackId);
+		}
+
+		String dataPackDisplayName = (String)attributes.get(
+			"dataPackDisplayName");
+
+		if (dataPackDisplayName != null) {
+			setDataPackDisplayName(dataPackDisplayName);
+		}
+
+		String recordType = (String)attributes.get("recordType");
+
+		if (recordType != null) {
+			setRecordType(recordType);
+		}
+
+		String recordDelimiter = (String)attributes.get("recordDelimiter");
+
+		if (recordDelimiter != null) {
+			setRecordDelimiter(recordDelimiter);
+		}
+
+		String recordFormat = (String)attributes.get("recordFormat");
+
+		if (recordFormat != null) {
+			setRecordFormat(recordFormat);
+		}
+
+		Integer entryCount = (Integer)attributes.get("entryCount");
+
+		if (entryCount != null) {
+			setEntryCount(entryCount);
+		}
+
+		Integer startEntryNo = (Integer)attributes.get("startEntryNo");
+
+		if (startEntryNo != null) {
+			setStartEntryNo(startEntryNo);
+		}
+
+		Integer endEntryNo = (Integer)attributes.get("endEntryNo");
+
+		if (endEntryNo != null) {
+			setEndEntryNo(endEntryNo);
+		}
+
 		String structuredData = (String)attributes.get("structuredData");
 
 		if (structuredData != null) {
@@ -194,6 +265,96 @@ public class StructuredDataWrapper
 	@Override
 	public Date getCreateDate() {
 		return model.getCreateDate();
+	}
+
+	/**
+	 * Returns the data pack display name of this structured data.
+	 *
+	 * @return the data pack display name of this structured data
+	 */
+	@Override
+	public String getDataPackDisplayName() {
+		return model.getDataPackDisplayName();
+	}
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized data pack display name of this structured data
+	 */
+	@Override
+	public String getDataPackDisplayName(java.util.Locale locale) {
+		return model.getDataPackDisplayName(locale);
+	}
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data pack display name of this structured data. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@Override
+	public String getDataPackDisplayName(
+		java.util.Locale locale, boolean useDefault) {
+
+		return model.getDataPackDisplayName(locale, useDefault);
+	}
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized data pack display name of this structured data
+	 */
+	@Override
+	public String getDataPackDisplayName(String languageId) {
+		return model.getDataPackDisplayName(languageId);
+	}
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data pack display name of this structured data
+	 */
+	@Override
+	public String getDataPackDisplayName(
+		String languageId, boolean useDefault) {
+
+		return model.getDataPackDisplayName(languageId, useDefault);
+	}
+
+	@Override
+	public String getDataPackDisplayNameCurrentLanguageId() {
+		return model.getDataPackDisplayNameCurrentLanguageId();
+	}
+
+	@Override
+	public String getDataPackDisplayNameCurrentValue() {
+		return model.getDataPackDisplayNameCurrentValue();
+	}
+
+	/**
+	 * Returns a map of the locales and localized data pack display names of this structured data.
+	 *
+	 * @return the locales and localized data pack display names of this structured data
+	 */
+	@Override
+	public Map<java.util.Locale, String> getDataPackDisplayNameMap() {
+		return model.getDataPackDisplayNameMap();
+	}
+
+	/**
+	 * Returns the data pack ID of this structured data.
+	 *
+	 * @return the data pack ID of this structured data
+	 */
+	@Override
+	public long getDataPackId() {
+		return model.getDataPackId();
 	}
 
 	/**
@@ -272,6 +433,94 @@ public class StructuredDataWrapper
 	@Override
 	public Map<java.util.Locale, String> getDataSetDisplayNameMap() {
 		return model.getDataSetDisplayNameMap();
+	}
+
+	/**
+	 * Returns the data set folder ID of this structured data.
+	 *
+	 * @return the data set folder ID of this structured data
+	 */
+	@Override
+	public long getDataSetFolderId() {
+		return model.getDataSetFolderId();
+	}
+
+	/**
+	 * Returns the data set folder name of this structured data.
+	 *
+	 * @return the data set folder name of this structured data
+	 */
+	@Override
+	public String getDataSetFolderName() {
+		return model.getDataSetFolderName();
+	}
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized data set folder name of this structured data
+	 */
+	@Override
+	public String getDataSetFolderName(java.util.Locale locale) {
+		return model.getDataSetFolderName(locale);
+	}
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data set folder name of this structured data. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@Override
+	public String getDataSetFolderName(
+		java.util.Locale locale, boolean useDefault) {
+
+		return model.getDataSetFolderName(locale, useDefault);
+	}
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized data set folder name of this structured data
+	 */
+	@Override
+	public String getDataSetFolderName(String languageId) {
+		return model.getDataSetFolderName(languageId);
+	}
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data set folder name of this structured data
+	 */
+	@Override
+	public String getDataSetFolderName(String languageId, boolean useDefault) {
+		return model.getDataSetFolderName(languageId, useDefault);
+	}
+
+	@Override
+	public String getDataSetFolderNameCurrentLanguageId() {
+		return model.getDataSetFolderNameCurrentLanguageId();
+	}
+
+	@Override
+	public String getDataSetFolderNameCurrentValue() {
+		return model.getDataSetFolderNameCurrentValue();
+	}
+
+	/**
+	 * Returns a map of the locales and localized data set folder names of this structured data.
+	 *
+	 * @return the locales and localized data set folder names of this structured data
+	 */
+	@Override
+	public Map<java.util.Locale, String> getDataSetFolderNameMap() {
+		return model.getDataSetFolderNameMap();
 	}
 
 	/**
@@ -380,6 +629,26 @@ public class StructuredDataWrapper
 	}
 
 	/**
+	 * Returns the end entry no of this structured data.
+	 *
+	 * @return the end entry no of this structured data
+	 */
+	@Override
+	public int getEndEntryNo() {
+		return model.getEndEntryNo();
+	}
+
+	/**
+	 * Returns the entry count of this structured data.
+	 *
+	 * @return the entry count of this structured data
+	 */
+	@Override
+	public int getEntryCount() {
+		return model.getEntryCount();
+	}
+
+	/**
 	 * Returns the group ID of this structured data.
 	 *
 	 * @return the group ID of this structured data
@@ -407,6 +676,46 @@ public class StructuredDataWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
+	}
+
+	/**
+	 * Returns the record delimiter of this structured data.
+	 *
+	 * @return the record delimiter of this structured data
+	 */
+	@Override
+	public String getRecordDelimiter() {
+		return model.getRecordDelimiter();
+	}
+
+	/**
+	 * Returns the record format of this structured data.
+	 *
+	 * @return the record format of this structured data
+	 */
+	@Override
+	public String getRecordFormat() {
+		return model.getRecordFormat();
+	}
+
+	/**
+	 * Returns the record type of this structured data.
+	 *
+	 * @return the record type of this structured data
+	 */
+	@Override
+	public String getRecordType() {
+		return model.getRecordType();
+	}
+
+	/**
+	 * Returns the start entry no of this structured data.
+	 *
+	 * @return the start entry no of this structured data
+	 */
+	@Override
+	public int getStartEntryNo() {
+		return model.getStartEntryNo();
 	}
 
 	/**
@@ -704,6 +1013,86 @@ public class StructuredDataWrapper
 	}
 
 	/**
+	 * Sets the data pack display name of this structured data.
+	 *
+	 * @param dataPackDisplayName the data pack display name of this structured data
+	 */
+	@Override
+	public void setDataPackDisplayName(String dataPackDisplayName) {
+		model.setDataPackDisplayName(dataPackDisplayName);
+	}
+
+	/**
+	 * Sets the localized data pack display name of this structured data in the language.
+	 *
+	 * @param dataPackDisplayName the localized data pack display name of this structured data
+	 * @param locale the locale of the language
+	 */
+	@Override
+	public void setDataPackDisplayName(
+		String dataPackDisplayName, java.util.Locale locale) {
+
+		model.setDataPackDisplayName(dataPackDisplayName, locale);
+	}
+
+	/**
+	 * Sets the localized data pack display name of this structured data in the language, and sets the default locale.
+	 *
+	 * @param dataPackDisplayName the localized data pack display name of this structured data
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	@Override
+	public void setDataPackDisplayName(
+		String dataPackDisplayName, java.util.Locale locale,
+		java.util.Locale defaultLocale) {
+
+		model.setDataPackDisplayName(
+			dataPackDisplayName, locale, defaultLocale);
+	}
+
+	@Override
+	public void setDataPackDisplayNameCurrentLanguageId(String languageId) {
+		model.setDataPackDisplayNameCurrentLanguageId(languageId);
+	}
+
+	/**
+	 * Sets the localized data pack display names of this structured data from the map of locales and localized data pack display names.
+	 *
+	 * @param dataPackDisplayNameMap the locales and localized data pack display names of this structured data
+	 */
+	@Override
+	public void setDataPackDisplayNameMap(
+		Map<java.util.Locale, String> dataPackDisplayNameMap) {
+
+		model.setDataPackDisplayNameMap(dataPackDisplayNameMap);
+	}
+
+	/**
+	 * Sets the localized data pack display names of this structured data from the map of locales and localized data pack display names, and sets the default locale.
+	 *
+	 * @param dataPackDisplayNameMap the locales and localized data pack display names of this structured data
+	 * @param defaultLocale the default locale
+	 */
+	@Override
+	public void setDataPackDisplayNameMap(
+		Map<java.util.Locale, String> dataPackDisplayNameMap,
+		java.util.Locale defaultLocale) {
+
+		model.setDataPackDisplayNameMap(dataPackDisplayNameMap, defaultLocale);
+	}
+
+	/**
+	 * Sets the data pack ID of this structured data.
+	 *
+	 * @param dataPackId the data pack ID of this structured data
+	 */
+	@Override
+	public void setDataPackId(long dataPackId) {
+		model.setDataPackId(dataPackId);
+	}
+
+	/**
 	 * Sets the data set display name of this structured data.
 	 *
 	 * @param dataSetDisplayName the data set display name of this structured data
@@ -770,6 +1159,85 @@ public class StructuredDataWrapper
 		java.util.Locale defaultLocale) {
 
 		model.setDataSetDisplayNameMap(dataSetDisplayNameMap, defaultLocale);
+	}
+
+	/**
+	 * Sets the data set folder ID of this structured data.
+	 *
+	 * @param dataSetFolderId the data set folder ID of this structured data
+	 */
+	@Override
+	public void setDataSetFolderId(long dataSetFolderId) {
+		model.setDataSetFolderId(dataSetFolderId);
+	}
+
+	/**
+	 * Sets the data set folder name of this structured data.
+	 *
+	 * @param dataSetFolderName the data set folder name of this structured data
+	 */
+	@Override
+	public void setDataSetFolderName(String dataSetFolderName) {
+		model.setDataSetFolderName(dataSetFolderName);
+	}
+
+	/**
+	 * Sets the localized data set folder name of this structured data in the language.
+	 *
+	 * @param dataSetFolderName the localized data set folder name of this structured data
+	 * @param locale the locale of the language
+	 */
+	@Override
+	public void setDataSetFolderName(
+		String dataSetFolderName, java.util.Locale locale) {
+
+		model.setDataSetFolderName(dataSetFolderName, locale);
+	}
+
+	/**
+	 * Sets the localized data set folder name of this structured data in the language, and sets the default locale.
+	 *
+	 * @param dataSetFolderName the localized data set folder name of this structured data
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	@Override
+	public void setDataSetFolderName(
+		String dataSetFolderName, java.util.Locale locale,
+		java.util.Locale defaultLocale) {
+
+		model.setDataSetFolderName(dataSetFolderName, locale, defaultLocale);
+	}
+
+	@Override
+	public void setDataSetFolderNameCurrentLanguageId(String languageId) {
+		model.setDataSetFolderNameCurrentLanguageId(languageId);
+	}
+
+	/**
+	 * Sets the localized data set folder names of this structured data from the map of locales and localized data set folder names.
+	 *
+	 * @param dataSetFolderNameMap the locales and localized data set folder names of this structured data
+	 */
+	@Override
+	public void setDataSetFolderNameMap(
+		Map<java.util.Locale, String> dataSetFolderNameMap) {
+
+		model.setDataSetFolderNameMap(dataSetFolderNameMap);
+	}
+
+	/**
+	 * Sets the localized data set folder names of this structured data from the map of locales and localized data set folder names, and sets the default locale.
+	 *
+	 * @param dataSetFolderNameMap the locales and localized data set folder names of this structured data
+	 * @param defaultLocale the default locale
+	 */
+	@Override
+	public void setDataSetFolderNameMap(
+		Map<java.util.Locale, String> dataSetFolderNameMap,
+		java.util.Locale defaultLocale) {
+
+		model.setDataSetFolderNameMap(dataSetFolderNameMap, defaultLocale);
 	}
 
 	/**
@@ -863,6 +1331,26 @@ public class StructuredDataWrapper
 	}
 
 	/**
+	 * Sets the end entry no of this structured data.
+	 *
+	 * @param endEntryNo the end entry no of this structured data
+	 */
+	@Override
+	public void setEndEntryNo(int endEntryNo) {
+		model.setEndEntryNo(endEntryNo);
+	}
+
+	/**
+	 * Sets the entry count of this structured data.
+	 *
+	 * @param entryCount the entry count of this structured data
+	 */
+	@Override
+	public void setEntryCount(int entryCount) {
+		model.setEntryCount(entryCount);
+	}
+
+	/**
 	 * Sets the group ID of this structured data.
 	 *
 	 * @param groupId the group ID of this structured data
@@ -890,6 +1378,46 @@ public class StructuredDataWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the record delimiter of this structured data.
+	 *
+	 * @param recordDelimiter the record delimiter of this structured data
+	 */
+	@Override
+	public void setRecordDelimiter(String recordDelimiter) {
+		model.setRecordDelimiter(recordDelimiter);
+	}
+
+	/**
+	 * Sets the record format of this structured data.
+	 *
+	 * @param recordFormat the record format of this structured data
+	 */
+	@Override
+	public void setRecordFormat(String recordFormat) {
+		model.setRecordFormat(recordFormat);
+	}
+
+	/**
+	 * Sets the record type of this structured data.
+	 *
+	 * @param recordType the record type of this structured data
+	 */
+	@Override
+	public void setRecordType(String recordType) {
+		model.setRecordType(recordType);
+	}
+
+	/**
+	 * Sets the start entry no of this structured data.
+	 *
+	 * @param startEntryNo the start entry no of this structured data
+	 */
+	@Override
+	public void setStartEntryNo(int startEntryNo) {
+		model.setStartEntryNo(startEntryNo);
 	}
 
 	/**

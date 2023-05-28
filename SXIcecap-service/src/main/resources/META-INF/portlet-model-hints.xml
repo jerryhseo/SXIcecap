@@ -1,6 +1,70 @@
 <?xml version="1.0"?>
 
 <model-hints>
+	<model name="com.sx.icecap.model.DataPack">
+		<field name="uuid" type="String" />
+		<field name="dataPackId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="lastPublishDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="dataSetId" type="long" />
+		<field name="dataSetFolderId" type="long" />
+		<field name="dataPackName" type="String" />
+		<field name="dataPackVersion" type="String" />
+		<field localized="true" name="displayName" type="String" />
+		<field localized="true" name="description" type="String" />
+	</model>
+	<model name="com.sx.icecap.model.DataPackEntry">
+		<field name="uuid" type="String" />
+		<field name="dataPackEntryId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="dataSetId" type="long" />
+		<field name="dataSetFolderId" type="long" />
+		<field name="dataPackId" type="long" />
+		<field name="entryData" type="String" />
+	</model>
+	<model name="com.sx.icecap.model.DataPackStructure">
+		<field name="dataPackId" type="long" />
+		<field name="structure" type="String">
+			<hint name="max-length">4096</hint>
+		</field>
+	</model>
+	<model name="com.sx.icecap.model.DataSet">
+		<field name="uuid" type="String" />
+		<field name="dataSetId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="lastPublishDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="dataSetName" type="String" />
+		<field name="dataSetVersion" type="String" />
+		<field localized="true" name="displayName" type="String" />
+		<field localized="true" name="description" type="String" />
+	</model>
 	<model name="com.sx.icecap.model.DataType">
 		<field name="uuid" type="String" />
 		<field name="dataTypeId" type="long" />
@@ -47,7 +111,19 @@
 		<field localized="true" name="dataSetDisplayName" type="String" />
 		<field name="dataTypeId" type="long" />
 		<field localized="true" name="dataTypeDisplayName" type="String" />
-		<field name="structuredData" type="String" />
+		<field name="dataSetFolderId" type="long" />
+		<field localized="true" name="dataSetFolderName" type="String" />
+		<field name="dataPackId" type="long" />
+		<field localized="true" name="dataPackDisplayName" type="String" />
+		<field name="recordType" type="String" />
+		<field name="recordDelimiter" type="String" />
+		<field name="recordFormat" type="String" />
+		<field name="entryCount" type="int" />
+		<field name="startEntryNo" type="int" />
+		<field name="endEntryNo" type="int" />
+		<field name="structuredData" type="String">
+			<hint name="max-length">4096</hint>
+		</field>
 	</model>
 	<model name="com.sx.icecap.model.Term">
 		<field name="uuid" type="String" />

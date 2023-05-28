@@ -47,6 +47,16 @@ public class StructuredDataSoap implements Serializable {
 		soapModel.setDataSetDisplayName(model.getDataSetDisplayName());
 		soapModel.setDataTypeId(model.getDataTypeId());
 		soapModel.setDataTypeDisplayName(model.getDataTypeDisplayName());
+		soapModel.setDataSetFolderId(model.getDataSetFolderId());
+		soapModel.setDataSetFolderName(model.getDataSetFolderName());
+		soapModel.setDataPackId(model.getDataPackId());
+		soapModel.setDataPackDisplayName(model.getDataPackDisplayName());
+		soapModel.setRecordType(model.getRecordType());
+		soapModel.setRecordDelimiter(model.getRecordDelimiter());
+		soapModel.setRecordFormat(model.getRecordFormat());
+		soapModel.setEntryCount(model.getEntryCount());
+		soapModel.setStartEntryNo(model.getStartEntryNo());
+		soapModel.setEndEntryNo(model.getEndEntryNo());
 		soapModel.setStructuredData(model.getStructuredData());
 
 		return soapModel;
@@ -234,6 +244,86 @@ public class StructuredDataSoap implements Serializable {
 		_dataTypeDisplayName = dataTypeDisplayName;
 	}
 
+	public long getDataSetFolderId() {
+		return _dataSetFolderId;
+	}
+
+	public void setDataSetFolderId(long dataSetFolderId) {
+		_dataSetFolderId = dataSetFolderId;
+	}
+
+	public String getDataSetFolderName() {
+		return _dataSetFolderName;
+	}
+
+	public void setDataSetFolderName(String dataSetFolderName) {
+		_dataSetFolderName = dataSetFolderName;
+	}
+
+	public long getDataPackId() {
+		return _dataPackId;
+	}
+
+	public void setDataPackId(long dataPackId) {
+		_dataPackId = dataPackId;
+	}
+
+	public String getDataPackDisplayName() {
+		return _dataPackDisplayName;
+	}
+
+	public void setDataPackDisplayName(String dataPackDisplayName) {
+		_dataPackDisplayName = dataPackDisplayName;
+	}
+
+	public String getRecordType() {
+		return _recordType;
+	}
+
+	public void setRecordType(String recordType) {
+		_recordType = recordType;
+	}
+
+	public String getRecordDelimiter() {
+		return _recordDelimiter;
+	}
+
+	public void setRecordDelimiter(String recordDelimiter) {
+		_recordDelimiter = recordDelimiter;
+	}
+
+	public String getRecordFormat() {
+		return _recordFormat;
+	}
+
+	public void setRecordFormat(String recordFormat) {
+		_recordFormat = recordFormat;
+	}
+
+	public int getEntryCount() {
+		return _entryCount;
+	}
+
+	public void setEntryCount(int entryCount) {
+		_entryCount = entryCount;
+	}
+
+	public int getStartEntryNo() {
+		return _startEntryNo;
+	}
+
+	public void setStartEntryNo(int startEntryNo) {
+		_startEntryNo = startEntryNo;
+	}
+
+	public int getEndEntryNo() {
+		return _endEntryNo;
+	}
+
+	public void setEndEntryNo(int endEntryNo) {
+		_endEntryNo = endEntryNo;
+	}
+
 	public String getStructuredData() {
 		return _structuredData;
 	}
@@ -258,6 +348,16 @@ public class StructuredDataSoap implements Serializable {
 	private String _dataSetDisplayName;
 	private long _dataTypeId;
 	private String _dataTypeDisplayName;
+	private long _dataSetFolderId;
+	private String _dataSetFolderName;
+	private long _dataPackId;
+	private String _dataPackDisplayName;
+	private String _recordType;
+	private String _recordDelimiter;
+	private String _recordFormat;
+	private int _entryCount;
+	private int _startEntryNo;
+	private int _endEntryNo;
 	private String _structuredData;
 
 }

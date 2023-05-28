@@ -204,6 +204,12 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 				   termType.equalsIgnoreCase(IcecapSSSTermTypes.BOOLEAN) ) {
 			return _extractListAttributes(jsonObj);
 		}
+		else if( termType.equalsIgnoreCase(IcecapSSSTermTypes.DATE)) {
+			return _extractDateAttributes(jsonObj);
+		}
+		else if( termType.equalsIgnoreCase(IcecapSSSTermTypes.FILE)) {
+			return _extractFileAttributes(jsonObj);
+		}
 		else {
 			return "";
 		}
@@ -293,6 +299,22 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			}
 		}
 
+		return json.toJSONString();
+	}
+	
+	private String _extractDateAttributes( JSONObject jsonObj ) {
+		JSONObject json = JSONFactoryUtil.createJSONObject();
+		
+		if( !jsonObj.isNull("enableTime") ) {
+			json.put("enableTime",  jsonObj.getString("enableTime"));
+		}
+		
+		return json.toJSONString();
+	}
+	
+	private String _extractFileAttributes(JSONObject jsonObj) {
+		JSONObject json = JSONFactoryUtil.createJSONObject();
+		
 		return json.toJSONString();
 	}
 	

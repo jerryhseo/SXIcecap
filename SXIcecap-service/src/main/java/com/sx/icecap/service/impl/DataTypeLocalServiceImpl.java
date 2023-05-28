@@ -36,7 +36,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.sx.constant.StationXConstants;
-import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.exception.DuplicatedDataTypeNameException;
 import com.sx.icecap.exception.InvalidDataTypeNameException;
@@ -349,7 +348,6 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	public int countAllDataTypes() {
 		return super.dataTypePersistence.countAll();
 	}
-	
 	
 	public List<DataType> getDataTypesByGroupId( long groupId ){
 		return super.dataTypePersistence.findByGroupId(groupId);

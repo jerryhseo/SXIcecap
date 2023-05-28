@@ -526,6 +526,326 @@ public interface StructuredDataModel
 		Map<Locale, String> dataTypeDisplayNameMap, Locale defaultLocale);
 
 	/**
+	 * Returns the data set folder ID of this structured data.
+	 *
+	 * @return the data set folder ID of this structured data
+	 */
+	public long getDataSetFolderId();
+
+	/**
+	 * Sets the data set folder ID of this structured data.
+	 *
+	 * @param dataSetFolderId the data set folder ID of this structured data
+	 */
+	public void setDataSetFolderId(long dataSetFolderId);
+
+	/**
+	 * Returns the data set folder name of this structured data.
+	 *
+	 * @return the data set folder name of this structured data
+	 */
+	public String getDataSetFolderName();
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized data set folder name of this structured data
+	 */
+	@AutoEscape
+	public String getDataSetFolderName(Locale locale);
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data set folder name of this structured data. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@AutoEscape
+	public String getDataSetFolderName(Locale locale, boolean useDefault);
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized data set folder name of this structured data
+	 */
+	@AutoEscape
+	public String getDataSetFolderName(String languageId);
+
+	/**
+	 * Returns the localized data set folder name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data set folder name of this structured data
+	 */
+	@AutoEscape
+	public String getDataSetFolderName(String languageId, boolean useDefault);
+
+	@AutoEscape
+	public String getDataSetFolderNameCurrentLanguageId();
+
+	@AutoEscape
+	public String getDataSetFolderNameCurrentValue();
+
+	/**
+	 * Returns a map of the locales and localized data set folder names of this structured data.
+	 *
+	 * @return the locales and localized data set folder names of this structured data
+	 */
+	public Map<Locale, String> getDataSetFolderNameMap();
+
+	/**
+	 * Sets the data set folder name of this structured data.
+	 *
+	 * @param dataSetFolderName the data set folder name of this structured data
+	 */
+	public void setDataSetFolderName(String dataSetFolderName);
+
+	/**
+	 * Sets the localized data set folder name of this structured data in the language.
+	 *
+	 * @param dataSetFolderName the localized data set folder name of this structured data
+	 * @param locale the locale of the language
+	 */
+	public void setDataSetFolderName(String dataSetFolderName, Locale locale);
+
+	/**
+	 * Sets the localized data set folder name of this structured data in the language, and sets the default locale.
+	 *
+	 * @param dataSetFolderName the localized data set folder name of this structured data
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataSetFolderName(
+		String dataSetFolderName, Locale locale, Locale defaultLocale);
+
+	public void setDataSetFolderNameCurrentLanguageId(String languageId);
+
+	/**
+	 * Sets the localized data set folder names of this structured data from the map of locales and localized data set folder names.
+	 *
+	 * @param dataSetFolderNameMap the locales and localized data set folder names of this structured data
+	 */
+	public void setDataSetFolderNameMap(
+		Map<Locale, String> dataSetFolderNameMap);
+
+	/**
+	 * Sets the localized data set folder names of this structured data from the map of locales and localized data set folder names, and sets the default locale.
+	 *
+	 * @param dataSetFolderNameMap the locales and localized data set folder names of this structured data
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataSetFolderNameMap(
+		Map<Locale, String> dataSetFolderNameMap, Locale defaultLocale);
+
+	/**
+	 * Returns the data pack ID of this structured data.
+	 *
+	 * @return the data pack ID of this structured data
+	 */
+	public long getDataPackId();
+
+	/**
+	 * Sets the data pack ID of this structured data.
+	 *
+	 * @param dataPackId the data pack ID of this structured data
+	 */
+	public void setDataPackId(long dataPackId);
+
+	/**
+	 * Returns the data pack display name of this structured data.
+	 *
+	 * @return the data pack display name of this structured data
+	 */
+	public String getDataPackDisplayName();
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized data pack display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataPackDisplayName(Locale locale);
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data pack display name of this structured data. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@AutoEscape
+	public String getDataPackDisplayName(Locale locale, boolean useDefault);
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized data pack display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataPackDisplayName(String languageId);
+
+	/**
+	 * Returns the localized data pack display name of this structured data in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized data pack display name of this structured data
+	 */
+	@AutoEscape
+	public String getDataPackDisplayName(String languageId, boolean useDefault);
+
+	@AutoEscape
+	public String getDataPackDisplayNameCurrentLanguageId();
+
+	@AutoEscape
+	public String getDataPackDisplayNameCurrentValue();
+
+	/**
+	 * Returns a map of the locales and localized data pack display names of this structured data.
+	 *
+	 * @return the locales and localized data pack display names of this structured data
+	 */
+	public Map<Locale, String> getDataPackDisplayNameMap();
+
+	/**
+	 * Sets the data pack display name of this structured data.
+	 *
+	 * @param dataPackDisplayName the data pack display name of this structured data
+	 */
+	public void setDataPackDisplayName(String dataPackDisplayName);
+
+	/**
+	 * Sets the localized data pack display name of this structured data in the language.
+	 *
+	 * @param dataPackDisplayName the localized data pack display name of this structured data
+	 * @param locale the locale of the language
+	 */
+	public void setDataPackDisplayName(
+		String dataPackDisplayName, Locale locale);
+
+	/**
+	 * Sets the localized data pack display name of this structured data in the language, and sets the default locale.
+	 *
+	 * @param dataPackDisplayName the localized data pack display name of this structured data
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataPackDisplayName(
+		String dataPackDisplayName, Locale locale, Locale defaultLocale);
+
+	public void setDataPackDisplayNameCurrentLanguageId(String languageId);
+
+	/**
+	 * Sets the localized data pack display names of this structured data from the map of locales and localized data pack display names.
+	 *
+	 * @param dataPackDisplayNameMap the locales and localized data pack display names of this structured data
+	 */
+	public void setDataPackDisplayNameMap(
+		Map<Locale, String> dataPackDisplayNameMap);
+
+	/**
+	 * Sets the localized data pack display names of this structured data from the map of locales and localized data pack display names, and sets the default locale.
+	 *
+	 * @param dataPackDisplayNameMap the locales and localized data pack display names of this structured data
+	 * @param defaultLocale the default locale
+	 */
+	public void setDataPackDisplayNameMap(
+		Map<Locale, String> dataPackDisplayNameMap, Locale defaultLocale);
+
+	/**
+	 * Returns the record type of this structured data.
+	 *
+	 * @return the record type of this structured data
+	 */
+	@AutoEscape
+	public String getRecordType();
+
+	/**
+	 * Sets the record type of this structured data.
+	 *
+	 * @param recordType the record type of this structured data
+	 */
+	public void setRecordType(String recordType);
+
+	/**
+	 * Returns the record delimiter of this structured data.
+	 *
+	 * @return the record delimiter of this structured data
+	 */
+	@AutoEscape
+	public String getRecordDelimiter();
+
+	/**
+	 * Sets the record delimiter of this structured data.
+	 *
+	 * @param recordDelimiter the record delimiter of this structured data
+	 */
+	public void setRecordDelimiter(String recordDelimiter);
+
+	/**
+	 * Returns the record format of this structured data.
+	 *
+	 * @return the record format of this structured data
+	 */
+	@AutoEscape
+	public String getRecordFormat();
+
+	/**
+	 * Sets the record format of this structured data.
+	 *
+	 * @param recordFormat the record format of this structured data
+	 */
+	public void setRecordFormat(String recordFormat);
+
+	/**
+	 * Returns the entry count of this structured data.
+	 *
+	 * @return the entry count of this structured data
+	 */
+	public int getEntryCount();
+
+	/**
+	 * Sets the entry count of this structured data.
+	 *
+	 * @param entryCount the entry count of this structured data
+	 */
+	public void setEntryCount(int entryCount);
+
+	/**
+	 * Returns the start entry no of this structured data.
+	 *
+	 * @return the start entry no of this structured data
+	 */
+	public int getStartEntryNo();
+
+	/**
+	 * Sets the start entry no of this structured data.
+	 *
+	 * @param startEntryNo the start entry no of this structured data
+	 */
+	public void setStartEntryNo(int startEntryNo);
+
+	/**
+	 * Returns the end entry no of this structured data.
+	 *
+	 * @return the end entry no of this structured data
+	 */
+	public int getEndEntryNo();
+
+	/**
+	 * Sets the end entry no of this structured data.
+	 *
+	 * @param endEntryNo the end entry no of this structured data
+	 */
+	public void setEndEntryNo(int endEntryNo);
+
+	/**
 	 * Returns the structured data of this structured data.
 	 *
 	 * @return the structured data of this structured data

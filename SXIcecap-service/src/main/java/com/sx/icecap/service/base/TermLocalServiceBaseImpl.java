@@ -56,6 +56,10 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.icecap.model.Term;
 import com.sx.icecap.service.TermLocalService;
 import com.sx.icecap.service.TermLocalServiceUtil;
+import com.sx.icecap.service.persistence.DataPackEntryPersistence;
+import com.sx.icecap.service.persistence.DataPackPersistence;
+import com.sx.icecap.service.persistence.DataPackStructurePersistence;
+import com.sx.icecap.service.persistence.DataSetPersistence;
 import com.sx.icecap.service.persistence.DataTypePersistence;
 import com.sx.icecap.service.persistence.DataTypeStructurePersistence;
 import com.sx.icecap.service.persistence.StructuredDataPersistence;
@@ -623,6 +627,18 @@ public abstract class TermLocalServiceBaseImpl
 			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
+
+	@Reference
+	protected DataPackPersistence dataPackPersistence;
+
+	@Reference
+	protected DataPackEntryPersistence dataPackEntryPersistence;
+
+	@Reference
+	protected DataPackStructurePersistence dataPackStructurePersistence;
+
+	@Reference
+	protected DataSetPersistence dataSetPersistence;
 
 	@Reference
 	protected DataTypePersistence dataTypePersistence;

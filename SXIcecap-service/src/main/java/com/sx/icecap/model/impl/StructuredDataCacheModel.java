@@ -63,7 +63,7 @@ public class StructuredDataCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(55);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -97,6 +97,26 @@ public class StructuredDataCacheModel
 		sb.append(dataTypeId);
 		sb.append(", dataTypeDisplayName=");
 		sb.append(dataTypeDisplayName);
+		sb.append(", dataSetFolderId=");
+		sb.append(dataSetFolderId);
+		sb.append(", dataSetFolderName=");
+		sb.append(dataSetFolderName);
+		sb.append(", dataPackId=");
+		sb.append(dataPackId);
+		sb.append(", dataPackDisplayName=");
+		sb.append(dataPackDisplayName);
+		sb.append(", recordType=");
+		sb.append(recordType);
+		sb.append(", recordDelimiter=");
+		sb.append(recordDelimiter);
+		sb.append(", recordFormat=");
+		sb.append(recordFormat);
+		sb.append(", entryCount=");
+		sb.append(entryCount);
+		sb.append(", startEntryNo=");
+		sb.append(startEntryNo);
+		sb.append(", endEntryNo=");
+		sb.append(endEntryNo);
 		sb.append(", structuredData=");
 		sb.append(structuredData);
 		sb.append("}");
@@ -176,6 +196,49 @@ public class StructuredDataCacheModel
 			structuredDataImpl.setDataTypeDisplayName(dataTypeDisplayName);
 		}
 
+		structuredDataImpl.setDataSetFolderId(dataSetFolderId);
+
+		if (dataSetFolderName == null) {
+			structuredDataImpl.setDataSetFolderName("");
+		}
+		else {
+			structuredDataImpl.setDataSetFolderName(dataSetFolderName);
+		}
+
+		structuredDataImpl.setDataPackId(dataPackId);
+
+		if (dataPackDisplayName == null) {
+			structuredDataImpl.setDataPackDisplayName("");
+		}
+		else {
+			structuredDataImpl.setDataPackDisplayName(dataPackDisplayName);
+		}
+
+		if (recordType == null) {
+			structuredDataImpl.setRecordType("");
+		}
+		else {
+			structuredDataImpl.setRecordType(recordType);
+		}
+
+		if (recordDelimiter == null) {
+			structuredDataImpl.setRecordDelimiter("");
+		}
+		else {
+			structuredDataImpl.setRecordDelimiter(recordDelimiter);
+		}
+
+		if (recordFormat == null) {
+			structuredDataImpl.setRecordFormat("");
+		}
+		else {
+			structuredDataImpl.setRecordFormat(recordFormat);
+		}
+
+		structuredDataImpl.setEntryCount(entryCount);
+		structuredDataImpl.setStartEntryNo(startEntryNo);
+		structuredDataImpl.setEndEntryNo(endEntryNo);
+
 		if (structuredData == null) {
 			structuredDataImpl.setStructuredData("");
 		}
@@ -214,6 +277,21 @@ public class StructuredDataCacheModel
 
 		dataTypeId = objectInput.readLong();
 		dataTypeDisplayName = objectInput.readUTF();
+
+		dataSetFolderId = objectInput.readLong();
+		dataSetFolderName = objectInput.readUTF();
+
+		dataPackId = objectInput.readLong();
+		dataPackDisplayName = objectInput.readUTF();
+		recordType = objectInput.readUTF();
+		recordDelimiter = objectInput.readUTF();
+		recordFormat = objectInput.readUTF();
+
+		entryCount = objectInput.readInt();
+
+		startEntryNo = objectInput.readInt();
+
+		endEntryNo = objectInput.readInt();
 		structuredData = objectInput.readUTF();
 	}
 
@@ -275,6 +353,51 @@ public class StructuredDataCacheModel
 			objectOutput.writeUTF(dataTypeDisplayName);
 		}
 
+		objectOutput.writeLong(dataSetFolderId);
+
+		if (dataSetFolderName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(dataSetFolderName);
+		}
+
+		objectOutput.writeLong(dataPackId);
+
+		if (dataPackDisplayName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(dataPackDisplayName);
+		}
+
+		if (recordType == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(recordType);
+		}
+
+		if (recordDelimiter == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(recordDelimiter);
+		}
+
+		if (recordFormat == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(recordFormat);
+		}
+
+		objectOutput.writeInt(entryCount);
+
+		objectOutput.writeInt(startEntryNo);
+
+		objectOutput.writeInt(endEntryNo);
+
 		if (structuredData == null) {
 			objectOutput.writeUTF("");
 		}
@@ -299,6 +422,16 @@ public class StructuredDataCacheModel
 	public String dataSetDisplayName;
 	public long dataTypeId;
 	public String dataTypeDisplayName;
+	public long dataSetFolderId;
+	public String dataSetFolderName;
+	public long dataPackId;
+	public String dataPackDisplayName;
+	public String recordType;
+	public String recordDelimiter;
+	public String recordFormat;
+	public int entryCount;
+	public int startEntryNo;
+	public int endEntryNo;
 	public String structuredData;
 
 }

@@ -7294,6 +7294,1026 @@ public class StructuredDataPersistenceImpl
 	private static final String _FINDER_COLUMN_DATASETID_DATASETID_2 =
 		"structuredData.dataSetId = ?";
 
+	private FinderPath _finderPathWithPaginationFindByDataSetFolderId;
+	private FinderPath _finderPathWithoutPaginationFindByDataSetFolderId;
+	private FinderPath _finderPathCountByDataSetFolderId;
+
+	/**
+	 * Returns all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataSetFolderId(long dataSetFolderId) {
+		return findByDataSetFolderId(
+			dataSetFolderId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataSetFolderId(
+		long dataSetFolderId, int start, int end) {
+
+		return findByDataSetFolderId(dataSetFolderId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataSetFolderId(
+		long dataSetFolderId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataSetFolderId(
+			dataSetFolderId, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataSetFolderId(
+		long dataSetFolderId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataSetFolderId;
+				finderArgs = new Object[] {dataSetFolderId};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataSetFolderId;
+			finderArgs = new Object[] {
+				dataSetFolderId, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if (dataSetFolderId !=
+							structuredData.getDataSetFolderId()) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(3);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATASETFOLDERID_DATASETFOLDERID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataSetFolderId);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataSetFolderId_First(
+			long dataSetFolderId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataSetFolderId_First(
+			dataSetFolderId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataSetFolderId=");
+		sb.append(dataSetFolderId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataSetFolderId_First(
+		long dataSetFolderId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataSetFolderId(
+			dataSetFolderId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataSetFolderId_Last(
+			long dataSetFolderId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataSetFolderId_Last(
+			dataSetFolderId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataSetFolderId=");
+		sb.append(dataSetFolderId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataSetFolderId_Last(
+		long dataSetFolderId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataSetFolderId(dataSetFolderId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataSetFolderId(
+			dataSetFolderId, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataSetFolderId_PrevAndNext(
+			long structuredDataId, long dataSetFolderId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataSetFolderId_PrevAndNext(
+				session, structuredData, dataSetFolderId, orderByComparator,
+				true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataSetFolderId_PrevAndNext(
+				session, structuredData, dataSetFolderId, orderByComparator,
+				false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataSetFolderId_PrevAndNext(
+		Session session, StructuredData structuredData, long dataSetFolderId,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(3);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATASETFOLDERID_DATASETFOLDERID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataSetFolderId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataSetFolderId = &#63; from the database.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 */
+	@Override
+	public void removeByDataSetFolderId(long dataSetFolderId) {
+		for (StructuredData structuredData :
+				findByDataSetFolderId(
+					dataSetFolderId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataSetFolderId(long dataSetFolderId) {
+		FinderPath finderPath = _finderPathCountByDataSetFolderId;
+
+		Object[] finderArgs = new Object[] {dataSetFolderId};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATASETFOLDERID_DATASETFOLDERID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataSetFolderId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String
+		_FINDER_COLUMN_DATASETFOLDERID_DATASETFOLDERID_2 =
+			"structuredData.dataSetFolderId = ?";
+
+	private FinderPath _finderPathWithPaginationFindByDataPackId;
+	private FinderPath _finderPathWithoutPaginationFindByDataPackId;
+	private FinderPath _finderPathCountByDataPackId;
+
+	/**
+	 * Returns all the structured datas where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @return the matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataPackId(long dataPackId) {
+		return findByDataPackId(
+			dataPackId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataPackId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataPackId(
+		long dataPackId, int start, int end) {
+
+		return findByDataPackId(dataPackId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataPackId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataPackId(
+		long dataPackId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return findByDataPackId(
+			dataPackId, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataPackId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	@Override
+	public List<StructuredData> findByDataPackId(
+		long dataPackId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByDataPackId;
+				finderArgs = new Object[] {dataPackId};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByDataPackId;
+			finderArgs = new Object[] {
+				dataPackId, start, end, orderByComparator
+			};
+		}
+
+		List<StructuredData> list = null;
+
+		if (useFinderCache) {
+			list = (List<StructuredData>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (StructuredData structuredData : list) {
+					if (dataPackId != structuredData.getDataPackId()) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(3);
+			}
+
+			sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATAPACKID_DATAPACKID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataPackId);
+
+				list = (List<StructuredData>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				if (useFinderCache) {
+					finderCache.removeResult(finderPath, finderArgs);
+				}
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataPackId_First(
+			long dataPackId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataPackId_First(
+			dataPackId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataPackId=");
+		sb.append(dataPackId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataPackId_First(
+		long dataPackId, OrderByComparator<StructuredData> orderByComparator) {
+
+		List<StructuredData> list = findByDataPackId(
+			dataPackId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData findByDataPackId_Last(
+			long dataPackId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = fetchByDataPackId_Last(
+			dataPackId, orderByComparator);
+
+		if (structuredData != null) {
+			return structuredData;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("dataPackId=");
+		sb.append(dataPackId);
+
+		sb.append("}");
+
+		throw new NoSuchStructuredDataException(sb.toString());
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	@Override
+	public StructuredData fetchByDataPackId_Last(
+		long dataPackId, OrderByComparator<StructuredData> orderByComparator) {
+
+		int count = countByDataPackId(dataPackId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<StructuredData> list = findByDataPackId(
+			dataPackId, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	@Override
+	public StructuredData[] findByDataPackId_PrevAndNext(
+			long structuredDataId, long dataPackId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws NoSuchStructuredDataException {
+
+		StructuredData structuredData = findByPrimaryKey(structuredDataId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			StructuredData[] array = new StructuredDataImpl[3];
+
+			array[0] = getByDataPackId_PrevAndNext(
+				session, structuredData, dataPackId, orderByComparator, true);
+
+			array[1] = structuredData;
+
+			array[2] = getByDataPackId_PrevAndNext(
+				session, structuredData, dataPackId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected StructuredData getByDataPackId_PrevAndNext(
+		Session session, StructuredData structuredData, long dataPackId,
+		OrderByComparator<StructuredData> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(3);
+		}
+
+		sb.append(_SQL_SELECT_STRUCTUREDDATA_WHERE);
+
+		sb.append(_FINDER_COLUMN_DATAPACKID_DATAPACKID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(StructuredDataModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(dataPackId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						structuredData)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<StructuredData> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the structured datas where dataPackId = &#63; from the database.
+	 *
+	 * @param dataPackId the data pack ID
+	 */
+	@Override
+	public void removeByDataPackId(long dataPackId) {
+		for (StructuredData structuredData :
+				findByDataPackId(
+					dataPackId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+
+			remove(structuredData);
+		}
+	}
+
+	/**
+	 * Returns the number of structured datas where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @return the number of matching structured datas
+	 */
+	@Override
+	public int countByDataPackId(long dataPackId) {
+		FinderPath finderPath = _finderPathCountByDataPackId;
+
+		Object[] finderArgs = new Object[] {dataPackId};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_STRUCTUREDDATA_WHERE);
+
+			sb.append(_FINDER_COLUMN_DATAPACKID_DATAPACKID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(dataPackId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_DATAPACKID_DATAPACKID_2 =
+		"structuredData.dataPackId = ?";
+
 	private FinderPath _finderPathWithPaginationFindByDataTypeId;
 	private FinderPath _finderPathWithoutPaginationFindByDataTypeId;
 	private FinderPath _finderPathCountByDataTypeId;
@@ -13953,6 +14973,18 @@ public class StructuredDataPersistenceImpl
 			finderCache.removeResult(
 				_finderPathWithoutPaginationFindByDataSetId, args);
 
+			args = new Object[] {structuredDataModelImpl.getDataSetFolderId()};
+
+			finderCache.removeResult(_finderPathCountByDataSetFolderId, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataSetFolderId, args);
+
+			args = new Object[] {structuredDataModelImpl.getDataPackId()};
+
+			finderCache.removeResult(_finderPathCountByDataPackId, args);
+			finderCache.removeResult(
+				_finderPathWithoutPaginationFindByDataPackId, args);
+
 			args = new Object[] {structuredDataModelImpl.getDataTypeId()};
 
 			finderCache.removeResult(_finderPathCountByDataTypeId, args);
@@ -14242,6 +15274,48 @@ public class StructuredDataPersistenceImpl
 				finderCache.removeResult(_finderPathCountByDataSetId, args);
 				finderCache.removeResult(
 					_finderPathWithoutPaginationFindByDataSetId, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataSetFolderId.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataSetFolderId()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataSetFolderId, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataSetFolderId, args);
+
+				args = new Object[] {
+					structuredDataModelImpl.getDataSetFolderId()
+				};
+
+				finderCache.removeResult(
+					_finderPathCountByDataSetFolderId, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataSetFolderId, args);
+			}
+
+			if ((structuredDataModelImpl.getColumnBitmask() &
+				 _finderPathWithoutPaginationFindByDataPackId.
+					 getColumnBitmask()) != 0) {
+
+				Object[] args = new Object[] {
+					structuredDataModelImpl.getOriginalDataPackId()
+				};
+
+				finderCache.removeResult(_finderPathCountByDataPackId, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataPackId, args);
+
+				args = new Object[] {structuredDataModelImpl.getDataPackId()};
+
+				finderCache.removeResult(_finderPathCountByDataPackId, args);
+				finderCache.removeResult(
+					_finderPathWithoutPaginationFindByDataPackId, args);
 			}
 
 			if ((structuredDataModelImpl.getColumnBitmask() &
@@ -14959,6 +16033,44 @@ public class StructuredDataPersistenceImpl
 		_finderPathCountByDataSetId = new FinderPath(
 			entityCacheEnabled, finderCacheEnabled, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataSetId",
+			new String[] {Long.class.getName()});
+
+		_finderPathWithPaginationFindByDataSetFolderId = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataSetFolderId",
+			new String[] {
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataSetFolderId = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataSetFolderId",
+			new String[] {Long.class.getName()},
+			StructuredDataModelImpl.DATASETFOLDERID_COLUMN_BITMASK);
+
+		_finderPathCountByDataSetFolderId = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataSetFolderId",
+			new String[] {Long.class.getName()});
+
+		_finderPathWithPaginationFindByDataPackId = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByDataPackId",
+			new String[] {
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			});
+
+		_finderPathWithoutPaginationFindByDataPackId = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, StructuredDataImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByDataPackId",
+			new String[] {Long.class.getName()},
+			StructuredDataModelImpl.DATAPACKID_COLUMN_BITMASK);
+
+		_finderPathCountByDataPackId = new FinderPath(
+			entityCacheEnabled, finderCacheEnabled, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByDataPackId",
 			new String[] {Long.class.getName()});
 
 		_finderPathWithPaginationFindByDataTypeId = new FinderPath(

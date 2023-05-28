@@ -217,6 +217,12 @@
 										xml="">
 						</liferay-ui:input-localized>
 				</aui:field-wrapper>
+								<aui:input 
+							type="checkbox"
+							name="abstractKey" 
+							label="abatract-key" 
+							helpMessage="abstract-key-help">
+				</aui:input>
 				<aui:field-wrapper name="termTooltip" label="tooltip" helpMessage="term-tooltip-help">
 						<liferay-ui:input-localized 
 										name="termTooltip"

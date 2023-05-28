@@ -41,6 +41,10 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.sx.icecap.model.DataTypeStructure;
 import com.sx.icecap.service.DataTypeStructureLocalService;
 import com.sx.icecap.service.DataTypeStructureLocalServiceUtil;
+import com.sx.icecap.service.persistence.DataPackEntryPersistence;
+import com.sx.icecap.service.persistence.DataPackPersistence;
+import com.sx.icecap.service.persistence.DataPackStructurePersistence;
+import com.sx.icecap.service.persistence.DataSetPersistence;
 import com.sx.icecap.service.persistence.DataTypePersistence;
 import com.sx.icecap.service.persistence.DataTypeStructurePersistence;
 import com.sx.icecap.service.persistence.StructuredDataPersistence;
@@ -445,6 +449,18 @@ public abstract class DataTypeStructureLocalServiceBaseImpl
 			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
+
+	@Reference
+	protected DataPackPersistence dataPackPersistence;
+
+	@Reference
+	protected DataPackEntryPersistence dataPackEntryPersistence;
+
+	@Reference
+	protected DataPackStructurePersistence dataPackStructurePersistence;
+
+	@Reference
+	protected DataSetPersistence dataSetPersistence;
 
 	@Reference
 	protected DataTypePersistence dataTypePersistence;

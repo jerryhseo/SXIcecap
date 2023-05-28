@@ -2287,6 +2287,353 @@ public class StructuredDataUtil {
 	}
 
 	/**
+	 * Returns all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @return the matching structured datas
+	 */
+	public static List<StructuredData> findByDataSetFolderId(
+		long dataSetFolderId) {
+
+		return getPersistence().findByDataSetFolderId(dataSetFolderId);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	public static List<StructuredData> findByDataSetFolderId(
+		long dataSetFolderId, int start, int end) {
+
+		return getPersistence().findByDataSetFolderId(
+			dataSetFolderId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	public static List<StructuredData> findByDataSetFolderId(
+		long dataSetFolderId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return getPersistence().findByDataSetFolderId(
+			dataSetFolderId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataSetFolderId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	public static List<StructuredData> findByDataSetFolderId(
+		long dataSetFolderId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByDataSetFolderId(
+			dataSetFolderId, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	public static StructuredData findByDataSetFolderId_First(
+			long dataSetFolderId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws com.sx.icecap.exception.NoSuchStructuredDataException {
+
+		return getPersistence().findByDataSetFolderId_First(
+			dataSetFolderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	public static StructuredData fetchByDataSetFolderId_First(
+		long dataSetFolderId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return getPersistence().fetchByDataSetFolderId_First(
+			dataSetFolderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	public static StructuredData findByDataSetFolderId_Last(
+			long dataSetFolderId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws com.sx.icecap.exception.NoSuchStructuredDataException {
+
+		return getPersistence().findByDataSetFolderId_Last(
+			dataSetFolderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	public static StructuredData fetchByDataSetFolderId_Last(
+		long dataSetFolderId,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return getPersistence().fetchByDataSetFolderId_Last(
+			dataSetFolderId, orderByComparator);
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataSetFolderId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataSetFolderId the data set folder ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	public static StructuredData[] findByDataSetFolderId_PrevAndNext(
+			long structuredDataId, long dataSetFolderId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws com.sx.icecap.exception.NoSuchStructuredDataException {
+
+		return getPersistence().findByDataSetFolderId_PrevAndNext(
+			structuredDataId, dataSetFolderId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the structured datas where dataSetFolderId = &#63; from the database.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 */
+	public static void removeByDataSetFolderId(long dataSetFolderId) {
+		getPersistence().removeByDataSetFolderId(dataSetFolderId);
+	}
+
+	/**
+	 * Returns the number of structured datas where dataSetFolderId = &#63;.
+	 *
+	 * @param dataSetFolderId the data set folder ID
+	 * @return the number of matching structured datas
+	 */
+	public static int countByDataSetFolderId(long dataSetFolderId) {
+		return getPersistence().countByDataSetFolderId(dataSetFolderId);
+	}
+
+	/**
+	 * Returns all the structured datas where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @return the matching structured datas
+	 */
+	public static List<StructuredData> findByDataPackId(long dataPackId) {
+		return getPersistence().findByDataPackId(dataPackId);
+	}
+
+	/**
+	 * Returns a range of all the structured datas where dataPackId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @return the range of matching structured datas
+	 */
+	public static List<StructuredData> findByDataPackId(
+		long dataPackId, int start, int end) {
+
+		return getPersistence().findByDataPackId(dataPackId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataPackId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching structured datas
+	 */
+	public static List<StructuredData> findByDataPackId(
+		long dataPackId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator) {
+
+		return getPersistence().findByDataPackId(
+			dataPackId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the structured datas where dataPackId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>StructuredDataModelImpl</code>.
+	 * </p>
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param start the lower bound of the range of structured datas
+	 * @param end the upper bound of the range of structured datas (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching structured datas
+	 */
+	public static List<StructuredData> findByDataPackId(
+		long dataPackId, int start, int end,
+		OrderByComparator<StructuredData> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByDataPackId(
+			dataPackId, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	public static StructuredData findByDataPackId_First(
+			long dataPackId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws com.sx.icecap.exception.NoSuchStructuredDataException {
+
+		return getPersistence().findByDataPackId_First(
+			dataPackId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	public static StructuredData fetchByDataPackId_First(
+		long dataPackId, OrderByComparator<StructuredData> orderByComparator) {
+
+		return getPersistence().fetchByDataPackId_First(
+			dataPackId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data
+	 * @throws NoSuchStructuredDataException if a matching structured data could not be found
+	 */
+	public static StructuredData findByDataPackId_Last(
+			long dataPackId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws com.sx.icecap.exception.NoSuchStructuredDataException {
+
+		return getPersistence().findByDataPackId_Last(
+			dataPackId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching structured data, or <code>null</code> if a matching structured data could not be found
+	 */
+	public static StructuredData fetchByDataPackId_Last(
+		long dataPackId, OrderByComparator<StructuredData> orderByComparator) {
+
+		return getPersistence().fetchByDataPackId_Last(
+			dataPackId, orderByComparator);
+	}
+
+	/**
+	 * Returns the structured datas before and after the current structured data in the ordered set where dataPackId = &#63;.
+	 *
+	 * @param structuredDataId the primary key of the current structured data
+	 * @param dataPackId the data pack ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next structured data
+	 * @throws NoSuchStructuredDataException if a structured data with the primary key could not be found
+	 */
+	public static StructuredData[] findByDataPackId_PrevAndNext(
+			long structuredDataId, long dataPackId,
+			OrderByComparator<StructuredData> orderByComparator)
+		throws com.sx.icecap.exception.NoSuchStructuredDataException {
+
+		return getPersistence().findByDataPackId_PrevAndNext(
+			structuredDataId, dataPackId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the structured datas where dataPackId = &#63; from the database.
+	 *
+	 * @param dataPackId the data pack ID
+	 */
+	public static void removeByDataPackId(long dataPackId) {
+		getPersistence().removeByDataPackId(dataPackId);
+	}
+
+	/**
+	 * Returns the number of structured datas where dataPackId = &#63;.
+	 *
+	 * @param dataPackId the data pack ID
+	 * @return the number of matching structured datas
+	 */
+	public static int countByDataPackId(long dataPackId) {
+		return getPersistence().countByDataPackId(dataPackId);
+	}
+
+	/**
 	 * Returns all the structured datas where dataTypeId = &#63;.
 	 *
 	 * @param dataTypeId the data type ID

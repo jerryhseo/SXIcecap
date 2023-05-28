@@ -55,6 +55,10 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.StructuredDataLocalService;
 import com.sx.icecap.service.StructuredDataLocalServiceUtil;
+import com.sx.icecap.service.persistence.DataPackEntryPersistence;
+import com.sx.icecap.service.persistence.DataPackPersistence;
+import com.sx.icecap.service.persistence.DataPackStructurePersistence;
+import com.sx.icecap.service.persistence.DataSetPersistence;
 import com.sx.icecap.service.persistence.DataTypePersistence;
 import com.sx.icecap.service.persistence.DataTypeStructurePersistence;
 import com.sx.icecap.service.persistence.StructuredDataPersistence;
@@ -613,6 +617,18 @@ public abstract class StructuredDataLocalServiceBaseImpl
 			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
+
+	@Reference
+	protected DataPackPersistence dataPackPersistence;
+
+	@Reference
+	protected DataPackEntryPersistence dataPackEntryPersistence;
+
+	@Reference
+	protected DataPackStructurePersistence dataPackStructurePersistence;
+
+	@Reference
+	protected DataSetPersistence dataSetPersistence;
 
 	@Reference
 	protected DataTypePersistence dataTypePersistence;

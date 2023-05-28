@@ -76,6 +76,7 @@
 				
 				<input id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
 				<input type="radio" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
+				<input type="text" id="<portlet:namespace/>uploadParamName" name="<portlet:namespace/>uploadParamName"/>
 				<table class="table table-striped">
 					<tbody id="<portlet:namespace/>canvasPanel">
 					</tbody>
@@ -120,6 +121,8 @@ $(document).ready(function(){
 		let term = eventData.term;
 		if( term.termType === SX.TermTypes.FILE){
 			$('#<portlet:namespace/>hasFile').prop('checked', true);
+			$('#<portlet:namespace/>uploadParamName').val( 
+						term.termName );
 		}
 		
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );

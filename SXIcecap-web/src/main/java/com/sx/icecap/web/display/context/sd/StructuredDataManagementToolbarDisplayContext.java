@@ -342,7 +342,7 @@ public class StructuredDataManagementToolbarDisplayContext
 		return filterNavigationDropdownItems;
 	}
 	
-	public List<DropdownItem> getItemActionDropdownItems( PortletRequest portletRequest, long structuredDataId ){
+	public List<DropdownItem> getItemActionDropdownItems( PortletRequest portletRequest,  long structuredDataId ){
 
 		long plid = super.liferayPortletRequest.getPlid();
 		
@@ -352,10 +352,11 @@ public class StructuredDataManagementToolbarDisplayContext
 				new DropdownItemList() {
 					{
 						if (_hasUpdatePermission( structuredDataId )) {
-							PortletURL updateURL = liferayPortletResponse.createActionURL();
-							updateURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT);
+							PortletURL updateURL = liferayPortletResponse.createRenderURL();
+							updateURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT);
 							updateURL.setParameter(Constants.CMD, Constants.UPDATE);
 							updateURL.setParameter(StationXWebKeys.BACK_URL, currentURL);
+							updateURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(_dataTypeId) );
 							updateURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredDataId) );
 							
 							add(dropdownItem -> {
