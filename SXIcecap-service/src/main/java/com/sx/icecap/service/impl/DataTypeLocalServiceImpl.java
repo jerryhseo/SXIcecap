@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -49,9 +50,11 @@ import com.sx.icecap.service.base.DataTypeLocalServiceBaseImpl;
 import com.sx.icecap.util.comparator.datatype.DataTypeModifiedDateComparator;
 import com.sx.icecap.util.comparator.datatype.DataTypeNameComparator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -578,6 +581,25 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	}
 	public List<StructuredData> getStructuredDatas( long dataTypeId, int start, int end ){
 		return super.structuredDataPersistence.findByDataTypeId(dataTypeId, start, end);
+	}
+	
+	public List<String> getAbstractFields( long dataTypeId ) throws JSONException{
+		List<String> abstractFieldList = new ArrayList<String>();
+		
+		JSONObject dataStructure = getDataTypeStructureJSONObject(dataTypeId);
+		
+		JSONArray terms = dataStructure.getJSONArray("terms");
+
+		for( int i=0; i<terms.length(); i++ ) {
+			JSONObject term = terms.getJSONObject(i);
+
+			if( term.has("abstractKey") && term.getBoolean("abstractKey") == true ) {
+				abstractFieldList.add(term.getString("termName"));
+				System.out.println("A Key is added for abstrct: " + term.getString("termName"));
+			}
+		}
+		
+		return abstractFieldList;
 	}
 	
 	public JSONObject getStructuredDataWithValues( 

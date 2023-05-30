@@ -12,10 +12,14 @@ import com.sx.icecap.constant.IcecapJsps;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.DataType;
+import com.sx.icecap.model.DataTypeStructure;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
 import com.sx.icecap.web.display.context.sd.StructuredDataManagementToolbarDisplayContext;
 import com.sx.icecap.web.display.context.sd.StructuredDataSearchContainerProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -63,10 +67,13 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 		String backURL = ParamUtil.getString(renderRequest, StationXWebKeys.BACK_URL );
 		System.out.println("backURL: "+backURL);
 		
-		DataType dataType = null; 
+		DataType dataType = null;
+		List<String> abstractFieldList = null;
 		
 		try {
 			dataType = _dataTypeLocalService.getDataType(dataTypeId);
+			abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId );
+			System.out.println("Abstract field size: "+abstractFieldList.size());
 		}
 		catch( PortalException pe) {
 			throw new PortletException(pe.getMessage());
@@ -98,6 +105,9 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 		renderRequest.setAttribute(
 				StationXWebKeys.DATATYPE, 
 				dataType );
+		renderRequest.setAttribute(
+				StationXWebKeys.ABSTRACT_FIELDS, 
+				abstractFieldList );
 		
 		return IcecapJsps.STRUCTURED_DATA_LIST_VIEW;
 	}

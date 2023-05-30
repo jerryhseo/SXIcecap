@@ -262,6 +262,12 @@ public class DataTypeLocalServiceUtil {
 		return getService().fetchDataTypeByUuidAndGroupId(uuid, groupId);
 	}
 
+	public static List<String> getAbstractFields(long dataTypeId)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return getService().getAbstractFields(dataTypeId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 

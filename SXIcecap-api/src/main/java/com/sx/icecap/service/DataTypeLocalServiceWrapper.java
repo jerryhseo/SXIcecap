@@ -282,6 +282,13 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<String> getAbstractFields(long dataTypeId)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return _dataTypeLocalService.getAbstractFields(dataTypeId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 

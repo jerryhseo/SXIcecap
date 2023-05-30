@@ -1,4 +1,6 @@
 
+<%@page import="java.util.List"%>
+<%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
 <%@page import="com.sx.icecap.model.StructuredData"%>
@@ -21,6 +23,7 @@
 
 <%
 	DataType dataType = (DataType)renderRequest.getAttribute(StationXWebKeys.DATATYPE);
+	List<String> abstractFieldList  = (List<String>)renderRequest.getAttribute(StationXWebKeys.ABSTRACT_FIELDS);
 
 	StructuredDataManagementToolbarDisplayContext structuredDataManagementToolbarDisplayContext = 
 		(StructuredDataManagementToolbarDisplayContext)renderRequest.getAttribute(
@@ -77,8 +80,7 @@
 		        <liferay-ui:search-container-row
 							className="com.sx.icecap.model.StructuredData" 
 							keyProperty="structuredDataId" 
-							modelVar="structuredData"
-							escapedModel="<%=true%>">
+							modelVar="structuredData">
 					<%
 						Map<String, Object> rowData = new HashMap<>();
 
@@ -89,6 +91,20 @@
 						rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_FULL_CONTENT);
 						rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
 						rowURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredData.getPrimaryKey()));
+						
+						JSONObject jsonData = JSONFactoryUtil.createJSONObject( structuredData.getStructuredData() );
+						
+						String abstractData = "";
+						
+						Iterator<String> keys = jsonData.keys();
+						while( keys.hasNext() ){
+							String key = keys.next();
+							if( abstractFieldList.contains(key) ){
+								abstractData +=  key + ":" + jsonData.getString(key) + ", ";
+							}
+						}
+						
+						System.out.println("Abstract Data: " + abstractData );
 					%>
 					
 					<c:choose>
@@ -116,20 +132,7 @@
 								<h5 class="€œtext-default"€><%= structuredData.getStructuredDataId() %></h5>
 							</liferay-ui:search-container-column-text>
 							<liferay-ui:search-container-column-text >
-	  							<h6 class="text-default"€>
-	    							<%
-	    								JSONObject jsonData = JSONFactoryUtil.createJSONObject( structuredData.getStructuredData() );
-	    								int i = 0;
-	    								Iterator<String> keys = jsonData.keys();
-	    								while( keys.hasNext() && i<5 ){
-	    									String key = keys.next();
-		    								out.println( key +" = " + jsonData.getString(key) );
-		    							}
-	    							%>
-	  							</h6>
-	  							<h6>
-	  								<%= dataType.getDescription(locale) %>
-	  							</h6>
+	  								<%= abstractData %>
 							</liferay-ui:search-container-column-text>
 							<liferay-ui:search-container-column-text>
 								<clay:dropdown-actions
@@ -144,7 +147,11 @@
 							<liferay-ui:search-container-column-text
 							 			name="id"
 							 			href="<%=rowURL.toString() %>"
-										value="<%=structuredData.getStructuredData()%>"/>
+										value="<%= String.valueOf(structuredData.getStructuredDataId()) %>"/>
+							<liferay-ui:search-container-column-text
+							 			name="abstract"
+							 			href="<%=rowURL.toString() %>"
+										value="<%= abstractData %>"/>
 			
 							<liferay-ui:search-container-column-text name="actions">
 								<clay:dropdown-actions

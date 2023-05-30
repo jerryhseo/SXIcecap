@@ -43,10 +43,10 @@ $(document).ready(function(){
 		}
 		
 		if( currentTerm.isGroupTerm() ){
-			dataStructure.disable(['mandatory'], true);
+			dataStructure.disable(['mandatory', 'abstractKey'], true);
 		}
 		else{
-			dataStructure.disable(['mandatory'], false);
+			dataStructure.disable(['mandatory', 'abstractKey'], false);
 		}
 		
 		console.log( 'Current term rendered: ' + currentTerm.isRendered() );
@@ -207,6 +207,7 @@ $(document).ready(function(){
 	});
 	
 	$('#<portlet:namespace/>abstractKey').change(function(eventObj){
+		console.log( 'abstractKey changed...', currentTerm);
 		currentTerm.getAbstractKeyFormValue(true);
 		currentTerm.setDirty( true );
 	});
