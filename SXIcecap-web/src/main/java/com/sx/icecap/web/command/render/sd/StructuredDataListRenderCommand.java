@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.STRUCTURED_DATA,
-	        "mvc.command.name="+IcecapMVCCommands.RENDER_ROOT,
+//	        "mvc.command.name="+IcecapMVCCommands.RENDER_ROOT,
 	        "mvc.command.name="+IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST
 	    },
 	    service = MVCRenderCommand.class

@@ -43,6 +43,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
+import javax.portlet.MimeResponse.Copy;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -160,11 +161,7 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 		
 		String backURL = ParamUtil.getString(actionRequest, StationXWebKeys.BACK_URL, "");
 		
-		PortletURL renderURL = PortletURLFactoryUtil.create(
-				actionRequest, 
-				themeDisplay.getPortletDisplay().getId(), 
-				themeDisplay.getPlid(),
-				PortletRequest.RENDER_PHASE);
+		PortletURL renderURL = actionResponse.createRedirectURL(Copy.ALL);
 		
 		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
 		renderURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataTypeId) );
