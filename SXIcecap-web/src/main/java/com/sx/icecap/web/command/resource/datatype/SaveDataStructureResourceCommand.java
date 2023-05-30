@@ -91,6 +91,7 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			
 			String synonyms = term.getString("synonyms");
 			boolean mandatory = term.getBoolean("mandatory");
+			boolean abstractKey = term.getBoolean("abstractKey");
 			String value = term.getString("value");
 			int status = term.getInt("status", WorkflowConstants.STATUS_DRAFT);
 			
@@ -305,10 +306,11 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 	private String _extractDateAttributes( JSONObject jsonObj ) {
 		JSONObject json = JSONFactoryUtil.createJSONObject();
 		
-		if( !jsonObj.isNull("enableTime") ) {
+		if( jsonObj.has("enableTime") ) {
 			json.put("enableTime",  jsonObj.getString("enableTime"));
 		}
 		
+		System.out.println("Date Attrs: " + json.toString());
 		return json.toJSONString();
 	}
 	

@@ -135,7 +135,6 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 			JSONObject term = terms.getJSONObject(i);
 			String termName = term.getString("termName");
 			if( keySet.contains( termName ) ) {
-				System.out.println("Valued term name: " + termName);
 				term.put("value",jsonData.getString(termName));
 			}
 		}

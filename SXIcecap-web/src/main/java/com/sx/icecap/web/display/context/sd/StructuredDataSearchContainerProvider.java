@@ -153,11 +153,13 @@ public class StructuredDataSearchContainerProvider {
 		
 		if ( _navigation.equals(StationXConstants.NAVIGATION_MINE) ) {
 			_searchContainer.setTotal(
-					_structuredDataLocalService.countStructuredDatasByU_S(
-					_themeDisplay.getUserId(),
-					_status));
+					_structuredDataLocalService.countStructuredDatasByDataTypeId_U_S(
+							_dataType.getPrimaryKey(), 
+							_themeDisplay.getUserId(),
+							_status));
 	
-			entriesResults = _structuredDataLocalService.getStructuredDatasByU_S( 
+			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId_U_S(
+					_dataType.getPrimaryKey(), 
 					_themeDisplay.getUserId(),
 					_status, 
 					_searchContainer.getStart(),
@@ -166,11 +168,13 @@ public class StructuredDataSearchContainerProvider {
 		}
 		else if( _navigation.equals(StationXConstants.NAVIGATION_GROUP)){
 			_searchContainer.setTotal(
-					_structuredDataLocalService.countStructuredDatasByG_S(
-					_themeDisplay.getScopeGroupId(),
-					_status));
+					_structuredDataLocalService.countStructuredDatasByDataTypeId_G_S(
+							_dataType.getPrimaryKey(), 
+							_themeDisplay.getScopeGroupId(),
+							_status));
 			
-			entriesResults = _structuredDataLocalService.getStructuredDatasByG_S(
+			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId_G_S(
+					_dataType.getPrimaryKey(), 
 					_themeDisplay.getScopeGroupId(),
 					_status, 
 					_searchContainer.getStart(),
@@ -178,9 +182,13 @@ public class StructuredDataSearchContainerProvider {
 					_searchContainer.getOrderByComparator());
 		}
 		else {
-			_searchContainer.setTotal(_structuredDataLocalService.countStructuredDatasByStatus(_status));
+			_searchContainer.setTotal(
+					_structuredDataLocalService.countStructuredDatasByDataTypeId_S(
+							_dataType.getPrimaryKey(),
+							_status));
 			
-			entriesResults = _structuredDataLocalService.getStructuredDatasByStatus(
+			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId_S(
+					_dataType.getPrimaryKey(),
 					_status,
 					_searchContainer.getStart(),
 					_searchContainer.getEnd() ,

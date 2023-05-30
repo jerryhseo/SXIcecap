@@ -67,9 +67,10 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 		
 		System.out.println("SaveStructuredDataActionCommand");
 		String cmd = ParamUtil.getString(actionRequest, StationXWebKeys.CMD);
+		System.out.println("cmd: " + cmd);
 		
 		long dataTypeId = ParamUtil.getLong(actionRequest, IcecapDataTypeAttributes.DATATYPE_ID, 0);
-		long structuredDataId = ParamUtil.getLong(actionRequest, IcecapDataTypeAttributes.DATATYPE_ID, 0);
+		long structuredDataId = ParamUtil.getLong(actionRequest, IcecapWebKeys.STRUCTURED_DATA_ID,  0);
 		
 		String dataTypeName = ParamUtil.getString(actionRequest, IcecapDataTypeAttributes.DATATYPE_NAME);
 		String dataTypeVersion = ParamUtil.getString(actionRequest, IcecapDataTypeAttributes.DATATYPE_VERSION);
@@ -149,7 +150,11 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 			_dataTypeLocalService.addStructuredData(0, dataTypeId, structuredData, WorkflowConstants.STATUS_APPROVED, serviceContext);
 		}
 		else {
-			_dataTypeLocalService.updateStructuredData(structuredDataId, 0, dataTypeId, structuredData, WorkflowConstants.STATUS_APPROVED, serviceContext);
+			try {
+				_dataTypeLocalService.updateStructuredData(structuredDataId, 0, dataTypeId, structuredData, WorkflowConstants.STATUS_APPROVED, serviceContext);
+			} catch( Exception e ) {
+				e.printStackTrace();
+			}
 		}
 		
 		
@@ -161,9 +166,9 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 				themeDisplay.getPlid(),
 				PortletRequest.RENDER_PHASE);
 		
-		String renderCommand = IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST; 
-		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, renderCommand);
+		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
 		renderURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataTypeId) );
+		renderURL.setParameter(StationXWebKeys.BACK_URL, backURL );
 		
 		actionResponse.sendRedirect(renderURL.toString());
 	}
