@@ -1,12 +1,10 @@
 package com.sx.icecap.web.command.render.sd;
 
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
@@ -19,8 +17,6 @@ import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
 
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.portlet.PortletException;
@@ -82,7 +78,6 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 	
 	private JSONObject getStructuredDataWithValues( 
 			long dataTypeId, long structuredDataId ) throws PortletException  {
-//		DataType dataType = super.dataTypePersistence.fetchByPrimaryKey(dataTypeId);
 		DataType dataType = null;
 		try {
 			dataType = _dataTypeLocalService.getDataType(dataTypeId);
@@ -138,36 +133,6 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 				term.put("value",jsonData.getString(termName));
 			}
 		}
-		
-		try {
-			System.out.println(dataStructure.toString(4));
-		}
-		catch( Exception e ) {
-			e.printStackTrace();
-			return null;
-		}
-		
-		/*
-		String[] lines = structuredData.split(termDelimiter);
-		
-		System.out.println("Line count: " + lines.length);
-		
-		Arrays.stream(lines).forEach(line->{
-			line = line.trim();
-			System.out.println("Line: [" + line + "]" );
-			
-			String valueDelimiter = dataStructure.getString(IcecapDataTypeAttributes.TERM_VALUE_DELIMITER);
-			System.out.println("Value Delimiter: " + valueDelimiter);
-			
-			if( ! line.isEmpty() ) {
-				String[] tokens = line.split(valueDelimiter);
-				tokens = Arrays.stream(tokens).filter(token -> token.trim().isEmpty() ).toArray(String[]::new);
-				
-				System.out.println("Tokens length: " + tokens.length);
-				System.out.println("Key: " + tokens[0] + ", Value: "+tokens[1]);
-			}
-			
-		});*/
 		
 		return dataStructure;
 	}

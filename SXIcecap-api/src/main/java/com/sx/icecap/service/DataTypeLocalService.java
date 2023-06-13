@@ -239,7 +239,8 @@ public interface DataTypeLocalService
 	public DataType fetchDataTypeByUuidAndGroupId(String uuid, long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<String> getAbstractFields(long dataTypeId) throws JSONException;
+	public List<String> getAbstractFields(long dataTypeId, boolean abstractKey)
+		throws JSONException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -417,6 +418,11 @@ public interface DataTypeLocalService
 		throws JSONException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<String> getDownloadableFields(
+			long dataTypeId, boolean downloadable)
+		throws JSONException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
 		PortletDataContext portletDataContext);
 
@@ -445,6 +451,10 @@ public interface DataTypeLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<String> getSearchableFields(long dataTypeId, boolean searchable)
+		throws JSONException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public SearchContainerResults<AssetEntry> getSearchContainerResults(

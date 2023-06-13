@@ -80,7 +80,7 @@ public class StructuredDataSearchContainerProvider {
 			_assetCategoryId = ParamUtil.getLong(renderRequest, StationXWebKeys.CATEGORY_ID);
 			_assetTagName = ParamUtil.getString(renderRequest, StationXWebKeys.TAG);
 			_navigation = ParamUtil.getString( renderRequest, StationXWebKeys.NAVIGATION, StationXConstants.NAVIGATION_ALL);
-			_orderByCol = ParamUtil.getString( renderRequest, StationXWebKeys.ORDER_BY_COL, IcecapSDSearchFields.DATATYPE_TITLE);
+			_orderByCol = ParamUtil.getString( renderRequest, StationXWebKeys.ORDER_BY_COL, IcecapSDSearchFields.DATATYPE_NAME);
 			_orderByType = ParamUtil.getString( renderRequest, StationXWebKeys.ORDER_BY_TYPE, StationXConstants.ASC);
 			_status = ParamUtil.getInteger( _renderRequest, IcecapSDSearchFields.STATUS, WorkflowConstants.STATUS_APPROVED);
 	}
@@ -302,7 +302,7 @@ public class StructuredDataSearchContainerProvider {
 				ParamUtil.getString(
 						_renderRequest, 
 						StationXWebKeys.ORDER_BY_COL, 
-						IcecapSDSearchFields.DATATYPE_TITLE));
+						IcecapSDSearchFields.DATATYPE_NAME));
 		_searchContainer.setOrderByType(
 				ParamUtil.getString(
 						_renderRequest, 

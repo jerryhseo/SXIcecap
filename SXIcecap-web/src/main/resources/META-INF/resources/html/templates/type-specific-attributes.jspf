@@ -97,6 +97,16 @@
 					<aui:input name="sweepable" label="sweepable" type="checkbox" helpMessage="numeric-sweepable-help"></aui:input>
 				</aui:col>
 			</aui:row>
+			<aui:row>
+				<aui:col>
+					<aui:field-wrapper name="numericPlaceHolder" label="place-holder" helpMessage="numeric-place-holder-help">
+						<liferay-ui:input-localized 
+										name="numericPlaceHolder"
+										xml="">
+						</liferay-ui:input-localized>
+					</aui:field-wrapper>
+				</aui:col>
+			</aui:row>
 		</aui:container>
 	</div>
 	

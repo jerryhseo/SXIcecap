@@ -32,7 +32,6 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.STRUCTURED_DATA,
-//	        "mvc.command.name="+IcecapMVCCommands.RENDER_ROOT,
 	        "mvc.command.name="+IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST
 	    },
 	    service = MVCRenderCommand.class
@@ -72,7 +71,7 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 		
 		try {
 			dataType = _dataTypeLocalService.getDataType(dataTypeId);
-			abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId );
+			abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId, true );
 			System.out.println("Abstract field size: "+abstractFieldList.size());
 		}
 		catch( PortalException pe) {

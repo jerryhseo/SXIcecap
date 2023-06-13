@@ -10,17 +10,17 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
-import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapSDSearchFields;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
 import com.sx.icecap.model.StructuredData;
+import com.sx.icecap.service.DataTypeLocalService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * The contributor is a actual indexer when each DataType data is added or updated.
@@ -35,12 +35,43 @@ import org.osgi.service.component.annotations.Component;
 public class StructuredDataModelDocumentContributor implements ModelDocumentContributor<StructuredData> {
 	private static final Log _log = LogFactoryUtil.getLog(StructuredDataModelDocumentContributor.class);
 	
+	@Reference
+	DataTypeLocalService _dataTypeLocalService;
+	
 	@Override
 	public void contribute(Document document, StructuredData structuredData) {
 		
 		long dataSetId = structuredData.getDataSetId();
 		long dataTypeId = structuredData.getDataTypeId();
-		String data = structuredData.getStructuredData();
+		long structuredDataId = structuredData.getStructuredDataId();
+		JSONObject data = null;
+		try {
+			data = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredData.getStructuredDataId());
+			System.out.println( data.toString(4));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+//		String data = structuredData.getStructuredData();
+		
+		List<String> searchableFieldList = null;;
+		try {
+			searchableFieldList = _dataTypeLocalService.getSearchableFields(dataTypeId, true);
+			System.out.println("Searchable Fields for " + dataTypeId  + ":" );
+			searchableFieldList.forEach(field->{System.out.println( field);});
+			System.out.println("^^^^^^^^^");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return;
+		}
+		
+		Map<String, Field> fields = document.getFields();
+		fields.forEach((key, field)->{
+			System.out.println( key + ":" + field.getName() + "-" + field.getValue() );
+		});
 		
 		document.addKeyword(Field.COMPANY_ID,structuredData.getCompanyId());
 		document.addKeyword(Field.GROUP_ID, structuredData.getGroupId());
@@ -51,10 +82,14 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 		document.addDate(Field.MODIFIED_DATE, structuredData.getModifiedDate());
 		document.addKeyword(Field.STATUS, structuredData.getStatus());
 		document.addKeyword(IcecapSDSearchFields.DATASET_ID, dataSetId);
-		document.addLocalizedKeyword(IcecapSDSearchFields.DATASET_TITLE, structuredData.getDataSetDisplayNameMap(), true);
+		document.addLocalizedKeyword(IcecapSDSearchFields.DATASET_NAME, structuredData.getDataSetDisplayNameMap(), true);
+		document.addKeyword(IcecapSDSearchFields.DATASET_ID, dataSetId);
+		document.addLocalizedKeyword(IcecapSDSearchFields.DATASET_NAME, structuredData.getDataSetDisplayNameMap(), true);
 		document.addKeyword(IcecapSDSearchFields.DATATYPE_ID, dataTypeId);
-		document.addLocalizedKeyword(IcecapSDSearchFields.DATATYPE_TITLE, structuredData.getDataTypeDisplayNameMap(), true);
+		document.addLocalizedKeyword(IcecapSDSearchFields.DATATYPE_NAME, structuredData.getDataTypeDisplayNameMap(), true);
 		
+		
+		/*
 		try {
 			JSONObject jsonData = JSONFactoryUtil.createJSONObject( data );
 			JSONArray values = jsonData.getJSONArray(IcecapSDSearchFields.VALUES);
@@ -82,6 +117,7 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 	}
 	
 }

@@ -27,9 +27,9 @@ public class StructuredDataModelSummaryContributor implements ModelSummaryContri
 
 	private Summary createSummary(Document document, Locale locale) {
 //		System.out.println("StructuredDataModelSummaryContributor: createSummary");
-		String title = document.get( locale, IcecapSDSearchFields.DATASET_TITLE );
+		String title = document.get( locale, IcecapSDSearchFields.DATASET_NAME );
 		
-		String content = document.get( locale, IcecapSDSearchFields.DATATYPE_TITLE );
+		String content = document.get( locale, IcecapSDSearchFields.DATATYPE_NAME );
  
 		return new Summary(locale, title, content);
 	}

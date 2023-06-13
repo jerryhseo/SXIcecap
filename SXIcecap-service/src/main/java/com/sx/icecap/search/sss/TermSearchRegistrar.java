@@ -20,11 +20,11 @@ import org.osgi.service.component.annotations.Reference;
 public class TermSearchRegistrar {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
-		Debug.printHeader("TermSearchRegistrar activator()");
-		System.out.println("_serviceRegistration: "+ Validator.isNotNull(_serviceRegistration));
-		System.out.println("_modelSearchRegistrarHelper: "+ Validator.isNotNull(_modelSearchRegistrarHelper));
-		System.out.println("_modelIndexWriterContributor: "+ Validator.isNotNull(_modelIndexWriterContributor));
-		System.out.println("_modelSummaryContributor: "+ Validator.isNotNull(_modelSummaryContributor));
+//		Debug.printHeader("TermSearchRegistrar activator()");
+//		System.out.println("_serviceRegistration: "+ Validator.isNotNull(_serviceRegistration));
+//		System.out.println("_modelSearchRegistrarHelper: "+ Validator.isNotNull(_modelSearchRegistrarHelper));
+//		System.out.println("_modelIndexWriterContributor: "+ Validator.isNotNull(_modelIndexWriterContributor));
+//		System.out.println("_modelSummaryContributor: "+ Validator.isNotNull(_modelSummaryContributor));
 		
 			_serviceRegistration = _modelSearchRegistrarHelper.register(
 					Term.class, 
@@ -60,7 +60,7 @@ public class TermSearchRegistrar {
 								modelSearchDefinition.setSelectAllLocales(true);
 					});
 
-			Debug.printFooter("TermSearchRegistrar activator()");
+//			Debug.printFooter("TermSearchRegistrar activator()");
 	}
 
 	@Deactivate

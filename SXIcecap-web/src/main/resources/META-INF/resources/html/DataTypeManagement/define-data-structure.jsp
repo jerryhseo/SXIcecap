@@ -217,11 +217,23 @@
 										xml="">
 						</liferay-ui:input-localized>
 				</aui:field-wrapper>
-								<aui:input 
+				<aui:input 
 							type="checkbox"
 							name="abstractKey" 
-							label="abatract-key" 
+							label="abstract-key" 
 							helpMessage="abstract-key-help">
+				</aui:input>
+				<aui:input 
+							type="checkbox"
+							name="searchable" 
+							label="searchable" 
+							helpMessage="searchable-help">
+				</aui:input>
+				<aui:input 
+							type="checkbox"
+							name="downloadable" 
+							label="downloadable" 
+							helpMessage="downloadable-help">
 				</aui:input>
 				<aui:field-wrapper name="termTooltip" label="tooltip" helpMessage="term-tooltip-help">
 						<liferay-ui:input-localized 
@@ -266,7 +278,7 @@
 				<!-- div id="templateString" cssClass="hide" -->
 				<aui:button-row>
 					<aui:button id="btnRefresh" value="refresh"></aui:button>
-					<aui:button id="btnShowSDE" value="structured-datatype-editor"></aui:button>
+					<aui:button id="btnShowSDE" value="structured-data-editor"></aui:button>
 				</aui:button-row>
 				<hr class="content-horizontal-line">
 				

@@ -282,10 +282,11 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
-	public java.util.List<String> getAbstractFields(long dataTypeId)
+	public java.util.List<String> getAbstractFields(
+			long dataTypeId, boolean abstractKey)
 		throws com.liferay.portal.kernel.json.JSONException {
 
-		return _dataTypeLocalService.getAbstractFields(dataTypeId);
+		return _dataTypeLocalService.getAbstractFields(dataTypeId, abstractKey);
 	}
 
 	@Override
@@ -603,6 +604,15 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<String> getDownloadableFields(
+			long dataTypeId, boolean downloadable)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return _dataTypeLocalService.getDownloadableFields(
+			dataTypeId, downloadable);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
 		getExportActionableDynamicQuery(
 			com.liferay.exportimport.kernel.lar.PortletDataContext
@@ -654,6 +664,15 @@ public class DataTypeLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _dataTypeLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	@Override
+	public java.util.List<String> getSearchableFields(
+			long dataTypeId, boolean searchable)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return _dataTypeLocalService.getSearchableFields(
+			dataTypeId, searchable);
 	}
 
 	@Override

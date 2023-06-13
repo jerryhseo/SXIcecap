@@ -5,7 +5,6 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXWebKeys;

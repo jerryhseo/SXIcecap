@@ -262,10 +262,11 @@ public class DataTypeLocalServiceUtil {
 		return getService().fetchDataTypeByUuidAndGroupId(uuid, groupId);
 	}
 
-	public static List<String> getAbstractFields(long dataTypeId)
+	public static List<String> getAbstractFields(
+			long dataTypeId, boolean abstractKey)
 		throws com.liferay.portal.kernel.json.JSONException {
 
-		return getService().getAbstractFields(dataTypeId);
+		return getService().getAbstractFields(dataTypeId, abstractKey);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -513,6 +514,13 @@ public class DataTypeLocalServiceUtil {
 		return getService().getDataTypeStructureJSONObject(dataTypeId);
 	}
 
+	public static List<String> getDownloadableFields(
+			long dataTypeId, boolean downloadable)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return getService().getDownloadableFields(dataTypeId, downloadable);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
 		getExportActionableDynamicQuery(
 			com.liferay.exportimport.kernel.lar.PortletDataContext
@@ -556,6 +564,13 @@ public class DataTypeLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static List<String> getSearchableFields(
+			long dataTypeId, boolean searchable)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return getService().getSearchableFields(dataTypeId, searchable);
 	}
 
 	public static com.liferay.portal.kernel.dao.search.SearchContainerResults

@@ -31,21 +31,17 @@ public class StructuredDataSearchRegistrar {
 					modelSearchDefinition -> {
 //								System.out.println("DataTypeSearchRegister activator: modelSearchDefinition");
 								modelSearchDefinition.setDefaultSelectedFieldNames(
-										Field.COMPANY_ID,
-										Field.GROUP_ID,
-										Field.UID,
 										Field.USER_ID,
 										Field.USER_NAME,
-										Field.CREATE_DATE, 
-										Field.MODIFIED_DATE, 
 										Field.STATUS,
 										IcecapSDSearchFields.DATASET_ID,
-										IcecapSDSearchFields.DATATYPE_ID
+										IcecapSDSearchFields.DATATYPE_ID,
+										IcecapSDSearchFields.VALUE
 										);
 								
 								modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
-										IcecapSDSearchFields.DATASET_TITLE,
-										IcecapSDSearchFields.DATATYPE_TITLE );
+										IcecapSDSearchFields.DATASET_NAME,
+										IcecapSDSearchFields.DATATYPE_NAME );
 
 								modelSearchDefinition.setModelIndexWriteContributor(
 										_modelIndexWriterContributor);

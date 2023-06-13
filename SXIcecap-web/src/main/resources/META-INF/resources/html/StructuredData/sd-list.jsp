@@ -97,9 +97,13 @@
 						String abstractData = "";
 						
 						Iterator<String> keys = jsonData.keys();
+						abstractFieldList.forEach(field->{System.out.println("abastract field: " + field);});
+						
 						while( keys.hasNext() ){
 							String key = keys.next();
+							System.out.println("----key: " + key );
 							if( abstractFieldList.contains(key) ){
+								 System.out.println(  "Value:" + jsonData.getString(key));
 								abstractData +=  key + ":" + jsonData.getString(key) + ", ";
 							}
 						}

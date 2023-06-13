@@ -73,6 +73,7 @@ $(document).ready(function(){
 												$('#<portlet:namespace/>previewPanel'));
 		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 		
+		console.log('Start Terms: ', dataStructure.terms);
 		setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
 		dataStructure.highlightTerm( currentTerm );
 	}
@@ -107,7 +108,7 @@ $(document).ready(function(){
 	});
 	
 	SX.Term.$DEFAULT_TERM_TYPE_FORM_CTRL.change(function(eventObj){
-		let selectedTermType = currentTerm.getTermTypeFormValue();
+		let selectedTermType = currentTerm.getTermTypeFormValue( false );
 		console.log('Term Type changed: ' + selectedTermType);
 		
 		if( selectedTermType === currentTerm.termType ){
@@ -143,15 +144,14 @@ $(document).ready(function(){
 						text: 'OK',
 						btnClass: 'btn-blue',
 						action: function(){
-							let changedName = currentTerm.getTermNameFormValue();
+							let changedName = currentTerm.getTermNameFormValue( false );
 							if( dataStructure.exist( changedName ) ){
 								$.alert( changedName + 'already exist. Should be changed another name.' );
 								currentTerm.setTermNameFormValue();
 							}
 							else{
 								if( currentTerm.validateNameExpression( changedName ) === true ){
-									currentTerm.termName = changedName;
-									currentTerm.setDirty( true );
+									currentTerm.getTermNameFormValue(true);
 									dataStructure.refreshTerm( currentTerm );
 								}
 								else{
@@ -174,7 +174,7 @@ $(document).ready(function(){
 	});
 
 	SX.Term.$DEFAULT_TERM_VERSION_FORM_CTRL.change(function(eventObj){
-		const changedVersion = currentTerm.getTermVersionFormValue();
+		const changedVersion = currentTerm.getTermVersionFormValue( false );
 		
 		let validated;
 		if( currentTerm.$rendered ){
@@ -185,8 +185,7 @@ $(document).ready(function(){
 		}
 		
 		if( validated === true ){
-			currentTerm.termVersion = changedVersion;
-			currentTerm.setDirty( true );
+			currentTerm.currentTerm.getTermVersionFormValue();
 			
 		}
 		else{
@@ -197,7 +196,6 @@ $(document).ready(function(){
 
 	SX.Term.$DEFAULT_TERM_DISPLAY_NAME_FORM_CTRL.change(function(eventObj){
 		currentTerm.getDisplayNameFormValue(true);
-		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
@@ -211,33 +209,43 @@ $(document).ready(function(){
 		currentTerm.getAbstractKeyFormValue(true);
 		currentTerm.setDirty( true );
 	});
-
+	
+	$('#<portlet:namespace/>searchable').change(function(eventObj){
+		console.log( 'searchable changed...', currentTerm);
+		currentTerm.getSearchableFormValue();
+	});
+	
+	$('#<portlet:namespace/>downloadable').change(function(eventObj){
+		console.log( 'downloadable changed...', currentTerm);
+		currentTerm.getDownloadableFormValue();
+	});
+	
 	$('#<portlet:namespace/>termTooltip').change(function(eventObj){
 		currentTerm.getTooltipFormValue(true);
-		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>placeHolder').change(function(eventObj){
 		currentTerm.getPlaceHolderFormValue(true);
-		currentTerm.setDirty( true );
+		dataStructure.refreshTerm( currentTerm );
+	});
+
+	$('#<portlet:namespace/>numericPlaceHolder').change(function(eventObj){
+		currentTerm.getNumericPlaceHolderFormValue(true);
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>synonyms').change(function(eventObj){
 		currentTerm.getSynonymsFormValue(true);
-		currentTerm.setDirty( true );
 	});
 	
 	$('#<portlet:namespace/>mandatory').change(function(eventObj){
 		currentTerm.getMandatoryFormValue(true);
-		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>value').change(function(eventObj){
 		currentTerm.getValueFormValue(true);
-		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 
@@ -688,7 +696,6 @@ $(document).ready(function(){
 			return;
 		}
 		
-		 console.log('Before save: ' + JSON.stringify(dataStructure, null, 4) );
 		$.ajax({
 			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
 			method: 'post',
@@ -706,7 +713,6 @@ $(document).ready(function(){
 			}
 		});
 		
-		console.log('Data Structure: ', JSON.stringify(dataStructure, null, 4));
 	});
 });
 </aui:script>

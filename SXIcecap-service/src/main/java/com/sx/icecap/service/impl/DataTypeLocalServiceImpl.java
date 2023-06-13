@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -526,13 +525,18 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		try {
 			return super.dataTypeStructurePersistence.findByPrimaryKey(dataTypeId).getStructure();
 		} catch (NoSuchDataTypeStructureException e) {
-			return null;
+			return "";
 		}
 	}
 	
-	public JSONObject getDataTypeStructureJSONObject( long dataTypeId ) throws JSONException {
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-				getDataTypeStructure( dataTypeId ) );
+	public JSONObject getDataTypeStructureJSONObject( long dataTypeId ) throws JSONException{
+		String dataStructureString = getDataTypeStructure( dataTypeId );
+		
+		JSONObject jsonObject = null;
+		if( !dataStructureString.isEmpty() ) {
+				jsonObject = JSONFactoryUtil.createJSONObject(
+						getDataTypeStructure( dataTypeId ) );
+		}
 		
 		return jsonObject;
 	}
@@ -583,24 +587,72 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		return super.structuredDataPersistence.findByDataTypeId(dataTypeId, start, end);
 	}
 	
-	public List<String> getAbstractFields( long dataTypeId ) throws JSONException{
+	public List<String> getAbstractFields( long dataTypeId, boolean abstractKey ) throws JSONException{
 		List<String> abstractFieldList = new ArrayList<String>();
 		
 		JSONObject dataStructure = getDataTypeStructureJSONObject(dataTypeId);
 		
-		JSONArray terms = dataStructure.getJSONArray("terms");
-
-		for( int i=0; i<terms.length(); i++ ) {
-			JSONObject term = terms.getJSONObject(i);
-
-			if( term.has("abstractKey") && term.getBoolean("abstractKey") == true ) {
-				abstractFieldList.add(term.getString("termName"));
-				System.out.println("A Key is added for abstrct: " + term.getString("termName"));
+		if( Validator.isNotNull(dataStructure) ) {
+			JSONArray terms = dataStructure.getJSONArray("terms");
+			
+			for( int i=0; i<terms.length(); i++ ) {
+				JSONObject term = terms.getJSONObject(i);
+				
+				boolean definedValue = (term.has("abstractKey") && term.getBoolean("abstractKey") == true) ? true : false;
+				if( definedValue == abstractKey ) {
+					abstractFieldList.add(term.getString("termName"));
+					System.out.println("A Key is added for abstrct: " + term.getString("termName"));
+				}
 			}
 		}
 		
 		return abstractFieldList;
 	}
+	
+	public List<String> getSearchableFields( long dataTypeId, boolean searchable ) throws JSONException{
+		List<String> searchableFieldList = new ArrayList<String>();
+		
+		JSONObject dataStructure = getDataTypeStructureJSONObject(dataTypeId);
+		
+		if( Validator.isNotNull(dataStructure) ) {
+			JSONArray terms = dataStructure.getJSONArray("terms");
+	
+			for( int i=0; i<terms.length(); i++ ) {
+				JSONObject term = terms.getJSONObject(i);
+	
+				boolean definedValue = (term.has("searchable") && term.getBoolean("searchable") == true) ? true : false;
+				if( definedValue == searchable ) {
+					searchableFieldList.add(term.getString("termName"));
+					System.out.println("A Key is added for search: " + term.getString("termName"));
+				}
+			}
+		}
+		
+		return searchableFieldList;
+	}
+	
+	public List<String> getDownloadableFields( long dataTypeId, boolean downloadable ) throws JSONException{
+		List<String> downloadableFieldList = new ArrayList<String>();
+		
+		JSONObject dataStructure = getDataTypeStructureJSONObject(dataTypeId);
+		
+		if( Validator.isNotNull(dataStructure) ) {
+			JSONArray terms = dataStructure.getJSONArray("terms");
+	
+			for( int i=0; i<terms.length(); i++ ) {
+				JSONObject term = terms.getJSONObject(i);
+	
+				boolean definedValue = (term.has("downloadable") && term.getBoolean("downloadable") == false) ? false : true;
+				if(  definedValue == downloadable ) {
+					downloadableFieldList.add(term.getString("termName"));
+					System.out.println("A Key is added for download: " + term.getString("termName"));
+				}
+			}
+		}
+		
+		return downloadableFieldList;
+	}
+
 	
 	public JSONObject getStructuredDataWithValues( 
 			long dataTypeId, long structuredDataId ) throws JSONException {

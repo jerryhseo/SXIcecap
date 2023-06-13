@@ -16,7 +16,6 @@ import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
-import com.sx.icecap.exception.NoSuchTermException;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.model.Term;
 import com.sx.icecap.service.TermLocalService;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -54,6 +52,9 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		System.out.println( "+++++ Data Structure Length: \n" + dataStructure );
 		
 		JSONObject jsonDataStructure = JSONFactoryUtil.createJSONObject(dataStructure);
+		if( jsonDataStructure.length() == 0 ) {
+			return;
+		}
 
 //		System.out.println(jsonDataStructure.toString(4));
 		
@@ -92,6 +93,8 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			String synonyms = term.getString("synonyms");
 			boolean mandatory = term.getBoolean("mandatory");
 			boolean abstractKey = term.getBoolean("abstractKey");
+			boolean searchable = term.getBoolean("searchable");
+			boolean downloadable = term.getBoolean("downloadable");
 			String value = term.getString("value");
 			int status = term.getInt("status", WorkflowConstants.STATUS_DRAFT);
 			
@@ -107,7 +110,7 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			
 			boolean dirty = term.getBoolean("dirty");
 			
-			_printOutTermAttributes(termType, termName, termVersion, displayNameMap, definitionMap, tooltipMap, synonyms, mandatory, value, typeAttributes, groupTermId, status);
+			_printOutTermAttributes(termType, termName, termVersion, displayNameMap, definitionMap, tooltipMap, synonyms, mandatory, searchable, downloadable, value, typeAttributes, groupTermId, status);
 			
 /*	 Temporarily Block out to dis-connect SSS
 			Term existTerm = null;
@@ -163,6 +166,8 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 							Map<Locale, String> tooltipMap,
 							String synonyms,
 							boolean mandatory,
+							boolean searchable,
+							boolean downloadable,
 							String value,
 							String attributes,
 							String groupTermId,
@@ -179,6 +184,8 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		System.out.println("Tooltip: " + tipStr );
 		System.out.println("Synonyms: " + synonyms );
 		System.out.println("Mandatory: " + mandatory );
+		System.out.println("Searchable: " + searchable );
+		System.out.println("Downloadable: " + downloadable );
 		System.out.println("Value: " + value );
 		System.out.println("Attributes: " + attributes );
 		System.out.println("GroupTermId: " + groupTermId );
@@ -247,32 +254,36 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 	private String _extractNumericAttributes( JSONObject jsonObj ) {
 		JSONObject json = JSONFactoryUtil.createJSONObject();
 		
-		if( !jsonObj.isNull("minValue") ) {
+		if( !jsonObj.has("minValue") ) {
 			json.put("minValue",  jsonObj.getDouble("minValue"));
 		}
 		
-		if( !jsonObj.isNull("minBoundary") ) {
+		if( !jsonObj.has("minBoundary") ) {
 			json.put("minBoundary",  jsonObj.getBoolean("minBoundary"));
 		}
 
-		if( !jsonObj.isNull("maxValue") ) {
+		if( !jsonObj.has("maxValue") ) {
 			json.put("maxValue",  jsonObj.getDouble("maxValue"));
 		}
 		
-		if( !jsonObj.isNull("maxBoundary") ) {
+		if( !jsonObj.has("maxBoundary") ) {
 			json.put("maxBoundary",  jsonObj.getBoolean("maxBoundary"));
 		}
 
-		if( !jsonObj.isNull("unit") ) {
+		if( !jsonObj.has("unit") ) {
 			json.put("unit",  jsonObj.getString("unit"));
 		}
 
-		if( !jsonObj.isNull("uncertainty") ) {
+		if( !jsonObj.has("uncertainty") ) {
 			json.put("uncertainty",  jsonObj.getBoolean("uncertainty"));
 		}
 
-		if( !jsonObj.isNull("sweepable") ) {
+		if( !jsonObj.has("sweepable") ) {
 			json.put("sweepable",  jsonObj.getBoolean("sweepable"));
+		}
+		
+		if( !jsonObj.has("placeHolder") ) {
+			json.put("placeHolder",  jsonObj.getString("placeHolder"));
 		}
 
 		return json.toJSONString();
