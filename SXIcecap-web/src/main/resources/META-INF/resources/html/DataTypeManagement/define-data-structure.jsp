@@ -280,7 +280,6 @@
 					<aui:button id="btnRefresh" value="refresh"></aui:button>
 					<aui:button id="btnShowSDE" value="structured-data-editor"></aui:button>
 				</aui:button-row>
-				<hr class="content-horizontal-line">
 				
 				<table class="table table-striped">
 					<tbody id="<portlet:namespace/>previewPanel">
