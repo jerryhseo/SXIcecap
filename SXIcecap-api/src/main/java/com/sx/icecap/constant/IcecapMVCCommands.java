@@ -48,6 +48,7 @@ public class IcecapMVCCommands {
 	public static final String RENDER_STRUCTURED_DATA_LIST = "/html/StructuredData/structured-data-list";
 	public static final String RENDER_STRUCTURED_DATA_EDIT = "/html/StructuredData/edit-structured-data";
 	public static final String RENDER_STRUCTURED_DATA_VIEW = "/html/StructuredData/view-structured-data";
+	public static final String RENDER_STRUCTURED_DATA_ADVANCED_SEARCH = "/html/StructuredData/structured-data-advanced-search";
 	public static final String RENDER_STRUCTURED_DATA_FULL_CONTENT = "/html/StructuredData/full-content";
 	public static final String RENDER_SEARCH_STRUCTURED_DATA= "/html/StructuredData/search-structured-data";
 

@@ -27,6 +27,7 @@ import com.liferay.trash.TrashHelper;
 import com.sx.icecap.web.security.permission.resource.datatype.DataTypeResourcePermissionHelper;
 import com.sx.icecap.web.security.permission.resource.sd.StructuredDataModelPermissionHelper;
 import com.sx.icecap.constant.IcecapActionKeys;
+import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapSDSearchFields;
 import com.sx.constant.StationXConstants;
@@ -158,6 +159,14 @@ public class StructuredDataManagementToolbarDisplayContext
 		return menu;
 	}
 	
+	@Override
+	public String getSearchContainerId() {
+		String searchContainerId = super.searchContainer.getId( _httpServletRequest, _namespace);
+		System.out.println("Structured Data Management Search Container ID: " + searchContainerId);
+
+		return searchContainerId;
+	}
+	
 	public SearchContainer<StructuredData> getSearchContainer(){
 		return super.searchContainer;
 	}
@@ -168,7 +177,7 @@ public class StructuredDataManagementToolbarDisplayContext
 		
 		searchURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME, 
-				IcecapMVCCommands.RENDER_DATATYPE_LIST);
+				IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
 		
 		return searchURL.toString();
 	}
@@ -431,17 +440,16 @@ public class StructuredDataManagementToolbarDisplayContext
 
 	@Override
 	public Boolean isShowAdvancedSearch() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public String getComponentId() {
-		return "dataTypeManagementToolbar";
+		return IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_COMPONENT_ID;
 	}
 
 	@Override
 	public String getSearchFormMethod() {
-//		System.out.println("----- Search Form Method: "+super.getSearchFormMethod());
 		return super.getSearchFormMethod();
 	}
 

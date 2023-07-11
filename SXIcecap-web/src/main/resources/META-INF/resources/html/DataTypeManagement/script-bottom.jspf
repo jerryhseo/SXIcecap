@@ -56,7 +56,8 @@ $(document).ready(function(){
 	};
 
 	let dataStructure;
-	let jsonDataStructure = JSON.parse('<%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>');
+	console.log( 'init dataStructure: ' + <%= dataStructure.toString() %>);
+	let jsonDataStructure = <%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>;
 	
 	let currentTerm = null;
 	if( SX.Util.isEmptyObject(jsonDataStructure) ){
@@ -174,6 +175,7 @@ $(document).ready(function(){
 	});
 
 	SX.Term.$DEFAULT_TERM_VERSION_FORM_CTRL.change(function(eventObj){
+		console.log('Term version changed....');
 		const changedVersion = currentTerm.getTermVersionFormValue( false );
 		
 		let validated;
@@ -185,7 +187,7 @@ $(document).ready(function(){
 		}
 		
 		if( validated === true ){
-			currentTerm.currentTerm.getTermVersionFormValue();
+			currentTerm.getTermVersionFormValue();
 			
 		}
 		else{
@@ -692,9 +694,11 @@ $(document).ready(function(){
 	});
 	
 	$('#<portlet:namespace/>btnSave').click(function(event){
-		if( currentTerm.validate() === false ){
+		if( !dataStructure.terms || dataStructure.terms.length < 1 ){
 			return;
 		}
+		
+		console.log( 'Before Save: ', dataStructure, JSON.stringify(dataStructure, null, 4) );
 		
 		$.ajax({
 			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
@@ -713,6 +717,30 @@ $(document).ready(function(){
 			}
 		});
 		
+	});
+	
+	$('#<portlet:namespace/>btnSaveAndViewDataTypeList').click(function(event){
+		if( !dataStructure.terms || dataStructure.terms.length < 1 ){
+			return;
+		}
+		
+		$.ajax({
+			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
+			method: 'post',
+			dataType: 'text',
+			data: {
+				<portlet:namespace/>dataTypeId: '<%= String.valueOf(dataTypeId) %>',
+				<portlet:namespace/>dataStructure: JSON.stringify(dataStructure)
+			},
+			success: function( result ){
+				console.log( result );
+				// redirect to datatype list view
+				window.location.href='<%= dataTypeListURL %>';
+			},
+			error: function(){
+				console.log('error');
+			}
+		});
 	});
 });
 </aui:script>

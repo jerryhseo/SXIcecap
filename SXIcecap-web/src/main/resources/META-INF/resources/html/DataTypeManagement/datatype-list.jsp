@@ -63,7 +63,7 @@
 	
 <div class="closed container-fluid container-fluid-max-xl sidenav-container sidenav-right" id="<portlet:namespace />dataTypeInfoPanelId">
 	<liferay-frontend:sidebar-panel
-		searchContainerId="<%= IcecapConstants.DATATYPE_SEARCH_CONTAINER_ID %>"
+		searchContainerId="<%= dataTypeManagementToolbarDisplayContext.getSearchContainerId() %>"
 	>	</liferay-frontend:sidebar-panel>
 	
 	<div class="sidenav-content">
@@ -75,7 +75,7 @@
 			<aui:input name="redirect" type="hidden"></aui:input>
 		
 		 	<liferay-ui:search-container 
-				 		id="<%= IcecapConstants.DATATYPE_SEARCH_CONTAINER_ID %>"
+				 		id="<%= dataTypeManagementToolbarDisplayContext.getSearchContainerId() %>"
 					    searchContainer="<%= dataTypeManagementToolbarDisplayContext.getSearchContainer() %>" >
 		    
 		        <liferay-ui:search-container-row

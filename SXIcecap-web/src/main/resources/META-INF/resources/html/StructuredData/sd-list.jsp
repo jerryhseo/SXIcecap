@@ -1,4 +1,8 @@
 
+<%@page import="com.sx.icecap.constant.IcecapWebPortletKeys"%>
+<%@page import="com.sx.icecap.constant.IcecapWebKeys"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
 <%@page import="java.util.Iterator"%>
@@ -20,6 +24,25 @@
 <%@page import="com.sx.constant.StationXWebKeys"%>
 <%@page import="com.sx.icecap.web.display.context.sd.StructuredDataManagementToolbarDisplayContext"%>
 <%@ include file="../init.jsp" %>
+
+<style type="text/css">
+	.id-width {
+		width: 10% !important;
+		text-align:center;
+	}
+	.abstract-width {
+		width: 60% !important;
+	}
+	.status-width {
+		width: 10% !important;
+		text-align:center;
+	}
+	.actions-width {
+		width: 10% !important;
+		text-align:center;
+	}
+	
+</style>
 
 <%
 	DataType dataType = (DataType)renderRequest.getAttribute(StationXWebKeys.DATATYPE);
@@ -62,19 +85,19 @@
 	
 <div class="closed container-fluid container-fluid-max-xl sidenav-container sidenav-right" id="<portlet:namespace />structuredDataInfoPanelId">
 	<liferay-frontend:sidebar-panel
-		searchContainerId="<%= IcecapConstants.STRUCTURED_DATA_SEARCH_CONTAINER_ID %>"
+		searchContainerId="<%= structuredDataManagementToolbarDisplayContext.getSearchContainerId() %>"
 	>	</liferay-frontend:sidebar-panel>
 	
 	<div class="sidenav-content">
 		<aui:form 
-					action="" 
-					method="<%= structuredDataManagementToolbarDisplayContext.getSearchFormMethod() %>" 
+					action=""
+					method="post" 
 					name="<%= structuredDataManagementToolbarDisplayContext.getSearchFormName() %>">
 			<aui:input name="cmd" type="hidden"></aui:input>
 			<aui:input name="redirect" type="hidden"></aui:input>
 		
 			<liferay-ui:search-container 
-				 		id="<%= IcecapConstants.STRUCTURED_DATA_SEARCH_CONTAINER_ID %>"
+				 		id="<%= structuredDataManagementToolbarDisplayContext.getSearchContainerId() %>"
 					    searchContainer="<%= structuredDataManagementToolbarDisplayContext.getSearchContainer() %>" >
 		    
 		        <liferay-ui:search-container-row
@@ -96,19 +119,17 @@
 						
 						String abstractData = "";
 						
+						System.out.println(" Data: " + structuredData.getPrimaryKey() + "-" +  jsonData.toString() );
 						Iterator<String> keys = jsonData.keys();
-						abstractFieldList.forEach(field->{System.out.println("abastract field: " + field);});
-						
-						while( keys.hasNext() ){
-							String key = keys.next();
-							System.out.println("----key: " + key );
-							if( abstractFieldList.contains(key) ){
-								 System.out.println(  "Value:" + jsonData.getString(key));
-								abstractData +=  key + ":" + jsonData.getString(key) + ", ";
+						for( String field : abstractFieldList ){ 
+							System.out.println( "Abstract field: " + field );
+							if( jsonData.has(field) ){
+								abstractData +=  field + ":" + jsonData.getString(field) ;
+								if(  abstractFieldList.indexOf(field) < (abstractFieldList.size() - 1) ){
+									abstractData += ", ";
+								}
 							}
 						}
-						
-						System.out.println("Abstract Data: " + abstractData );
 					%>
 					
 					<c:choose>
@@ -151,13 +172,22 @@
 							<liferay-ui:search-container-column-text
 							 			name="id"
 							 			href="<%=rowURL.toString() %>"
+							 			cssClass="id-width"
 										value="<%= String.valueOf(structuredData.getStructuredDataId()) %>"/>
 							<liferay-ui:search-container-column-text
 							 			name="abstract"
 							 			href="<%=rowURL.toString() %>"
+							 			cssClass="abstract-width"
 										value="<%= abstractData %>"/>
+										
+							<liferay-ui:search-container-column-status 
+										name="status"
+										cssClass="status-width"
+										property="status" />
 			
-							<liferay-ui:search-container-column-text name="actions">
+							<liferay-ui:search-container-column-text 
+										name="actions"
+										cssClass="actions-width">
 								<clay:dropdown-actions
 									dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()) %>"
 								/>
@@ -187,7 +217,20 @@
 Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_COMPONENT_ID %>').then(function(
 		managementToolbar
 	) {
-
+		
+		$('.input-group .input-group-item .input-group-inset-item .dropdown').on('click', function(e){
+			e.stopPropagation();
+			
+			let advancedSearchRenderURL = Liferay.PortletURL.createRenderURL();
+			
+			advancedSearchRenderURL.setPortletId('<%=IcecapWebPortletKeys.STRUCTURED_DATA %>');
+			advancedSearchRenderURL.setPlid('<%= themeDisplay.getPlid() %>');
+			advancedSearchRenderURL.setParameter('<%=IcecapWebKeys.DATATYPE_ID %>', '<%= dataType.getDataTypeId() %>');
+			advancedSearchRenderURL.setParameter('<%=StationXWebKeys.MVC_RENDER_COMMAND_NAME %>', '<%= IcecapMVCCommands.RENDER_STRUCTURED_DATA_ADVANCED_SEARCH %>');
+			console.log( 'Created advenced Search URL: ', advancedSearchRenderURL);
+			window.location.href = advancedSearchRenderURL;
+		});
+		
 		managementToolbar.on('actionItemClicked', function(event) {
 			confirm('confirm...');
 			console.log('Data CMD: ', event.data.item.data.cmd );

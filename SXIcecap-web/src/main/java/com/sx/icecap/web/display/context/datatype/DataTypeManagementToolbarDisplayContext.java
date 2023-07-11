@@ -29,6 +29,7 @@ import com.sx.icecap.web.security.permission.resource.datatype.DataTypeModelPerm
 import com.sx.icecap.web.security.permission.resource.datatype.DataTypeResourcePermissionHelper;
 import com.sx.icecap.web.taglib.clay.datatype.DataTypeVerticalCard;
 import com.sx.icecap.constant.IcecapActionKeys;
+import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.constant.StationXConstants;
@@ -357,7 +358,7 @@ public class DataTypeManagementToolbarDisplayContext
 										getPortletURL(), 
 										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_EDIT, 
 										Constants.CMD, Constants.UPDATE,
-										StationXWebKeys.REDIRECT, _getRedirectURL(), 
+										StationXWebKeys.BACK_URL, _themeDisplay.getURLCurrent(), 
 										StationXWebKeys.DATATYPE_ID, dataTypeId);
 									dropdownItem.setIcon("edit");
 									dropdownItem.setLabel(LanguageUtil.get(_locale, "edit"));
@@ -369,7 +370,7 @@ public class DataTypeManagementToolbarDisplayContext
 							
 							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_DATATYPE_DELETE);
 							deleteURL.setParameter(Constants.CMD, Constants.DELETE);
-							deleteURL.setParameter(StationXWebKeys.REDIRECT, _getRedirectURL());
+							deleteURL.setParameter(StationXWebKeys.BACK_URL, _themeDisplay.getURLCurrent());
 							deleteURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataTypeId) );
 							
 							add( dropdownItem -> {
@@ -473,10 +474,10 @@ public class DataTypeManagementToolbarDisplayContext
 		return hasPermission;
 	}
 	
-	private String _getRedirectURL() {
-		PortletURL redirectURL = getPortletURL();
+	private String _getBackURL() {
+		PortletURL backURL = getPortletURL();
 
-		return redirectURL.toString();
+		return backURL.toString();
 	}
 
 	@Override
@@ -611,14 +612,16 @@ public class DataTypeManagementToolbarDisplayContext
 
 	@Override
 	public String getComponentId() {
-		return "dataTypeManagementToolbar";
+		return IcecapConstants.DATATYPE_SEARCH_CONTAINER_ID;
 	}
 
+	/*
 	@Override
 	public String getSearchFormMethod() {
 //		System.out.println("----- Search Form Method: "+super.getSearchFormMethod());
-		return super.getSearchFormMethod();
+		return "post";
 	}
+	*/
 
 	@Override
 	public String getSearchFormName() {

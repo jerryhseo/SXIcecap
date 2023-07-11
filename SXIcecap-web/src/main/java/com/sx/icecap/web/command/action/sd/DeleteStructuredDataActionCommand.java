@@ -12,6 +12,7 @@ import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
+import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
 
 import javax.portlet.ActionRequest;
@@ -39,8 +40,9 @@ public class DeleteStructuredDataActionCommand extends BaseMVCActionCommand  {
 		
 		long structuredDataId = ParamUtil.getLong(actionRequest, StationXWebKeys.STRUCTURED_DATA_ID, 0);
 		
+		StructuredData structuredData = null;
 		try {
-			_dataTypeLocalService.removeStructuredData(structuredDataId);
+			structuredData = _dataTypeLocalService.removeStructuredData(structuredDataId);
 		} catch (PortalException e) {
 			throw new PortletException(e.getMessage());
 		}
@@ -52,7 +54,7 @@ public class DeleteStructuredDataActionCommand extends BaseMVCActionCommand  {
 				themeDisplay.getPortletDisplay().getId(), 
 				themeDisplay.getPlid(),
 				PortletRequest.RENDER_PHASE);
-		renderURL.setParameter(IcecapWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredDataId) );
+		renderURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(structuredData.getDataTypeId()) );
 		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
 		
 		actionResponse.sendRedirect(renderURL.toString());

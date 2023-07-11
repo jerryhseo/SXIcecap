@@ -43,8 +43,12 @@
 <portlet:renderURL var="defineStructureRenderURL">
 	<portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" value="<%= IcecapMVCCommands.RENDER_DEFINE_DATA_STRUCTURE %>"/>
 	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%= String.valueOf(dataTypeId) %>"/>
+	<portlet:param name="<%= StationXWebKeys.BACK_URL %>" value="<%= currentURL %>"/>
 </portlet:renderURL>
 
+<portlet:renderURL var="dataTypeListURL">
+	<portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" value="<%= IcecapMVCCommands.RENDER_DATATYPE_LIST %>"></portlet:param>
+</portlet:renderURL>
 
 <portlet:resourceURL 
 		id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_RENDER_TERM %>" 
@@ -54,7 +58,7 @@
 <aui:container cssClass="SXIcecap-web">
 	<aui:row>
 		<aui:col md="2">
-			<a href="<%=backURL%>"><clay:icon symbol="caret-left"/>&nbsp;<liferay-ui:message key="back-to-list" /></a>
+			<a href="<%=dataTypeListURL%>"><clay:icon symbol="caret-left"/>&nbsp;<liferay-ui:message key="back-to-list" /></a>
 		</aui:col>
 	</aui:row>
 	<aui:row>
@@ -186,7 +190,6 @@
 				</aui:button>
 				<aui:button id="btnDelete" value="delete" href="<%= deleteActionURL.toString() %>"></aui:button>
 			</c:if>
-			<aui:button id="btnClear" type="reset" value="clear"></aui:button>
 			<aui:button id="btnCancel" value="cancel" href="<%= backURL %>"></aui:button>
 		</aui:button-row>
 		
@@ -199,6 +202,7 @@
 $(document).ready(function(){
 	const isUpdate = <%= isUpdate %>;
 
+	console.log('CurrentURL: <%= currentURL %>');
 	$('#<portlet:namespace/>btnSaveToList').click( function(){
 		let actionURL = isUpdate ? '<%= updateActionURL.toString() %>' : '<%= addActionURL.toString() %>';
 		

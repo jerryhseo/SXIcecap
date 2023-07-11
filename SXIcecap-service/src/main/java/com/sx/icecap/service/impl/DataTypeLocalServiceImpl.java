@@ -38,6 +38,8 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.sx.constant.StationXConstants;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
+import com.sx.icecap.constant.IcecapSSSTermAttributes;
+import com.sx.icecap.constant.IcecapSSSTermTypes;
 import com.sx.icecap.exception.DuplicatedDataTypeNameException;
 import com.sx.icecap.exception.InvalidDataTypeNameException;
 import com.sx.icecap.exception.NoSuchDataTypeException;
@@ -57,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -653,18 +656,40 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		return downloadableFieldList;
 	}
 
-	
 	public JSONObject getStructuredDataWithValues( 
 			long dataTypeId, long structuredDataId ) throws JSONException {
-		DataType dataType = super.dataTypePersistence.fetchByPrimaryKey(dataTypeId);
-		String dataStructure = getDataTypeStructure( structuredDataId ); 
-		
-		JSONObject jsonData = JSONFactoryUtil.createJSONObject( dataStructure );
+		String dataStructure = getDataTypeStructure( dataTypeId ); 
 		
 		StructuredData structuredData = 
 				super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
 		
-		return jsonData;
+		return _fillDataStructureWithValues( dataStructure, structuredData.getStructuredData() );
+	}
+	
+	public JSONObject getStructuredDataWithValues( 
+			long dataTypeId, String structuredData ) throws JSONException {
+		String dataStructure = getDataTypeStructure( dataTypeId ); 
+		
+		return _fillDataStructureWithValues( dataStructure, structuredData );
+	}
+	
+	private JSONObject _fillDataStructureWithValues( String dataStructure, String values ) throws JSONException {
+		JSONObject jsonStructure = JSONFactoryUtil.createJSONObject( dataStructure );
+		JSONObject jsonValues = JSONFactoryUtil.createJSONObject(values);
+
+		Set<String> valueKeys = jsonValues.keySet();
+		
+		JSONArray terms = jsonStructure.getJSONArray(IcecapDataTypeAttributes.TERMS);
+		
+		terms.forEach( term -> {
+			JSONObject jsonTerm = (JSONObject)term;
+			if( valueKeys.contains( jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME) ) ){
+				jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
+											jsonValues.getString(jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME)));
+			}
+		});
+		
+		return jsonStructure;
 	}
 
 	public Map<String, Object> parseStructuredData( 

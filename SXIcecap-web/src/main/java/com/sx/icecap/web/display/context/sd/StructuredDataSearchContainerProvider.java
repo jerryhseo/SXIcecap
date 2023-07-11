@@ -4,6 +4,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Document;
@@ -91,10 +92,9 @@ public class StructuredDataSearchContainerProvider {
 						_renderRequest,
 						_searchURL, // URL for iteration of pagenation.
 						null,
-						"no-data-types-were-found" );
+						"no-data-were-found" );
 		
 		_setSearchOptions();
-		
 		
 		if ((_assetCategoryId != 0) || Validator.isNotNull(_assetTagName)) {
 			_trySearchThroughCategoryTree();
@@ -309,12 +309,15 @@ public class StructuredDataSearchContainerProvider {
 						StationXWebKeys.ORDER_BY_TYPE, 
 						StationXConstants.ASC));
 		
+
+		_searchContainer.setForcePost(true);
+		
 		/*
 		_searchContainer.setOrderByComparator( 
 				_structuredDataLocalService.getOrderByNameComparator(
 						_searchContainer.getOrderByCol(), searchContainer.getOrderByType()) );
+		 */
 		_searchContainer.setRowChecker( new EmptyOnClickRowChecker(_renderResponse) );
-		*/
 	}
 	
 	private Optional<StructuredData> _toStructuredDataOptional(AssetEntry assetEntry) {

@@ -1,10 +1,14 @@
 .SXIcecap-web {
-	> .hide {
+	.hide {
 		display:none;
 	}
 
-	> .show {
+	.show {
 		display:block;
+	}
+
+	.display-inline-block {
+		display:inline-block;
 	}
 
 	> .card-horizontal {

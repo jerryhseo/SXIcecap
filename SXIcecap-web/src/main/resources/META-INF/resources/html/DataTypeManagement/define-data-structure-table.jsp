@@ -276,11 +276,10 @@
 					<aui:button id="btnShowSDE" value="structured-data-editor"></aui:button>
 				</aui:button-row>
 				
-				<div class="container-fluid">
-					<div class="row" >
-						<div class="col-md-12" id="<portlet:namespace/>previewPanel"></div>
-					</div>
-				</div>
+				<table class="table table-striped">
+					<tbody id="<portlet:namespace/>previewPanel">
+					</tbody>
+				</table>
 		</aui:col>
 	</aui:row>
 	<aui:button-row>

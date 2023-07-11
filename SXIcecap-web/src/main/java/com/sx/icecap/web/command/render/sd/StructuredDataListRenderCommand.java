@@ -1,6 +1,7 @@
 package com.sx.icecap.web.command.render.sd;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -62,15 +63,20 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 		System.out.println("StructuredDataListRenderCommand.render()");
 		
 		long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID );
+		
 		System.out.println("datatype id: "+dataTypeId);
 		String backURL = ParamUtil.getString(renderRequest, StationXWebKeys.BACK_URL );
 		System.out.println("backURL: "+backURL);
 		
 		DataType dataType = null;
 		List<String> abstractFieldList = null;
+		JSONObject dataStructure = null;
 		
 		try {
 			dataType = _dataTypeLocalService.getDataType(dataTypeId);
+			
+			dataStructure = _dataTypeLocalService.getDataTypeStructureJSONObject(dataTypeId);
+			
 			abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId, true );
 			System.out.println("Abstract field size: "+abstractFieldList.size());
 		}

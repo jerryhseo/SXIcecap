@@ -476,6 +476,11 @@ public interface DataTypeLocalService
 			long dataTypeId, long structuredDataId)
 		throws JSONException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getStructuredDataWithValues(
+			long dataTypeId, String structuredData)
+		throws JSONException;
+
 	public Map<String, Object> parseStructuredData(
 		String termDelimiter, String valueDelimiter, String structuredData);
 

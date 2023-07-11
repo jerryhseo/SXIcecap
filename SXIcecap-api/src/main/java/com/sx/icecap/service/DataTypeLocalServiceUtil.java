@@ -608,6 +608,14 @@ public class DataTypeLocalServiceUtil {
 			dataTypeId, structuredDataId);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONObject
+			getStructuredDataWithValues(long dataTypeId, String structuredData)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return getService().getStructuredDataWithValues(
+			dataTypeId, structuredData);
+	}
+
 	public static Map<String, Object> parseStructuredData(
 		String termDelimiter, String valueDelimiter, String structuredData) {
 

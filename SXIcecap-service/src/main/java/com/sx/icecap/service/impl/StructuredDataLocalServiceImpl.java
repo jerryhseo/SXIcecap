@@ -181,7 +181,7 @@ public class StructuredDataLocalServiceImpl
 		structuredData.setUserId(sc.getUserId());
 		structuredData.setGroupId(sc.getScopeGroupId());
 		structuredData.setModifiedDate(new Date() );
-
+	
 		boolean statusChanged = false;
 		if( status > WorkflowConstants.STATUS_ANY && status != structuredData.getStatus()) {
 			User user = super.userLocalService.getUser(sc.getUserId());
@@ -238,7 +238,7 @@ public class StructuredDataLocalServiceImpl
 		
 		return structuredData;
 	}
-	
+
 	@Indexable(type = IndexableType.REINDEX)
 	public StructuredData updateStatus(
 			long userId, 

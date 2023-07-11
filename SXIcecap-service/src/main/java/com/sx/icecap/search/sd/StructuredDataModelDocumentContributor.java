@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.sx.icecap.constant.IcecapSDSearchFields;
+import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
@@ -46,32 +47,16 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 		long structuredDataId = structuredData.getStructuredDataId();
 		JSONObject data = null;
 		try {
-			data = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredData.getStructuredDataId());
-			System.out.println( data.toString(4));
+			data = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredData.getStructuredData());
+			System.out.println("dataSetId: " + dataSetId);
+			System.out.println("dataTypeId: " + dataTypeId);
+			System.out.println("structuredData: " + structuredData.getStructuredData());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
 //		String data = structuredData.getStructuredData();
-		
-		List<String> searchableFieldList = null;;
-		try {
-			searchableFieldList = _dataTypeLocalService.getSearchableFields(dataTypeId, true);
-			System.out.println("Searchable Fields for " + dataTypeId  + ":" );
-			searchableFieldList.forEach(field->{System.out.println( field);});
-			System.out.println("^^^^^^^^^");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			return;
-		}
-		
-		Map<String, Field> fields = document.getFields();
-		fields.forEach((key, field)->{
-			System.out.println( key + ":" + field.getName() + "-" + field.getValue() );
-		});
 		
 		document.addKeyword(Field.COMPANY_ID,structuredData.getCompanyId());
 		document.addKeyword(Field.GROUP_ID, structuredData.getGroupId());
@@ -88,6 +73,51 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 		document.addKeyword(IcecapSDSearchFields.DATATYPE_ID, dataTypeId);
 		document.addLocalizedKeyword(IcecapSDSearchFields.DATATYPE_NAME, structuredData.getDataTypeDisplayNameMap(), true);
 		
+		List<String> searchableFieldList = null;;
+		try {
+			searchableFieldList = _dataTypeLocalService.getSearchableFields(dataTypeId, true);
+			
+			JSONArray terms = data.getJSONArray("terms");
+			System.out.println( "Structured Terms: " + terms.toString(4));
+			
+			terms.forEach( term -> {
+				JSONObject jsonTerm = (JSONObject)term;
+				 System.out.println("Searchable: " + jsonTerm.getBoolean("searchable") );
+				if( jsonTerm.getBoolean("searchable") == true ) {
+					System.out.println("Searchable Fields for " + dataTypeId  + ":" );
+					String fieldName = jsonTerm.getString("termName");
+					String fieldType = jsonTerm.getString("termType");
+					String fieldVersion = jsonTerm.getString("termVersion", "1.0.0");
+					JSONObject displayName = jsonTerm.getJSONObject("displayName");
+					Object value = jsonTerm.get( IcecapSSSTermAttributes.VALUE);
+					
+					System.out.println( fieldName + ", " + fieldType + ", " + fieldVersion + ", " + displayName.toString());
+					
+					System.out.println("^^^^^^^^^");
+					
+					if( fieldType.equalsIgnoreCase(IcecapSSSTermTypes.DATE) )
+						document.addDateSortable(fieldName, (Date)value);
+					else if( fieldType.equalsIgnoreCase(IcecapSSSTermTypes.STRING) || 
+								 fieldType.equalsIgnoreCase(IcecapSSSTermTypes.BOOLEAN) ||
+								 fieldType.equalsIgnoreCase(IcecapSSSTermTypes.LIST) ) {
+						document.addText(fieldName, (String)value);
+					}
+					else if( fieldType.equalsIgnoreCase(IcecapSSSTermTypes.NUMERIC) ){
+						document.addNumberSortable( fieldName,  Double.parseDouble((String)value) );
+					}
+				}
+			});
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return;
+		}
+		
+		Map<String, Field> fields = document.getFields();
+		fields.forEach((key, field)->{
+			System.out.println( key + ":" + field.getName() + "-" + field.getValue() );
+		});
 		
 		/*
 		try {

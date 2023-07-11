@@ -206,7 +206,7 @@
 						</aui:field-wrapper>
 					</div>
 					 <div style="display:inline-block;margin:1.7rem 10px 0 10px;height:1.2rem;flex-grow:1;">
-					 	<aui:button id="btnBooleanTrueActiveTerms" value="terms" cssClass="full"></aui:button>
+					 	<aui:button id="btnBooleanTrueActiveTerms" value="active-terms" cssClass="full"></aui:button>
 					 </div>
 				</div>
 				<div style="display:flex;">
@@ -219,7 +219,7 @@
 						</aui:field-wrapper> 
 					</div> 
 					 <div style="display:inline-block;margin:1.7rem 10px 0 10px;height:1.2rem;flex-grow:1;">
-					 	<aui:button id="btnBooleanFalseActiveTerms" value="terms" cssClass="full"></aui:button>
+					 	<aui:button id="btnBooleanFalseActiveTerms" value="active-terms" cssClass="full"></aui:button>
 					 </div>
 				</div>
 				<div id="<portlet:namespace/>booleanActiveTerms" ></div>

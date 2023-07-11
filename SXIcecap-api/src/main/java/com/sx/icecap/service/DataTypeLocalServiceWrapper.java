@@ -716,6 +716,15 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.json.JSONObject
+			getStructuredDataWithValues(long dataTypeId, String structuredData)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return _dataTypeLocalService.getStructuredDataWithValues(
+			dataTypeId, structuredData);
+	}
+
+	@Override
 	public java.util.Map<String, Object> parseStructuredData(
 		String termDelimiter, String valueDelimiter, String structuredData) {
 

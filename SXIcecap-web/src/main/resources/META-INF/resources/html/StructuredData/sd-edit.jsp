@@ -27,7 +27,6 @@
 	JSONObject structuredData = (JSONObject)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT);
 	
 	String cmd = (String)renderRequest.getAttribute(StationXWebKeys.CMD);
-	out.println( "CMD: "+cmd ) ;
 	String structuredDataId = (String)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_ID);
 	if( Validator.isNull(structuredDataId) ){
 		structuredDataId = "0";
@@ -48,14 +47,6 @@
 	<aui:row cssClass="form-section">
 		<aui:col md="12" >
 			<aui:form action="<%= saveActionURL %>" enctype="multipart/form-data" escapeXml="true" method="POST" name="fm" inlineLabels="true" >
-				<aui:field-wrapper name="testDate" label="today">
-					<liferay-ui:input-date name="testDate"
-									showDisableCheckbox="true"
-									dateTogglerCheckboxLabel="Toggle"
-									yearValue="<%=  today.get(Calendar.YEAR) %>" yearParam="year"
-									monthValue= "<%= today.get(Calendar.MONTH) %>" monthParam="month"
-									dayValue="<%= today.get(Calendar.DAY_OF_MONTH) %>"  dayParam="day"></liferay-ui:input-date>
-				</aui:field-wrapper>
 				<aui:fieldset-group markupView="lexicon">
 					<aui:fieldset label="datatype">
 						<span style="display:table-cell; width:40%;">
@@ -64,7 +55,7 @@
 						<span style="display:table-cell; width:10%;">
 						<aui:input name="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
 						</span>
-						<span style="display:table-cell; width:20%;">
+						<span style="display:table-cell; width:10%;">
 						<aui:input name="datatype-extention" disabled="true" value="<%= dataType.getExtension() %>"></aui:input>
 						</span>
 					</aui:fieldset>
@@ -77,10 +68,11 @@
 				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
 				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
 				<input type="hidden" id="<portlet:namespace/>uploadParamName" name="<portlet:namespace/>uploadParamName"/>
-				<table class="table table-striped">
-					<tbody id="<portlet:namespace/>canvasPanel">
-					</tbody>
-				</table>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-12"  id="<portlet:namespace/>canvasPanel"></div>
+					</div>
+				</div>
 				
 				<aui:button-row>
 					<c:choose>
@@ -105,9 +97,12 @@ $(document).ready(function(){
 			'<%= locale.toString() %>',
 			<%= jsonLocales.toJSONString() %> );
 	
-	let jsonDataStructure = JSON.parse('<%= structuredData.toString() %>');
+	let jsonDataStructure = <%= structuredData.toString() %>;
 	
-	let dataStructure = SX.newDataStructure(  jsonDataStructure, 0, SX.SXConstants.FOR_EDITOR );
+	let dataStructure = SX.newDataStructure(  jsonDataStructure) ;
+	if( <%= cmd.equalsIgnoreCase("update") %> === true ){
+		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
+	}
 	
 	dataStructure.render( SX.SXConstants.FOR_EDITOR, $('#<portlet:namespace/>canvasPanel') );
 	

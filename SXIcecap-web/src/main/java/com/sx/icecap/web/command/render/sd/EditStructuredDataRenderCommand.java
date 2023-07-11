@@ -61,7 +61,7 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 			throw new PortletException( "Cannot find data type: " + dataTypeId );
 		}
 
-		JSONObject jsonData = getStructuredDataWithValues(dataTypeId, structuredDataId);
+		JSONObject jsonData = _getStructuredDataWithValues(dataTypeId, structuredDataId);
 		
 		if( structuredDataId <= 0 ) {
 			renderRequest.setAttribute( StationXWebKeys.CMD, StationXConstants.CMD_ADD );
@@ -76,7 +76,7 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 		return IcecapJsps.STRUCTURED_DATA_EDIT;
 	}
 	
-	private JSONObject getStructuredDataWithValues( 
+	private JSONObject _getStructuredDataWithValues( 
 			long dataTypeId, long structuredDataId ) throws PortletException  {
 		DataType dataType = null;
 		try {
@@ -103,13 +103,13 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 				throw new PortletException("Cannot find data structure: " + structuredDataId);
 			}
 			
-			jsonData = setStructuredDataValues( jsonData, structuredData.getStructuredData() );
+			jsonData = _setStructuredDataValues( jsonData, structuredData.getStructuredData() );
 		}
 		
 		return jsonData;
 	}
 	
-	private JSONObject setStructuredDataValues( 
+	private JSONObject _setStructuredDataValues( 
 			JSONObject dataStructure, String structuredData ){
 		
 		String valueDelimiter = dataStructure.getString(IcecapDataTypeAttributes.TERM_VALUE_DELIMITER);
