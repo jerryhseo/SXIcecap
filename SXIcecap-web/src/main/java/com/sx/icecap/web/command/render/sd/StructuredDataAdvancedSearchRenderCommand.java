@@ -63,7 +63,7 @@ public class StructuredDataAdvancedSearchRenderCommand implements MVCRenderComma
 		} catch (Exception e) {
 			throw new PortletException( "Cannot find data type: " + dataTypeId );
 		}
-
+		
 		return IcecapJsps.STRUCTURED_DATA_ADVANCED_SEARCH_VIEW;
 	}
 	

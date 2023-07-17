@@ -56,7 +56,7 @@ $(document).ready(function(){
 	};
 
 	let dataStructure;
-	console.log( 'init dataStructure: ' + <%= dataStructure.toString() %>);
+	
 	let jsonDataStructure = <%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>;
 	
 	let currentTerm = null;
@@ -74,12 +74,9 @@ $(document).ready(function(){
 												$('#<portlet:namespace/>previewPanel'));
 		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 		
-		console.log('Start Terms: ', dataStructure.terms);
 		setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
 		dataStructure.highlightTerm( currentTerm );
 	}
-	
-	console.log('Data Structure: ', dataStructure);
 	
 	/**************************************************************
 	* Change Event handlers for form controls 
@@ -110,7 +107,6 @@ $(document).ready(function(){
 	
 	SX.Term.$DEFAULT_TERM_TYPE_FORM_CTRL.change(function(eventObj){
 		let selectedTermType = currentTerm.getTermTypeFormValue( false );
-		console.log('Term Type changed: ' + selectedTermType);
 		
 		if( selectedTermType === currentTerm.termType ){
 			// Do nothing
@@ -175,7 +171,6 @@ $(document).ready(function(){
 	});
 
 	SX.Term.$DEFAULT_TERM_VERSION_FORM_CTRL.change(function(eventObj){
-		console.log('Term version changed....');
 		const changedVersion = currentTerm.getTermVersionFormValue( false );
 		
 		let validated;
@@ -214,7 +209,8 @@ $(document).ready(function(){
 	
 	$('#<portlet:namespace/>searchable').change(function(eventObj){
 		console.log( 'searchable changed...', currentTerm);
-		currentTerm.getSearchableFormValue();
+		currentTerm.getSearchableFormValue(); 
+		dataStructure.setSearchable( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>downloadable').change(function(eventObj){

@@ -29,11 +29,12 @@ public class StructuredDataKeywordQueryContributor implements KeywordQueryContri
 //		System.out.println("DataTypeKeywordQueryContributor: contribute");
 		SearchContext searchContext = keywordQueryContributorHelper.getSearchContext();
 
-		queryHelper.addSearchTerm(booleanQuery, searchContext,"dataTypeId", true);
-		queryHelper.addSearchLocalizedTerm( booleanQuery, searchContext, "dataTypeDisplayName", false);
+		queryHelper.addSearchTerm(booleanQuery, searchContext,"dataTypeId", false);
+		queryHelper.addSearchLocalizedTerm( booleanQuery, searchContext, "dataTypeDisplayName", true);
 		queryHelper.addSearchTerm( booleanQuery, searchContext, "status", false);
-		queryHelper.addSearchTerm( booleanQuery, searchContext, Field.MODIFIED_DATE, false);
+		// queryHelper.addSearchTerm( booleanQuery, searchContext, Field.MODIFIED_DATE, false);
 		
+		System.out.println( "Boolean Query: " + booleanQuery.toString() );
 	}
 
 }

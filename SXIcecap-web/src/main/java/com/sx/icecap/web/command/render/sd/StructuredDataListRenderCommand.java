@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.constant.IcecapMVCCommands;
+import com.sx.icecap.constant.IcecapWebKeys;
 import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.constant.StationXWebKeys;
@@ -61,7 +62,8 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
 		
 		System.out.println("StructuredDataListRenderCommand.render()");
-		
+		String strQuery = ParamUtil.getString(renderRequest, IcecapWebKeys.STRUCTURED_DATA_QUERY, "");
+		System.out.println("SD SearchQuery: " + strQuery);
 		long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID );
 		
 		System.out.println("datatype id: "+dataTypeId);
@@ -86,6 +88,7 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 		
 		StructuredDataSearchContainerProvider sdSearchContainerProvider= new StructuredDataSearchContainerProvider(
 							dataType,
+							strQuery,
 							renderRequest,
 							renderResponse,
 							IcecapConstants.STRUCTURED_DATA_SEARCH_CONTAINER_ID,

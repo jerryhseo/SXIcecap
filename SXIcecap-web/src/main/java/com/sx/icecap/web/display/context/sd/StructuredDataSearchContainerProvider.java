@@ -53,6 +53,7 @@ public class StructuredDataSearchContainerProvider {
 	private PortletURL _searchURL = null;
 	private StructuredDataLocalService _structuredDataLocalService = null;
 	private ThemeDisplay _themeDisplay = null;
+	private String _query = "";
 	long _assetCategoryId = 0; 
 	String _assetTagName = "";
 	String _keywords = "";
@@ -65,6 +66,7 @@ public class StructuredDataSearchContainerProvider {
 
 	public StructuredDataSearchContainerProvider( 
 			DataType dataType,
+			String strQuery,
 			RenderRequest renderRequest,
 			RenderResponse renderResponse,
 			String searchContainerId,
@@ -77,6 +79,9 @@ public class StructuredDataSearchContainerProvider {
 			this._searchURL = _getSearchURL(); 
 			this._structuredDataLocalService = structuredDataLocalService;
 			this._themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+			this._keywords = ParamUtil.getString(renderRequest, StationXWebKeys.KEYWORDS, "");
+			this._query = strQuery;
+			System.out.println("Keywords: " + this._keywords);
 			
 			_assetCategoryId = ParamUtil.getLong(renderRequest, StationXWebKeys.CATEGORY_ID);
 			_assetTagName = ParamUtil.getString(renderRequest, StationXWebKeys.TAG);
@@ -99,11 +104,14 @@ public class StructuredDataSearchContainerProvider {
 		if ((_assetCategoryId != 0) || Validator.isNotNull(_assetTagName)) {
 			_trySearchThroughCategoryTree();
 		}
+		else if( ! _query.isEmpty() ) {
+			_tryAdvancedSearch();
+		}
 		else if( _keywords.isEmpty() ) {
 			_trySearchThroughService();
 		}
 		else {
-			_trySearchWithIndexer();
+			_trySearchWithKeywords();
 		}
 
 		return _searchContainer;
@@ -145,6 +153,89 @@ public class StructuredDataSearchContainerProvider {
 		 */
 		
 		_searchContainer.setResults(entriesResults);
+	}
+	
+	private boolean _tryAdvancedSearch() {
+		Indexer<StructuredData> indexer = IndexerRegistryUtil.getIndexer(StructuredData.class);
+
+		
+		SearchContext searchContext = SearchContextFactory.getInstance(PortalUtil.getHttpServletRequest(_renderRequest));
+
+		searchContext.setAttribute( Field.STATUS, String.valueOf(_status) );
+		searchContext.setAttribute("pagenationType", "more");
+		searchContext.setStart(_searchContainer.getStart());
+		searchContext.setEnd(_searchContainer.getEnd());
+		searchContext.setIncludeDiscussions(true);
+		searchContext.setKeywords(_keywords);
+		searchContext.setLocale(_themeDisplay.getLocale());
+
+		if (!_navigation.equals(StationXConstants.NAVIGATION_MINE)) {
+			searchContext.setOwnerUserId(_themeDisplay.getUserId());
+		}
+
+		boolean reverseSort = false;
+
+		if (_orderByType.equals(StationXConstants.DSC)) {
+			reverseSort = true;
+		}
+
+		Sort sort = SortFactoryUtil.create(_orderByCol, Sort.STRING_TYPE, reverseSort);
+
+		searchContext.setSorts(sort);
+
+		List<StructuredData> entriesResults = new ArrayList<StructuredData>();
+		Hits hits = null;
+		try {
+			hits = indexer.search(searchContext);
+		} catch (Exception e1) {
+			_searchContainer.setTotal( 0 );
+			_searchContainer.setResults(entriesResults);
+			
+			return true;
+		}
+
+		_searchContainer.setTotal( hits.getLength() );
+
+		List<SearchResult> searchResults =
+				SearchResultUtil.getSearchResults( hits, _themeDisplay.getLocale() );
+
+		// Imperative programming
+		Document[] docs = hits.getDocs();
+		
+		for( Document doc : docs ) {
+			long structuredDataId = GetterUtil.getLong( doc.get(Field.ENTRY_CLASS_PK) );
+			StructuredData structuredData = null;
+			try {
+				structuredData = _structuredDataLocalService.getStructuredData( structuredDataId );
+				entriesResults.add(structuredData);
+			} catch (Exception e) {
+			}
+			
+			System.out.println( "==== Begin Document Fields - "+doc.get(Field.ENTRY_CLASS_PK) );
+			
+			Map<String, Field> fields = doc.getFields();
+			fields.forEach((key, field) ->{
+				System.out.println(key + ": (" + field.getName() + "-"+ field.getValue());
+			});
+			System.out.println( "==== End Document Fields" );
+		}
+		
+		/* Functional programming
+		 * 
+
+		Stream<SearchResult> stream = searchResults.stream();
+
+		entriesResults = stream.map(
+			this::_toTermOptional
+		).filter(
+			Optional::isPresent
+		).map(
+			Optional::get
+		).collect(
+			Collectors.toList()
+		);
+		*/
+		return true;
 	}
 	
 	private void _trySearchThroughService () {
@@ -199,7 +290,7 @@ public class StructuredDataSearchContainerProvider {
 		_searchContainer.setResults(entriesResults);
 	}
 	
-	private boolean _trySearchWithIndexer() {
+	private boolean _trySearchWithKeywords() {
 		
 		if( _keywords.isEmpty() ) {
 			return false;
