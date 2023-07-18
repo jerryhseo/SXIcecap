@@ -33,10 +33,13 @@ import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.StructuredDataLocalService;
 import com.sx.icecap.service.StructuredDataLocalServiceUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.portlet.MimeResponse.Copy;
@@ -168,6 +171,7 @@ public class StructuredDataSearchContainerProvider {
 		searchContext.setIncludeDiscussions(true);
 		searchContext.setKeywords(_keywords);
 		searchContext.setLocale(_themeDisplay.getLocale());
+		
 
 		if (!_navigation.equals(StationXConstants.NAVIGATION_MINE)) {
 			searchContext.setOwnerUserId(_themeDisplay.getUserId());
@@ -308,6 +312,17 @@ public class StructuredDataSearchContainerProvider {
 		searchContext.setIncludeDiscussions(true);
 		searchContext.setKeywords(_keywords);
 		searchContext.setLocale(_themeDisplay.getLocale());
+		
+		System.out.println("Search Container Attributes.....");
+		Map<String, Serializable> attrs = searchContext.getAttributes();
+		Set<String> keySet = attrs.keySet();
+		Iterator<String> iter = keySet.iterator();
+		while( iter.hasNext() ) {
+			String key = iter.next();
+			
+			System.out.println(key + " - " + attrs.get(key) );
+		}
+		System.out.println("End of Search Container Attributes.....");
 
 		if (!_navigation.equals(StationXConstants.NAVIGATION_MINE)) {
 			searchContext.setOwnerUserId(_themeDisplay.getUserId());
@@ -351,7 +366,7 @@ public class StructuredDataSearchContainerProvider {
 			} catch (Exception e) {
 			}
 			
-			System.out.println( "==== Begin Document Fields - "+doc.get(Field.ENTRY_CLASS_PK) );
+			System.out.println( "==== Begin Document Fields in SD search container - "+doc.get(Field.ENTRY_CLASS_PK) );
 			
 			Map<String, Field> fields = doc.getFields();
 			fields.forEach((key, field) ->{
@@ -359,6 +374,8 @@ public class StructuredDataSearchContainerProvider {
 			});
 			System.out.println( "==== End Document Fields" );
 		}
+		
+		_searchContainer.setResults(entriesResults);
 		
 		/* Functional programming
 		 * 

@@ -80,7 +80,6 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 			dataStructure = _dataTypeLocalService.getDataTypeStructureJSONObject(dataTypeId);
 			
 			abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId, true );
-			System.out.println("Abstract field size: "+abstractFieldList.size());
 		}
 		catch( PortalException pe) {
 			throw new PortletException(pe.getMessage());

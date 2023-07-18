@@ -332,14 +332,6 @@ public class DataTypeListViewRenderCommand implements MVCRenderCommand {
 				entriesResults.add(dataType);
 			} catch (Exception e) {
 			}
-			
-			System.out.println( "==== Begin Document Fields - "+doc.get(Field.ENTRY_CLASS_PK) );
-			
-			Map<String, Field> fields = doc.getFields();
-			fields.forEach((key, field) ->{
-				System.out.println(key + ": (" + field.getName() + "-"+ field.getValue());
-			});
-			System.out.println( "==== End Document Fields" );
 		}
 		
 		/* Functional programming

@@ -45,6 +45,7 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 		long dataSetId = structuredData.getDataSetId();
 		long dataTypeId = structuredData.getDataTypeId();
 		long structuredDataId = structuredData.getStructuredDataId();
+		
 		JSONObject data = null;
 		try {
 			data = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredData.getStructuredData());
@@ -58,14 +59,7 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 		}
 //		String data = structuredData.getStructuredData();
 		
-		document.addKeyword(Field.COMPANY_ID,structuredData.getCompanyId());
-		document.addKeyword(Field.GROUP_ID, structuredData.getGroupId());
-		document.addKeyword(Field.UID, structuredData.getUuid());
-		document.addKeyword(Field.USER_ID, structuredData.getUserId());
-		document.addKeyword(Field.USER_NAME, structuredData.getUserName());
-		document.addDate(Field.CREATE_DATE, structuredData.getCreateDate());
 		document.addDate(Field.MODIFIED_DATE, structuredData.getModifiedDate());
-		document.addKeyword(Field.STATUS, structuredData.getStatus());
 		document.addKeyword(IcecapSDSearchFields.DATASET_ID, dataSetId);
 		document.addLocalizedKeyword(IcecapSDSearchFields.DATASET_NAME, structuredData.getDataSetDisplayNameMap(), true);
 		document.addKeyword(IcecapSDSearchFields.DATASET_ID, dataSetId);
@@ -78,7 +72,6 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 			searchableFieldList = _dataTypeLocalService.getSearchableFields(dataTypeId, true);
 			
 			JSONArray terms = data.getJSONArray("terms");
-			System.out.println( "Structured Terms: " + terms.toString(4));
 			
 			terms.forEach( term -> {
 				JSONObject jsonTerm = (JSONObject)term;

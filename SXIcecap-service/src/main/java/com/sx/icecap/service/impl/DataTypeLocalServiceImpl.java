@@ -604,7 +604,6 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 				boolean definedValue = (term.has("abstractKey") && term.getBoolean("abstractKey") == true) ? true : false;
 				if( definedValue == abstractKey ) {
 					abstractFieldList.add(term.getString("termName"));
-					System.out.println("A Key is added for abstrct: " + term.getString("termName"));
 				}
 			}
 		}
@@ -626,7 +625,6 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 				boolean definedValue = (term.has("searchable") && term.getBoolean("searchable") == true) ? true : false;
 				if( definedValue == searchable ) {
 					searchableFieldList.add(term.getString("termName"));
-					System.out.println("A Key is added for search: " + term.getString("termName"));
 				}
 			}
 		}

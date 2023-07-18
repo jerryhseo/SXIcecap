@@ -79,6 +79,29 @@
     value="<%= IcecapMVCCommands.RENDER_SEARCH_STRUCTURED_DATA %>" />
 </portlet:renderURL>
 
+<aui:container cssClass="SXIcecap-web">
+		<aui:row cssClass="form-section">
+			<aui:col md="12">
+					<aui:fieldset-group markupView="lexicon">
+						<aui:fieldset label="datatype">
+							<span style="display:table-cell; width:10%;">
+							<aui:input name="datatype-id" disabled="true" value="<%= dataType.getPrimaryKey() %>"></aui:input>
+							</span>
+							<span style="display:table-cell; width:40%;">
+							<aui:input name="datatype-name" disabled="true" value="<%= dataType.getDataTypeName() %>"></aui:input>
+							</span>
+							<span style="display:table-cell; width:10%;">
+							<aui:input name="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
+							</span>
+							<span style="display:table-cell; width:10%;">
+							<aui:input name="datatype-extension" disabled="true" value="<%= dataType.getExtension() %>"></aui:input>
+							</span>
+						</aui:fieldset>
+					</aui:fieldset-group>
+			</aui:col>
+		</aui:row>
+</aui:container>
+
 <clay:management-toolbar
 	displayContext="<%= structuredDataManagementToolbarDisplayContext %>"
 />
@@ -119,10 +142,8 @@
 						
 						String abstractData = "";
 						
-						System.out.println(" Data: " + structuredData.getPrimaryKey() + "-" +  jsonData.toString() );
 						Iterator<String> keys = jsonData.keys();
 						for( String field : abstractFieldList ){ 
-							System.out.println( "Abstract field: " + field );
 							if( jsonData.has(field) ){
 								abstractData +=  field + ":" + jsonData.getString(field) ;
 								if(  abstractFieldList.indexOf(field) < (abstractFieldList.size() - 1) ){

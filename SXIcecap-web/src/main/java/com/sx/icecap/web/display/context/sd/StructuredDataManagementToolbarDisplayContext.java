@@ -173,11 +173,12 @@ public class StructuredDataManagementToolbarDisplayContext
 	
 	@Override
 	public String getSearchActionURL() {
-		PortletURL searchURL =  getPortletURL();
+		PortletURL searchURL =  super.getPortletURL();
 		
 		searchURL.setParameter(
 				StationXWebKeys.MVC_RENDER_COMMAND_NAME, 
 				IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
+		System.out.println( "getSearchActionURL: "  + searchURL.toString() );
 		
 		return searchURL.toString();
 	}
