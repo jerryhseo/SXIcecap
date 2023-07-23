@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.trash.TrashHelper;
 import com.sx.icecap.web.display.context.datatype.DataTypeManagementToolbarDisplayContext;
-import com.sx.icecap.web.display.context.datatype.DataTypeSearchContainerProvider;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapConstants;
@@ -65,7 +64,7 @@ import org.osgi.service.component.annotations.Reference;
 	    },
 	    service = MVCRenderCommand.class
 	)
-public class DataTypeListViewRenderCommand implements MVCRenderCommand {
+public class DataTypeListViewRenderCommand2 implements MVCRenderCommand {
 	
 	@Reference(unbind = "-")
 	protected void setPortal(Portal portal) {
@@ -88,27 +87,29 @@ public class DataTypeListViewRenderCommand implements MVCRenderCommand {
 		
 //		System.out.println("TermListViewRenderCommand.render()");
 		
-		DataTypeSearchContainerProvider dataTypeSearchContainerProvider = new DataTypeSearchContainerProvider(
-				renderRequest, 
-				renderResponse, 
-				IcecapConstants.DATATYPE_SEARCH_CONTAINER_ID, 
-				_dataTypeLocalService);
-		
-		DataTypeManagementToolbarDisplayContext dataTypeManagementToolbarDisplayContext = null;
-		
+		SearchContainer<DataType> searchContainer = null;
 		try {
-			dataTypeManagementToolbarDisplayContext= new DataTypeManagementToolbarDisplayContext(
-							PortalUtil.getLiferayPortletRequest(renderRequest),
-							PortalUtil.getLiferayPortletResponse(renderResponse),
-							PortalUtil.getHttpServletRequest(renderRequest),
-							dataTypeSearchContainerProvider.createSearchContainer(),
-							_trashHelper);
-			renderRequest.setAttribute(
-					DataTypeManagementToolbarDisplayContext.class.getName(), 
-					dataTypeManagementToolbarDisplayContext );
+			searchContainer = _createSearchContainer( 
+					renderRequest,
+					renderResponse,
+					IcecapConstants.DATATYPE_SEARCH_CONTAINER_ID, 
+					_getSearchURL( renderResponse )  // URL for iteration of pagenation
+			);
 		} catch (PortalException e) {
 			throw new PortletException(e.getMessage());
 		}
+		
+		DataTypeManagementToolbarDisplayContext dataTypeManagementToolbarDisplayContext =
+				new DataTypeManagementToolbarDisplayContext(
+						PortalUtil.getLiferayPortletRequest(renderRequest),
+						PortalUtil.getLiferayPortletResponse(renderResponse),
+						PortalUtil.getHttpServletRequest(renderRequest),
+						searchContainer,
+						_trashHelper);
+		
+		renderRequest.setAttribute(
+				DataTypeManagementToolbarDisplayContext.class.getName(), 
+				dataTypeManagementToolbarDisplayContext );
 		
 		return IcecapJsps.DATATYPE_LIST;
 	}

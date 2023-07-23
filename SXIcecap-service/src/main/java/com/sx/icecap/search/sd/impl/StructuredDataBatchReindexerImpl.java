@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.search.batch.BatchIndexingActionable;
 import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.sx.debug.Debug;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.search.sd.StructuredDataBatchReindexer;
 
@@ -20,6 +21,7 @@ public class StructuredDataBatchReindexerImpl implements StructuredDataBatchRein
 
 	@Override
 	public void reindex(long structuredDataId, long companyId) {
+		Debug.printHeader("StructuredDataBatchReindexerImpl");
 		BatchIndexingActionable batchIndexingActionable = _indexerWriter.getBatchIndexingActionable();
 
 		batchIndexingActionable.setAddCriteriaMethod(dynamicQuery -> {
@@ -35,6 +37,8 @@ public class StructuredDataBatchReindexerImpl implements StructuredDataBatchRein
 		});
 
 		batchIndexingActionable.performActions();
+		
+Debug.printFooter("StructuredDataBatchReindexerImpl");
 	}
 
 	@Reference(

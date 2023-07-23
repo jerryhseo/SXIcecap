@@ -5,6 +5,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchRegistrarHelper;
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapSDSearchFields;
 import com.sx.icecap.model.StructuredData;
 
@@ -20,11 +21,7 @@ public class StructuredDataSearchRegistrar {
 	
 	@Activate
 	protected void activate(BundleContext bundleContext) {
-		System.out.println("===== Begin StructuredDataSearchRegistrar activator() =====");
-		System.out.println("_serviceRegistration: "+ Validator.isNotNull(_serviceRegistration));
-		System.out.println("_modelSearchRegistrarHelper: "+ Validator.isNotNull(_modelSearchRegistrarHelper));
-		System.out.println("_modelIndexWriterContributor: "+ Validator.isNotNull(_modelIndexWriterContributor));
-		System.out.println("_modelSummaryContributor: "+ Validator.isNotNull(_modelSummaryContributor));
+		Debug.printHeader("Begin StructuredDataSearchRegistrar activator");
 			_serviceRegistration = _modelSearchRegistrarHelper.register(
 					StructuredData.class, 
 					bundleContext, 
@@ -32,12 +29,9 @@ public class StructuredDataSearchRegistrar {
 //								System.out.println("DataTypeSearchRegister activator: modelSearchDefinition");
 								modelSearchDefinition.setDefaultSelectedFieldNames(
 										Field.USER_ID,
-										Field.USER_NAME,
-										Field.STATUS,
 										IcecapSDSearchFields.DATASET_ID,
-										IcecapSDSearchFields.DATATYPE_ID,
-										IcecapSDSearchFields.VALUE
-										);
+										IcecapSDSearchFields.DATATYPE_ID
+								);
 								
 								modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
 										IcecapSDSearchFields.DATASET_NAME,
@@ -48,9 +42,10 @@ public class StructuredDataSearchRegistrar {
 								modelSearchDefinition.setModelSummaryContributor(
 										_modelSummaryContributor);
 								modelSearchDefinition.setSelectAllLocales(true);
+								modelSearchDefinition.setSelectAllLocales(true);
 					});
 
-//			System.out.println("===== End of TermSearchRegistrar activator() =====");
+		Debug.printFooter("End of TermSearchRegistrar activator");
 	}
 
 	@Deactivate

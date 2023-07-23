@@ -29,7 +29,11 @@ public class DataTypeKeywordContributor implements KeywordQueryContributor {
 //		System.out.println("DataTypeKeywordContributor: contribute");
 		
 		SearchContext searchContext = keywordQueryContributorHelper.getSearchContext();
+		
+		String orgKeywords = searchContext.getKeywords();
+		System.out.println(("Datatype ORg Keywords: " + orgKeywords));
 
+		queryHelper.addSearchTerm(booleanQuery, searchContext, IcecapDataTypeAttributes.DATATYPE_ID, true);
 		queryHelper.addSearchTerm(booleanQuery, searchContext, IcecapDataTypeAttributes.DATATYPE_NAME, true);
 		queryHelper.addSearchLocalizedTerm( booleanQuery, searchContext, IcecapDataTypeAttributes.DISPLAY_NAME, false);
 		queryHelper.addSearchLocalizedTerm( booleanQuery, searchContext, IcecapDataTypeAttributes.DESCRIPTION, false);

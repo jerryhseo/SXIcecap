@@ -46,7 +46,6 @@
 <aui:container cssClass="SXIcecap-web">
 	<aui:row cssClass="form-section">
 		<aui:col md="12" >
-			<aui:form action="<%= saveActionURL %>" enctype="multipart/form-data" escapeXml="true" method="POST" name="fm" inlineLabels="true" >
 				<aui:fieldset-group markupView="lexicon">
 					<aui:fieldset label="datatype">
 						<span style="display:table-cell; width:40%;">
@@ -65,15 +64,16 @@
 				</div>
 				<hr class=""></hr>
 				
-				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
-				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
-				<input type="hidden" id="<portlet:namespace/>uploadParamName" name="<portlet:namespace/>uploadParamName"/>
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-12"  id="<portlet:namespace/>canvasPanel"></div>
 					</div>
 				</div>
 				
+			<aui:form action="<%= saveActionURL %>" enctype="multipart/form-data" escapeXml="true" method="POST" name="fm" inlineLabels="true" >
+				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
+				<input type="hidden" id="<portlet:namespace/>uploadParamName" name="<portlet:namespace/>uploadParamName"/>
+				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
 				<aui:button-row>
 					<c:choose>
 						<c:when test="<%= cmd.equalsIgnoreCase(StationXConstants.CMD_ADD) %>">
@@ -101,12 +101,16 @@ $(document).ready(function(){
 	
 	let dataStructure = SX.newDataStructure(  jsonDataStructure) ;
 	if( <%= cmd.equalsIgnoreCase("update") %> === true ){
+		console.log( 'Called update process....');
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
 	}
 	
 	dataStructure.render( SX.SXConstants.FOR_EDITOR, $('#<portlet:namespace/>canvasPanel') );
 	
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED, function( event ){
+		event.stopPropagation();
+		event.preventDefault();
+		
 		let eventData = event.sxeventData;
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
@@ -121,7 +125,7 @@ $(document).ready(function(){
 		}
 		
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
-		console.log( 'Changed Term Value: ', eventData.term);
+		console.log( 'Changed Term Value: ' + eventData.term.value);
 		console.log("Data Structure after value changed... ", dataStructure.terms);
 	});
 });

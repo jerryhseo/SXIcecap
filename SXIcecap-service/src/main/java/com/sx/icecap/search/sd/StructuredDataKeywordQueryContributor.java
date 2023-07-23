@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQueryContributorHelper;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 
 import org.osgi.service.component.annotations.Component;
@@ -28,7 +29,7 @@ public class StructuredDataKeywordQueryContributor implements KeywordQueryContri
 			String keywords, 
 			BooleanQuery booleanQuery,
 			KeywordQueryContributorHelper keywordQueryContributorHelper) {
-		System.out.println("DataTypeKeywordQueryContributor: contribute");
+		Debug.printHeader("DataTypeKeywordQueryContributor: contribute");
 		SearchContext searchContext = keywordQueryContributorHelper.getSearchContext();
 		String query = searchContext.getKeywords();
 		System.out.println("Query: " + query);
@@ -39,6 +40,8 @@ public class StructuredDataKeywordQueryContributor implements KeywordQueryContri
 		// queryHelper.addSearchTerm( booleanQuery, searchContext, Field.MODIFIED_DATE, false);
 		
 		System.out.println( "Boolean Query: " + booleanQuery.toString() );
+		
+		Debug.printFooter("DataTypeKeywordQueryContributor");
 	}
 
 }

@@ -202,7 +202,6 @@
 $(document).ready(function(){
 	const isUpdate = <%= isUpdate %>;
 
-	console.log('CurrentURL: <%= currentURL %>');
 	$('#<portlet:namespace/>btnSaveToList').click( function(){
 		let actionURL = isUpdate ? '<%= updateActionURL.toString() %>' : '<%= addActionURL.toString() %>';
 		

@@ -29,7 +29,7 @@ $(document).ready(function(){
 	****************************************************************/
 	let setCurrentTerm = function( term ){
 		currentTerm = term;
-		console.log( 'Current Term: ', term );
+		// console.log( 'Current Term: ', term );
 		dataStructure.replaceVisibleTypeSpecificSection( currentTerm.termType );
 		currentTerm.setAllFormValues();
 		
@@ -49,7 +49,7 @@ $(document).ready(function(){
 			dataStructure.disable(['mandatory', 'abstractKey'], false);
 		}
 		
-		console.log( 'Current term rendered: ' + currentTerm.isRendered() );
+		// console.log( 'Current term rendered: ' + currentTerm.isRendered() );
 		if( currentTerm.isRendered() ){
 			dataStructure.highlightTerm( currentTerm );
 		}
@@ -202,19 +202,19 @@ $(document).ready(function(){
 	});
 	
 	$('#<portlet:namespace/>abstractKey').change(function(eventObj){
-		console.log( 'abstractKey changed...', currentTerm);
+		// console.log( 'abstractKey changed...', currentTerm);
 		currentTerm.getAbstractKeyFormValue(true);
 		currentTerm.setDirty( true );
 	});
 	
 	$('#<portlet:namespace/>searchable').change(function(eventObj){
-		console.log( 'searchable changed...', currentTerm);
+		// console.log( 'searchable changed...', currentTerm);
 		currentTerm.getSearchableFormValue(); 
 		dataStructure.setSearchable( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>downloadable').change(function(eventObj){
-		console.log( 'downloadable changed...', currentTerm);
+		// console.log( 'downloadable changed...', currentTerm);
 		currentTerm.getDownloadableFormValue();
 	});
 	
@@ -408,11 +408,11 @@ $(document).ready(function(){
 		
 		currentTerm.setActiveTerms( activeTermNames );
 		currentTerm.setDirty( true );
-		console.log('active terms: ', activeTermNames);
+		// console.log('active terms: ', activeTermNames);
 	});
 	
 	$('input[name="<portlet:namespace/>booleanDisplayStyle"]').change(function(event){
-		console.log( 'Boolean display style changed: ', currentTerm.getDisplayStyleFormValue( true ) );
+		// console.log( 'Boolean display style changed: ', currentTerm.getDisplayStyleFormValue( true ) );
 		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
@@ -422,7 +422,16 @@ $(document).ready(function(){
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
-
+	SX.DateTerm.$DEFAULT_START_YEAR_FORM_CTRL.change(function(event){
+		currentTerm.getStartYearFormValue();
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
+	SX.DateTerm.$DEFAULT_END_YEAR_FORM_CTRL.change(function(event){
+		currentTerm.getEndYearFormValue();
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
 
 	/**************************************************************
 	* Custom Liferay event handlers
@@ -442,7 +451,7 @@ $(document).ready(function(){
 	
 	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
 		let eventData = event.sxeventData;
-		console.log('DATATYPE_PREVIEW_TERM_SELECTED', eventData, currentTerm);
+		// console.log('DATATYPE_PREVIEW_TERM_SELECTED', eventData, currentTerm);
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			console.log( 'Return by different portlet!!!' );
 			return;
@@ -450,7 +459,7 @@ $(document).ready(function(){
 		
 		setCurrentTerm( eventData.term );
 		dataStructure.highlightTerm( currentTerm );
-		console.log( 'Selected current term: ', currentTerm );
+		// console.log( 'Selected current term: ', currentTerm );
 	});
 
 	
@@ -480,7 +489,7 @@ $(document).ready(function(){
 	
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS, function( event ){
 		let eventData = event.sxeventData;
-		console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS received...', eventData);
+		// console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -491,7 +500,7 @@ $(document).ready(function(){
 	
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_FORM_UI_CHECKBOX_CHANGED, function( event ){
 		let eventData = event.sxeventData;
-		console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_CHECKBOX_CHANGED received...', eventData);
+		// console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_CHECKBOX_CHANGED received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -502,7 +511,7 @@ $(document).ready(function(){
 	
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_PREVIEW_REMOVE_TERM, function( event ){
 		let eventData = event.sxeventData;
-		console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_REMOVE_TERM received...', eventData);
+		// console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_REMOVE_TERM received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -510,12 +519,12 @@ $(document).ready(function(){
 		
 		dataStructure.removeTerm( eventData.term );
 		
-		console.log('Data Structure: ', dataStructure );
+		// console.log('Data Structure: ', dataStructure );
 	});
 	
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_PREVIEW_DELETE_TERM, function( event ){
 		let eventData = event.sxeventData;
-		console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_DELETE_TERM received...', eventData);
+		// console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_DELETE_TERM received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -523,7 +532,7 @@ $(document).ready(function(){
 		
 		dataStructure.deleteTerm( eventData.term );
 		
-		console.log('Data Structure: ', dataStructure );
+		// console.log('Data Structure: ', dataStructure );
 	});
 
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED, function( event ){
@@ -581,7 +590,7 @@ $(document).ready(function(){
 	
 	SX.ListTerm.$BTN_NEW_OPTION.click(function(){
 		
-		console.log( 'click new button' );
+		// console.log( 'click new button' );
 		
 		/*
 		$listOptionManagementDlg.dialog( 'open' );
@@ -604,7 +613,7 @@ $(document).ready(function(){
 					btnClass: 'btn-blue',
 					action: function(){
 						let labelMap = currentTerm.getOptionLabelFormValue();
-						console.log( 'labelMap: ', $('#<portlet:namespace/>optionLabel').val() );
+						// console.log( 'labelMap: ', $('#<portlet:namespace/>optionLabel').val() );
 						if( Object.keys(labelMap).length === 0 ){
 							$.alert('<liferay-ui:message key="option-label-cannot-be-empty"/>');
 							$('#<portlet:namespace/>optionLabel').focus();
@@ -646,7 +655,7 @@ $(document).ready(function(){
 	});
 	
 	SX.GroupTerm.$BTN_CHOOSE_GROUP_TERMS.click(function(event){
-		console.log( 'Current Term before group: ', currentTerm );
+		// console.log( 'Current Term before group: ', currentTerm );
 		dataStructure.chooseGroupTerms( currentTerm );
 	});
 	
@@ -666,7 +675,7 @@ $(document).ready(function(){
 			*/
 		}
 		
-		console.log('currentTerm: ',  currentTerm, dataStructure.terms );
+		// console.log('currentTerm: ',  currentTerm, dataStructure.terms );
 	});
 	
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
@@ -694,7 +703,7 @@ $(document).ready(function(){
 			return;
 		}
 		
-		console.log( 'Before Save: ', dataStructure, JSON.stringify(dataStructure, null, 4) );
+		// console.log( 'Before Save: ', dataStructure, JSON.stringify(dataStructure, null, 4) );
 		
 		$.ajax({
 			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
@@ -705,7 +714,6 @@ $(document).ready(function(){
 				<portlet:namespace/>dataStructure: JSON.stringify(dataStructure)
 			},
 			success: function( result ){
-				console.log( result );
 				dataStructure.clearTermsDirty();
 			},
 			error: function(){
@@ -729,7 +737,7 @@ $(document).ready(function(){
 				<portlet:namespace/>dataStructure: JSON.stringify(dataStructure)
 			},
 			success: function( result ){
-				console.log( result );
+				// console.log( result );
 				// redirect to datatype list view
 				window.location.href='<%= dataTypeListURL %>';
 			},

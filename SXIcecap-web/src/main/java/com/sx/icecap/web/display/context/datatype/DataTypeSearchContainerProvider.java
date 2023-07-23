@@ -1,9 +1,8 @@
-package com.sx.icecap.web.display.context.sd;
+package com.sx.icecap.web.display.context.datatype;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -29,9 +28,8 @@ import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapSDSearchFields;
 import com.sx.icecap.model.DataType;
-import com.sx.icecap.model.StructuredData;
-import com.sx.icecap.service.StructuredDataLocalService;
-import com.sx.icecap.service.StructuredDataLocalServiceUtil;
+import com.sx.icecap.service.DataTypeLocalService;
+import com.sx.icecap.service.DataTypeLocalServiceUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,18 +41,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.portlet.MimeResponse.Copy;
-import javax.servlet.http.HttpServletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-public class StructuredDataSearchContainerProvider {
-	private SearchContainer<StructuredData> _searchContainer = null;
+public class DataTypeSearchContainerProvider {
+	private SearchContainer<DataType> _searchContainer = null;
 	private RenderRequest _renderRequest = null;
 	private RenderResponse _renderResponse = null;
 	private String _searchContainerId = "";
 	private PortletURL _searchURL = null;
-	private StructuredDataLocalService _structuredDataLocalService = null;
+	private DataTypeLocalService _dataTypeLocalService = null;
 	private ThemeDisplay _themeDisplay = null;
 	private String _query = "";
 	long _assetCategoryId = 0; 
@@ -64,26 +61,20 @@ public class StructuredDataSearchContainerProvider {
 	String _orderByCol = "";
 	String _orderByType = "";
 	int _status = WorkflowConstants.STATUS_APPROVED;
-	DataType _dataType = null;
 
-
-	public StructuredDataSearchContainerProvider( 
-			DataType dataType,
-			String strQuery,
+	public DataTypeSearchContainerProvider( 
 			RenderRequest renderRequest,
 			RenderResponse renderResponse,
 			String searchContainerId,
-			StructuredDataLocalService structuredDataLocalService ){
+			DataTypeLocalService dataTypeLocalService ){
 		
-			this._dataType = dataType;
 			this._renderRequest = renderRequest;
 			this._renderResponse = renderResponse;
 			this._searchContainerId = searchContainerId;
 			this._searchURL = _getSearchURL(); 
-			this._structuredDataLocalService = structuredDataLocalService;
+			this._dataTypeLocalService = dataTypeLocalService;
 			this._themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 			this._keywords = ParamUtil.getString(renderRequest, StationXWebKeys.KEYWORDS, "");
-			this._query = strQuery;
 			System.out.println("Keywords: " + this._keywords);
 			
 			_assetCategoryId = ParamUtil.getLong(renderRequest, StationXWebKeys.CATEGORY_ID);
@@ -94,9 +85,9 @@ public class StructuredDataSearchContainerProvider {
 			_status = ParamUtil.getInteger( _renderRequest, IcecapSDSearchFields.STATUS, WorkflowConstants.STATUS_APPROVED);
 	}
 	
-	public SearchContainer<StructuredData> createSearchContainer() throws PortalException{
+	public SearchContainer<DataType> createSearchContainer() throws PortalException{
 		_searchContainer = 
-				new SearchContainer<StructuredData>(
+				new SearchContainer<DataType>(
 						_renderRequest,
 						_searchURL, // URL for iteration of pagenation.
 						null,
@@ -122,7 +113,7 @@ public class StructuredDataSearchContainerProvider {
 	
 	private void _trySearchThroughCategoryTree() throws PortalException {
 		
-		AssetEntryQuery assetEntryQuery = new AssetEntryQuery(StructuredData.class.getName(), _searchContainer);
+		AssetEntryQuery assetEntryQuery = new AssetEntryQuery(DataType.class.getName(), _searchContainer);
 
 		assetEntryQuery.setExcludeZeroViewCount(false);
 		assetEntryQuery.setOrderByCol1(ParamUtil.getString(_renderRequest, StationXWebKeys.ORDER_BY_COL));
@@ -139,19 +130,19 @@ public class StructuredDataSearchContainerProvider {
 		_searchContainer.setTotal(total);
 
 //			Sentance using functional programming
-		List<StructuredData> entriesResults = assetEntries.stream()
-				.map( this::_toStructuredDataOptional )
+		List<DataType> entriesResults = assetEntries.stream()
+				.map( this::_toDataTypeOptional )
 				.filter( Optional::isPresent )
 				.map( Optional::get )
 				.collect( Collectors.toList() );
 		
 //			Sentance using Lambda expression only
-//			assetEntries.forEach(assetEntry -> entriesResults.add(StructuredDataTypeLocalServiceUtil.getStructuredData(assetEntry.getClassPK())));
+//			assetEntries.forEach(assetEntry -> entriesResults.add(DataTypeTypeLocalServiceUtil.getDataType(assetEntry.getClassPK())));
 		
 		/* Using imperative programming
 		 * 
 		 * for (AssetEntry assetEntry : assetEntries) {
-		 * 		entriesResults.add(StructuredDataLocalServiceUtil.getStructuredData(assetEntry.getClassPK());
+		 * 		entriesResults.add(DataTypeLocalServiceUtil.getDataType(assetEntry.getClassPK());
 		 * }
 		 */
 		
@@ -159,7 +150,7 @@ public class StructuredDataSearchContainerProvider {
 	}
 	
 	private boolean _tryAdvancedSearch() {
-		Indexer<StructuredData> indexer = IndexerRegistryUtil.getIndexer(StructuredData.class);
+		Indexer<DataType> indexer = IndexerRegistryUtil.getIndexer(DataType.class);
 
 		
 		SearchContext searchContext = SearchContextFactory.getInstance(PortalUtil.getHttpServletRequest(_renderRequest));
@@ -187,7 +178,7 @@ public class StructuredDataSearchContainerProvider {
 
 		searchContext.setSorts(sort);
 
-		List<StructuredData> entriesResults = new ArrayList<StructuredData>();
+		List<DataType> entriesResults = new ArrayList<DataType>();
 		Hits hits = null;
 		try {
 			hits = indexer.search(searchContext);
@@ -207,11 +198,11 @@ public class StructuredDataSearchContainerProvider {
 		Document[] docs = hits.getDocs();
 		
 		for( Document doc : docs ) {
-			long structuredDataId = GetterUtil.getLong( doc.get(Field.ENTRY_CLASS_PK) );
-			StructuredData structuredData = null;
+			long dataTypeId = GetterUtil.getLong( doc.get(Field.ENTRY_CLASS_PK) );
+			DataType dataType = null;
 			try {
-				structuredData = _structuredDataLocalService.getStructuredData( structuredDataId );
-				entriesResults.add(structuredData);
+				dataType = _dataTypeLocalService.getDataType( dataTypeId );
+				entriesResults.add(dataType);
 			} catch (Exception e) {
 			}
 			
@@ -243,18 +234,16 @@ public class StructuredDataSearchContainerProvider {
 	}
 	
 	private void _trySearchThroughService () {
-		List<StructuredData> entriesResults = null;
+		List<DataType> entriesResults = null;
 
 		
 		if ( _navigation.equals(StationXConstants.NAVIGATION_MINE) ) {
 			_searchContainer.setTotal(
-					_structuredDataLocalService.countStructuredDatasByDataTypeId_U_S(
-							_dataType.getPrimaryKey(), 
+					_dataTypeLocalService.countDataTypesByU_S(
 							_themeDisplay.getUserId(),
 							_status));
 	
-			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId_U_S(
-					_dataType.getPrimaryKey(), 
+			entriesResults = _dataTypeLocalService.getDataTypesByU_S(
 					_themeDisplay.getUserId(),
 					_status, 
 					_searchContainer.getStart(),
@@ -263,13 +252,11 @@ public class StructuredDataSearchContainerProvider {
 		}
 		else if( _navigation.equals(StationXConstants.NAVIGATION_GROUP)){
 			_searchContainer.setTotal(
-					_structuredDataLocalService.countStructuredDatasByDataTypeId_G_S(
-							_dataType.getPrimaryKey(), 
+					_dataTypeLocalService.countDataTypesByG_S(
 							_themeDisplay.getScopeGroupId(),
 							_status));
 			
-			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId_G_S(
-					_dataType.getPrimaryKey(), 
+			entriesResults = _dataTypeLocalService.getDataTypesByG_S(
 					_themeDisplay.getScopeGroupId(),
 					_status, 
 					_searchContainer.getStart(),
@@ -278,12 +265,9 @@ public class StructuredDataSearchContainerProvider {
 		}
 		else {
 			_searchContainer.setTotal(
-					_structuredDataLocalService.countStructuredDatasByDataTypeId_S(
-							_dataType.getPrimaryKey(),
-							_status));
+					_dataTypeLocalService.countDataTypesByStatus(_status) );
 			
-			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId_S(
-					_dataType.getPrimaryKey(),
+			entriesResults = _dataTypeLocalService.getDataTypesByStatus(
 					_status,
 					_searchContainer.getStart(),
 					_searchContainer.getEnd() ,
@@ -300,7 +284,7 @@ public class StructuredDataSearchContainerProvider {
 			return false;
 		}
 
-		Indexer<StructuredData> indexer = IndexerRegistryUtil.getIndexer(StructuredData.class);
+		Indexer<DataType> indexer = IndexerRegistryUtil.getIndexer(DataType.class);
 
 		
 		SearchContext searchContext = SearchContextFactory.getInstance(PortalUtil.getHttpServletRequest(_renderRequest));
@@ -338,7 +322,7 @@ public class StructuredDataSearchContainerProvider {
 
 		searchContext.setSorts(sort);
 
-		List<StructuredData> entriesResults = new ArrayList<StructuredData>();
+		List<DataType> entriesResults = new ArrayList<DataType>();
 		Hits hits = null;
 		try {
 			hits = indexer.search(searchContext);
@@ -358,15 +342,15 @@ public class StructuredDataSearchContainerProvider {
 		Document[] docs = hits.getDocs();
 		
 		for( Document doc : docs ) {
-			long structuredDataId = GetterUtil.getLong( doc.get(Field.ENTRY_CLASS_PK) );
-			StructuredData structuredData = null;
+			long dataTypeId = GetterUtil.getLong( doc.get(Field.ENTRY_CLASS_PK) );
+			DataType dataType = null;
 			try {
-				structuredData = _structuredDataLocalService.getStructuredData( structuredDataId );
-				entriesResults.add(structuredData);
+				dataType = _dataTypeLocalService.getDataType( dataTypeId );
+				entriesResults.add(dataType);
 			} catch (Exception e) {
 			}
 			
-			System.out.println( "==== Begin Document Fields in SD search container - "+doc.get(Field.ENTRY_CLASS_PK) );
+			System.out.println( "==== Begin Document Fields in DataType search container - "+doc.get(Field.ENTRY_CLASS_PK) );
 			
 			Map<String, Field> fields = doc.getFields();
 			fields.forEach((key, field) ->{
@@ -422,20 +406,20 @@ public class StructuredDataSearchContainerProvider {
 		
 		/*
 		_searchContainer.setOrderByComparator( 
-				_structuredDataLocalService.getOrderByNameComparator(
+				_dataTypeLocalService.getOrderByNameComparator(
 						_searchContainer.getOrderByCol(), searchContainer.getOrderByType()) );
 		 */
 		_searchContainer.setRowChecker( new EmptyOnClickRowChecker(_renderResponse) );
 	}
 	
-	private Optional<StructuredData> _toStructuredDataOptional(AssetEntry assetEntry) {
+	private Optional<DataType> _toDataTypeOptional(AssetEntry assetEntry) {
 
 		try {
 			return Optional.of(
-				StructuredDataLocalServiceUtil.getStructuredData(assetEntry.getClassPK()));
+				DataTypeLocalServiceUtil.getDataType(assetEntry.getClassPK()));
 		}
 		catch (Exception e) {
-			System.out.println("StructuredData  search index is stale and contains entry " +
+			System.out.println("DataType  search index is stale and contains entry " +
 					assetEntry.getClassPK() );
 			return Optional.empty();
 		}

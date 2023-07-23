@@ -3,6 +3,7 @@ package com.sx.icecap.search.sd;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapSDSearchFields;
 
 import java.util.Locale;
@@ -18,10 +19,11 @@ public class StructuredDataModelSummaryContributor implements ModelSummaryContri
 
 	@Override
 	public Summary getSummary(Document document, Locale locale, String snippet) {
-//		System.out.println("StructuredDataModelSummaryContributor: getSummary");
+		Debug.printHeader("StructuredDataModelSummaryContributor");
 		Summary summary = createSummary(document, locale);
 		summary.setMaxContentLength(256);
 
+		Debug.printFooter("StructuredDataModelSummaryContributor");
 		return summary;
 	}
 

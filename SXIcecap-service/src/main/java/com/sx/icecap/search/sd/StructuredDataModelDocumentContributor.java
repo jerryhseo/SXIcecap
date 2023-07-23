@@ -10,6 +10,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapSDSearchFields;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
@@ -42,6 +43,7 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 	@Override
 	public void contribute(Document document, StructuredData structuredData) {
 		
+		Debug.printHeader("StructuredDataModelDocumentContributor");
 		long dataSetId = structuredData.getDataSetId();
 		long dataTypeId = structuredData.getDataTypeId();
 		long structuredDataId = structuredData.getStructuredDataId();
@@ -75,7 +77,7 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 			
 			terms.forEach( term -> {
 				JSONObject jsonTerm = (JSONObject)term;
-				 System.out.println("Searchable: " + jsonTerm.getBoolean("searchable") );
+				 System.out.println("Searchable: " + jsonTerm.getString("termName") + "-" +  jsonTerm.getBoolean("searchable") );
 				if( jsonTerm.getBoolean("searchable") == true ) {
 					System.out.println("Searchable Fields for " + dataTypeId  + ":" );
 					String fieldName = jsonTerm.getString("termName");
@@ -141,6 +143,8 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 			e.printStackTrace();
 		}
 		*/
+		
+		Debug.printFooter("StructuredDataModelDocumentContributor");
 	}
 	
 }

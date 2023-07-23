@@ -81,6 +81,7 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 		System.out.println("Structured Data:  " + structuredData);
 		
 		JSONObject jsonStructuredData = JSONFactoryUtil.createJSONObject(structuredData);
+		System.out.println("SD Data: " + jsonStructuredData.toString(4));
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		

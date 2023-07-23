@@ -93,28 +93,26 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 							IcecapConstants.STRUCTURED_DATA_SEARCH_CONTAINER_ID,
 							_structuredDataLocalService	);
 		
-		StructuredDataManagementToolbarDisplayContext structuredDataManagementToolbarDisplayContext = null;
 		try {
-			structuredDataManagementToolbarDisplayContext = new StructuredDataManagementToolbarDisplayContext(
-					PortalUtil.getLiferayPortletRequest(renderRequest),
-					PortalUtil.getLiferayPortletResponse(renderResponse),
-					PortalUtil.getHttpServletRequest(renderRequest),
-					sdSearchContainerProvider._createSearchContainer(),
-					_trashHelper);
-		} catch (PortalException e) {
-			e.printStackTrace();
+			StructuredDataManagementToolbarDisplayContext structuredDataManagementToolbarDisplayContext 
+						= new StructuredDataManagementToolbarDisplayContext(
+											PortalUtil.getLiferayPortletRequest(renderRequest),
+											PortalUtil.getLiferayPortletResponse(renderResponse),
+											PortalUtil.getHttpServletRequest(renderRequest),
+											sdSearchContainerProvider.createSearchContainer(),
+											_trashHelper);
+			renderRequest.setAttribute(
+					StationXWebKeys.MANAGEMENT_TOOLBAR_DISPLAY_CONTEXT, 
+					structuredDataManagementToolbarDisplayContext );
+			renderRequest.setAttribute(
+					StationXWebKeys.DATATYPE, 
+					dataType );
+			renderRequest.setAttribute(
+					StationXWebKeys.ABSTRACT_FIELDS, 
+					abstractFieldList );
+		} catch (Exception e) {
 			throw new PortletException(e.getMessage());
 		}
-		
-		renderRequest.setAttribute(
-				StationXWebKeys.MANAGEMENT_TOOLBAR_DISPLAY_CONTEXT, 
-				structuredDataManagementToolbarDisplayContext );
-		renderRequest.setAttribute(
-				StationXWebKeys.DATATYPE, 
-				dataType );
-		renderRequest.setAttribute(
-				StationXWebKeys.ABSTRACT_FIELDS, 
-				abstractFieldList );
 		
 		return IcecapJsps.STRUCTURED_DATA_LIST_VIEW;
 	}

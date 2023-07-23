@@ -252,7 +252,17 @@
 		<aui:container>
 			<aui:row>
 				<aui:col md="6">
-					<aui:input type="checkbox" id="enableTime" name="enableTime"></aui:input>
+					<aui:input type="checkbox" id="enableTime" name="enableTime" helpMessage="date-term-enable-time-help"></aui:input>
+				</aui:col>
+			</aui:row>
+			<aui:row>
+				<aui:col md="6">
+					<aui:input type="text" id="startYear" name="startYear" helpMessage="date-term-start-year-help"></aui:input>
+				</aui:col>
+			</aui:row>
+			<aui:row>
+				<aui:col md="6">
+					<aui:input type="text" id="endYear" name="endYear" helpMessage="date-term-end-year-help"></aui:input>
 				</aui:col>
 			</aui:row>
 		</aui:container>
