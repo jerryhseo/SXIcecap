@@ -17,7 +17,7 @@ import org.osgi.service.component.annotations.Reference;
 
 @Component(
         immediate = true,
-        property = "indexer.class.name=com.sx.icecap.datatype.model.DataType",
+        property = "indexer.class.name=com.sx.icecap.model.DataType",
         service = ModelIndexerWriterContributor.class
 )
 public class DataTypeModelIndexerWriterContributor implements ModelIndexerWriterContributor<DataType> {
@@ -26,15 +26,9 @@ public class DataTypeModelIndexerWriterContributor implements ModelIndexerWriter
 	public void customize(BatchIndexingActionable batchIndexingActionable,
 			ModelIndexerWriterDocumentHelper modelIndexerWriterDocumentHelper) {
 		Debug.printHeader("DataTypeModelIndexerWriterContributor");
-//		System.out.println("DataTypeModelIndexerWriterContributor......");
+
 		batchIndexingActionable.setPerformActionMethod((DataType dataType) -> {
 			Document document = modelIndexerWriterDocumentHelper.getDocument(dataType);
-			
-			 
-			Map<String, Field> fieldMap = document.getFields();
-			fieldMap.forEach((key, field) ->{
-				System.out.println(key + " : " + field.getName() + "-" + field.getValue());
-			});
 			
 			batchIndexingActionable.addDocuments(document);
 		});

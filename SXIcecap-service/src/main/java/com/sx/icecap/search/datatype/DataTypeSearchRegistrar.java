@@ -5,6 +5,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchRegistrarHelper;
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.model.DataType;
 
@@ -20,11 +21,7 @@ public class DataTypeSearchRegistrar {
 	
 	@Activate
 	protected void activate(BundleContext bundleContext) {
-		System.out.println("===== Begin DataTypeSearchRegistrar activator() =====");
-		System.out.println("_serviceRegistration: "+ Validator.isNotNull(_serviceRegistration));
-		System.out.println("_modelSearchRegistrarHelper: "+ Validator.isNotNull(_modelSearchRegistrarHelper));
-		System.out.println("_modelIndexWriterContributor: "+ Validator.isNotNull(_modelIndexWriterContributor));
-		System.out.println("_modelSummaryContributor: "+ Validator.isNotNull(_modelSummaryContributor));
+		Debug.printHeader("DataTypeSearchRegistrar activator");
 			_serviceRegistration = _modelSearchRegistrarHelper.register(
 					DataType.class, 
 					bundleContext, 
@@ -34,19 +31,14 @@ public class DataTypeSearchRegistrar {
 										Field.COMPANY_ID,
 										Field.GROUP_ID, 
 										Field.ENTRY_CLASS_NAME, 
-										Field.UID,
 										Field.ENTRY_CLASS_PK,
-										Field.MODIFIED_DATE, 
-										Field.ASSET_TAG_NAMES, 
+										Field.UID,
 										Field.SCOPE_GROUP_ID,
-										Field.STATUS,
-										IcecapDataTypeAttributes.DATATYPE_NAME); 
+										IcecapDataTypeAttributes.DATATYPE_NAME,
+										"terms"); 
 								modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
 										IcecapDataTypeAttributes.DESCRIPTION,
-										IcecapDataTypeAttributes.DISPLAY_NAME,
-										Field.ASSET_CATEGORY_TITLES,
-										Field.TITLE, 
-										Field.CONTENT);
+										IcecapDataTypeAttributes.DISPLAY_NAME);
 
 								modelSearchDefinition.setModelIndexWriteContributor(
 										_modelIndexWriterContributor);
@@ -55,7 +47,7 @@ public class DataTypeSearchRegistrar {
 								modelSearchDefinition.setSelectAllLocales(true);
 					});
 
-//			System.out.println("===== End of TermSearchRegistrar activator() =====");
+		Debug.printFooter("TermSearchRegistrar");
 	}
 
 	@Deactivate
@@ -64,7 +56,7 @@ public class DataTypeSearchRegistrar {
 	}
 	
 	@Reference(
-			target = "(indexer.class.name=com.sx.icecap.datatype.model.DataType)"
+			target = "(indexer.class.name=com.sx.icecap.model.DataType)"
 	)
 	protected ModelIndexerWriterContributor<DataType> _modelIndexWriterContributor;
 
@@ -72,7 +64,7 @@ public class DataTypeSearchRegistrar {
 	protected ModelSearchRegistrarHelper _modelSearchRegistrarHelper;
 
 	@Reference(
-			target = "(indexer.class.name=com.sx.icecap.datatype.model.DataType)"
+			target = "(indexer.class.name=com.sx.icecap.model.DataType)"
 	)
 	protected ModelSummaryContributor _modelSummaryContributor;
 

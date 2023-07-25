@@ -67,7 +67,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Brian Wing Shun Chan
  */
 @Component(
-	property = "model.class.name=com.sx.icecap.datatype.model.DataType",
+	property = "model.class.name=com.sx.icecap.model.DataType",
 	service = AopService.class
 )
 public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {

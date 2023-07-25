@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQueryContributorHelper;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 
 import org.osgi.service.component.annotations.Component;
@@ -13,7 +14,7 @@ import org.osgi.service.component.annotations.Reference;
 
 @Component(
         immediate = true,
-        property = "indexer.class.name=com.sx.icecap.datatype.model.DataType",
+        property = "indexer.class.name=com.sx.icecap.model.DataType",
         service = KeywordQueryContributor.class
 )
 public class DataTypeKeywordQueryContributor implements KeywordQueryContributor {
@@ -26,7 +27,8 @@ public class DataTypeKeywordQueryContributor implements KeywordQueryContributor 
 			String keywords, 
 			BooleanQuery booleanQuery,
 			KeywordQueryContributorHelper keywordQueryContributorHelper) {
-//		System.out.println("DataTypeKeywordQueryContributor: contribute");
+		Debug.printHeader("DataTypeKeywordQueryContributor");
+		
 		SearchContext searchContext = keywordQueryContributorHelper.getSearchContext();
 
 		queryHelper.addSearchTerm(booleanQuery, searchContext, IcecapDataTypeAttributes.DATATYPE_NAME, true);
@@ -34,8 +36,10 @@ public class DataTypeKeywordQueryContributor implements KeywordQueryContributor 
 				booleanQuery, searchContext, IcecapDataTypeAttributes.DISPLAY_NAME, false);
 		queryHelper.addSearchLocalizedTerm(
 				booleanQuery, searchContext, IcecapDataTypeAttributes.DESCRIPTION, false);
-		queryHelper.addSearchTerm(booleanQuery, searchContext, IcecapDataTypeAttributes.STATUS, false);
-		queryHelper.addSearchTerm( booleanQuery, searchContext, Field.MODIFIED_DATE, false);
+		queryHelper.addSearchTerm(booleanQuery, searchContext, "terms", false);
+		// queryHelper.addSearchTerm( booleanQuery, searchContext, Field.MODIFIED_DATE, false);
+		
+		Debug.printFooter("DataTypeKeywordQueryContributor");
 		
 	}
 

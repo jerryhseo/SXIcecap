@@ -11,7 +11,7 @@ import org.osgi.service.component.annotations.Component;
 
 @Component(
 		immediate = true,
-		property = "indexer.class.name=com.sx.icecap.datatype.model.DataType",
+		property = "indexer.class.name=com.sx.icecap.model.DataType",
 		service = ModelSummaryContributor.class
 )
 public class DataTypeModelSummaryContributor implements ModelSummaryContributor {

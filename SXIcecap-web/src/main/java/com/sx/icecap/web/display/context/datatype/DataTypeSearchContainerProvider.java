@@ -354,7 +354,7 @@ public class DataTypeSearchContainerProvider {
 			
 			Map<String, Field> fields = doc.getFields();
 			fields.forEach((key, field) ->{
-				System.out.println(key + ": (" + field.getName() + "-"+ field.getValue());
+				System.out.println(key + ": (" + field.getName() + "-"+ field.getValue() + ")");
 			});
 			System.out.println( "==== End Document Fields" );
 		}
