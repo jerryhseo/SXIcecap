@@ -75,7 +75,7 @@ public class DataTypeSearchContainerProvider {
 			this._dataTypeLocalService = dataTypeLocalService;
 			this._themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 			this._keywords = ParamUtil.getString(renderRequest, StationXWebKeys.KEYWORDS, "");
-			System.out.println("Keywords: " + this._keywords);
+			//System.out.println("Keywords: " + this._keywords);
 			
 			_assetCategoryId = ParamUtil.getLong(renderRequest, StationXWebKeys.CATEGORY_ID);
 			_assetTagName = ParamUtil.getString(renderRequest, StationXWebKeys.TAG);
@@ -206,6 +206,7 @@ public class DataTypeSearchContainerProvider {
 			} catch (Exception e) {
 			}
 			
+			/*
 			System.out.println( "==== Begin Document Fields - "+doc.get(Field.ENTRY_CLASS_PK) );
 			
 			Map<String, Field> fields = doc.getFields();
@@ -213,6 +214,7 @@ public class DataTypeSearchContainerProvider {
 				System.out.println(key + ": (" + field.getName() + "-"+ field.getValue());
 			});
 			System.out.println( "==== End Document Fields" );
+			*/
 		}
 		
 		/* Functional programming
@@ -274,7 +276,7 @@ public class DataTypeSearchContainerProvider {
 			        _searchContainer.getOrderByComparator());
 		}
 		
-		System.out.println("Search Result: "+entriesResults.size());
+		// System.out.println("Search Result: "+entriesResults.size());
 		_searchContainer.setResults(entriesResults);
 	}
 	
@@ -297,6 +299,7 @@ public class DataTypeSearchContainerProvider {
 		searchContext.setKeywords(_keywords);
 		searchContext.setLocale(_themeDisplay.getLocale());
 		
+		/*
 		System.out.println("Search Container Attributes.....");
 		Map<String, Serializable> attrs = searchContext.getAttributes();
 		Set<String> keySet = attrs.keySet();
@@ -307,6 +310,7 @@ public class DataTypeSearchContainerProvider {
 			System.out.println(key + " - " + attrs.get(key) );
 		}
 		System.out.println("End of Search Container Attributes.....");
+		*/
 
 		if (!_navigation.equals(StationXConstants.NAVIGATION_MINE)) {
 			searchContext.setOwnerUserId(_themeDisplay.getUserId());
@@ -350,6 +354,7 @@ public class DataTypeSearchContainerProvider {
 			} catch (Exception e) {
 			}
 			
+			/*
 			System.out.println( "==== Begin Document Fields in DataType search container - "+doc.get(Field.ENTRY_CLASS_PK) );
 			
 			Map<String, Field> fields = doc.getFields();
@@ -357,6 +362,7 @@ public class DataTypeSearchContainerProvider {
 				System.out.println(key + ": (" + field.getName() + "-"+ field.getValue() + ")");
 			});
 			System.out.println( "==== End Document Fields" );
+			*/
 		}
 		
 		_searchContainer.setResults(entriesResults);
@@ -383,7 +389,7 @@ public class DataTypeSearchContainerProvider {
 	private PortletURL _getSearchURL() {
 		PortletURL searchURL = _renderResponse.createRenderURL(Copy.ALL);
 		Map<String, String[]> params = searchURL.getParameterMap();
-		params.forEach( (k, v) -> System.out.println("key: "+k+", value: "+v));
+	// 	params.forEach( (k, v) -> System.out.println("key: "+k+", value: "+v));
 		
 		return searchURL;
 	}

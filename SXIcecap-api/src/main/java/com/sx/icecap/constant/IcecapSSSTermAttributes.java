@@ -1,6 +1,7 @@
 package com.sx.icecap.constant;
 
 public class IcecapSSSTermAttributes {
+	public static final String ABSTRACT_KEY = "abstractKey";
 	public static final String ACTIVE_TERMS = "activeTerms";
 	public static final String COUNTRY_CODE = "countryCode";
 	public static final String CATEGORY_ID = "categoryId";
@@ -14,7 +15,10 @@ public class IcecapSSSTermAttributes {
 	public static final String DISPLAY_FORMAT = "displayFormat";
 	public static final String DISPLAY_NAME = "displayName";
 	public static final String DISPLAY_STYLE = "displayStyle";
+	public static final String DOWNLOADABLE = "downloadable";
 	public static final String ELEMENT_TYPE = "elementType";
+	public static final String ENABLE_TIME = "enableTime";
+	public static final String END_YEAR = "endYear";
 	public static final String GROUP_TERM_ID = "groupTermId";
 	public static final String LABEL = "label";
 	public static final String MAX_BOUNDARY = "maxBoundary";
@@ -37,7 +41,9 @@ public class IcecapSSSTermAttributes {
 	public static final String REF_DATABASE_VERSION = "refDatabaseVersion";
 	public static final String REF_DATATYPES = "refDataTypes";
 	public static final String SELECTED = "selected";
+	public static final String SEARCHABLE = "searchable";
 	public static final String STANDARD = "standard";
+	public static final String START_YEAR = "startYear";
 	public static final String STATE = "state";
 	public static final String STATUS = "status";
 	public static final String SYNONYMS = "synonyms";

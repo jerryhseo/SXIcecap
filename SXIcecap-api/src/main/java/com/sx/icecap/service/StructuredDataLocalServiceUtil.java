@@ -410,6 +410,13 @@ public class StructuredDataLocalServiceUtil {
 		return getService().getStructuredDataByUuidAndGroupId(uuid, groupId);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONObject
+			getStructuredDataJSON(long structuredDataId)
+		throws PortalException {
+
+		return getService().getStructuredDataJSON(structuredDataId);
+	}
+
 	/**
 	 * Returns a range of all the structured datas.
 	 *

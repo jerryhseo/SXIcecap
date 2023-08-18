@@ -12,6 +12,7 @@ import com.sx.icecap.constant.IcecapWebKeys;
 import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.constant.StationXWebKeys;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.DataTypeStructure;
@@ -34,17 +35,11 @@ import org.osgi.service.component.annotations.Reference;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.STRUCTURED_DATA,
-	        "mvc.command.name="+IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST
+	        "mvc.command.name="+IcecapMVCCommands.RENDER_STRUCTURED_DATA_FULL_CONTENT
 	    },
 	    service = MVCRenderCommand.class
 	)
-public class StructuredDataListRenderCommand implements MVCRenderCommand {
-	
-	@Reference(unbind = "-")
-	protected void setPortal(Portal portal) {
-		  this._portal = portal;
-	}
-	protected Portal _portal;
+public class StructuredDataFullContentRenderCommand implements MVCRenderCommand {
 	
 	@Reference(unbind = "-")
 	protected void setTrashHelper(TrashHelper trashHelper) {
@@ -53,18 +48,15 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 	protected TrashHelper _trashHelper;
 	
 	@Reference
-	private StructuredDataLocalService _structuredDataLocalService;
-
-	@Reference
 	private DataTypeLocalService _dataTypeLocalService;
 
 	@Override
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
 		
-		System.out.println("StructuredDataListRenderCommand.render()");
-		String strAdvancedQuery = ParamUtil.getString(renderRequest, IcecapWebKeys.STRUCTURED_DATA_QUERY, "");
-		System.out.println("SD Advanced SearchQuery: " + strAdvancedQuery);
+		Debug.printHeader("StructuredDataListRenderCommand.render");
+		
 		long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID );
+		long structuredDataId = ParamUtil.getLong(renderRequest, IcecapWebKeys.STRUCTURED_DATA_ID, 0);
 		
 		System.out.println("datatype id: "+dataTypeId);
 		String backURL = ParamUtil.getString(renderRequest, StationXWebKeys.BACK_URL );
@@ -72,39 +64,15 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 		
 		try {
 			DataType dataType = _dataTypeLocalService.getDataType(dataTypeId);
+			JSONObject structuredData = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredDataId);
+			renderRequest.setAttribute(IcecapWebKeys.DATATYPE, dataType);
+			renderRequest.setAttribute(IcecapWebKeys.STRUCTURED_DATA, structuredData);
+		} catch (Exception e) {
+			e.printStackTrace();
 			
-			JSONObject dataStructure = _dataTypeLocalService.getDataTypeStructureJSONObject(dataTypeId);
-			
-			List<String> abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId, true );
-			
-			StructuredDataSearchContainerProvider sdSearchContainerProvider= new StructuredDataSearchContainerProvider(
-								dataType,
-								strAdvancedQuery,
-								renderRequest,
-								renderResponse,
-								IcecapConstants.STRUCTURED_DATA_SEARCH_CONTAINER_ID,
-								_structuredDataLocalService	);
-			StructuredDataManagementToolbarDisplayContext structuredDataManagementToolbarDisplayContext 
-					= new StructuredDataManagementToolbarDisplayContext(
-											PortalUtil.getLiferayPortletRequest(renderRequest),
-											PortalUtil.getLiferayPortletResponse(renderResponse),
-											PortalUtil.getHttpServletRequest(renderRequest),
-											sdSearchContainerProvider.createSearchContainer(),
-											_trashHelper);
-			renderRequest.setAttribute(
-					StationXWebKeys.MANAGEMENT_TOOLBAR_DISPLAY_CONTEXT, 
-					structuredDataManagementToolbarDisplayContext );
-			renderRequest.setAttribute(
-					StationXWebKeys.DATATYPE, 
-					dataType );
-			renderRequest.setAttribute(
-					StationXWebKeys.ABSTRACT_FIELDS, 
-					abstractFieldList );
-		}
-		catch (Exception e) {
-			throw new PortletException(e.getMessage());
+			throw new PortletException( e.getMessage() );
 		}
 		
-		return IcecapJsps.STRUCTURED_DATA_LIST_VIEW;
+		return IcecapJsps.STRUCTURED_DATA_FULL_CONTENT_VIEW;
 	}
 }

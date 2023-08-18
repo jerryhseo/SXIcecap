@@ -475,6 +475,15 @@ public class StructuredDataLocalServiceWrapper
 			uuid, groupId);
 	}
 
+	@Override
+	public com.liferay.portal.kernel.json.JSONObject getStructuredDataJSON(
+			long structuredDataId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _structuredDataLocalService.getStructuredDataJSON(
+			structuredDataId);
+	}
+
 	/**
 	 * Returns a range of all the structured datas.
 	 *

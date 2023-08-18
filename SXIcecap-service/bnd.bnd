@@ -12,3 +12,5 @@ Export-Package: \
 	com.sx.icecap.security.permission.resource.datatype,\
 	com.sx.icecap.search.sss,\
 	com.sx.icecap.search.sd
+
+Include-Resource:: @commons-lang3-3.12.0.jar

@@ -28,7 +28,13 @@ public class StructuredDataSearchRegistrar {
 					modelSearchDefinition -> {
 //								System.out.println("DataTypeSearchRegister activator: modelSearchDefinition");
 								modelSearchDefinition.setDefaultSelectedFieldNames(
-										Field.USER_ID,
+										Field.COMPANY_ID,
+										Field.GROUP_ID, 
+										Field.ENTRY_CLASS_NAME, 
+										Field.ENTRY_CLASS_PK,
+										Field.UID,
+										Field.SCOPE_GROUP_ID,
+										Field.CONTENT,
 										IcecapSDSearchFields.DATASET_ID,
 										IcecapSDSearchFields.DATATYPE_ID
 								);

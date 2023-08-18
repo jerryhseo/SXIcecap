@@ -62,15 +62,18 @@ public class AdvancedSearchStructuredDataActionCommand extends BaseMVCActionComm
 		
 		String strQuery = ParamUtil.getString(actionRequest, IcecapWebKeys.STRUCTURED_DATA_QUERY, "");
 		long dataTypeId = ParamUtil.getLong(actionRequest, IcecapWebKeys.DATATYPE_ID, 0);
+		String backURL = ParamUtil.getString(actionRequest, StationXWebKeys.BACK_URL, "/");
 		
 		System.out.println("Search Query: " + strQuery );
 		System.out.println("Data type ID: " + dataTypeId );
+		System.out.println("backURL: " + backURL );
 		
 		PortletURL renderURL = actionResponse.createRedirectURL(Copy.ALL);
 		
 		renderURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
 		renderURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataTypeId) );
 		renderURL.setParameter(IcecapWebKeys.STRUCTURED_DATA_QUERY, strQuery );
+		renderURL.setParameter(StationXWebKeys.BACK_URL, backURL);
 		
 		actionResponse.sendRedirect(renderURL.toString());
 	}

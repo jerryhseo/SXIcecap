@@ -21,7 +21,7 @@ public class DataTypeSearchRegistrar {
 	
 	@Activate
 	protected void activate(BundleContext bundleContext) {
-		Debug.printHeader("DataTypeSearchRegistrar activator");
+		//Debug.printHeader("DataTypeSearchRegistrar activator");
 			_serviceRegistration = _modelSearchRegistrarHelper.register(
 					DataType.class, 
 					bundleContext, 
@@ -35,7 +35,7 @@ public class DataTypeSearchRegistrar {
 										Field.UID,
 										Field.SCOPE_GROUP_ID,
 										IcecapDataTypeAttributes.DATATYPE_NAME,
-										"terms"); 
+										IcecapDataTypeAttributes.TERMS); 
 								modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
 										IcecapDataTypeAttributes.DESCRIPTION,
 										IcecapDataTypeAttributes.DISPLAY_NAME);
@@ -47,7 +47,7 @@ public class DataTypeSearchRegistrar {
 								modelSearchDefinition.setSelectAllLocales(true);
 					});
 
-		Debug.printFooter("TermSearchRegistrar");
+		//Debug.printFooter("TermSearchRegistrar");
 	}
 
 	@Deactivate

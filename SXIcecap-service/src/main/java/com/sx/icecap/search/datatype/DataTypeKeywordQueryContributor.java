@@ -27,7 +27,7 @@ public class DataTypeKeywordQueryContributor implements KeywordQueryContributor 
 			String keywords, 
 			BooleanQuery booleanQuery,
 			KeywordQueryContributorHelper keywordQueryContributorHelper) {
-		Debug.printHeader("DataTypeKeywordQueryContributor");
+//		Debug.printHeader("DataTypeKeywordQueryContributor");
 		
 		SearchContext searchContext = keywordQueryContributorHelper.getSearchContext();
 
@@ -37,9 +37,8 @@ public class DataTypeKeywordQueryContributor implements KeywordQueryContributor 
 		queryHelper.addSearchLocalizedTerm(
 				booleanQuery, searchContext, IcecapDataTypeAttributes.DESCRIPTION, false);
 		queryHelper.addSearchTerm(booleanQuery, searchContext, "terms", false);
-		// queryHelper.addSearchTerm( booleanQuery, searchContext, Field.MODIFIED_DATE, false);
 		
-		Debug.printFooter("DataTypeKeywordQueryContributor");
+//		Debug.printFooter("DataTypeKeywordQueryContributor");
 		
 	}
 

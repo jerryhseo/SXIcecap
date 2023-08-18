@@ -35,14 +35,13 @@ public class DataTypeModelDocumentContributor implements ModelDocumentContributo
 	
 	@Override
 	public void contribute(Document document, DataType dataType) {
-			Debug.printHeader("DataTypeModelDocumentContributor");
+			//Debug.printHeader("DataTypeModelDocumentContributor");
 			
 			document.addKeyword(IcecapDataTypeAttributes.DATATYPE_ID, dataType.getPrimaryKey());
 			document.addDate(Field.MODIFIED_DATE, dataType.getModifiedDate());
 			document.addText(IcecapDataTypeAttributes.DATATYPE_NAME, dataType.getDataTypeName());
-			document.addLocalizedKeyword(IcecapDataTypeAttributes.DESCRIPTION, dataType.getDescriptionMap(), true);
+			document.addLocalizedText(IcecapDataTypeAttributes.DESCRIPTION, dataType.getDescriptionMap());
 			document.addLocalizedKeyword(IcecapDataTypeAttributes.DISPLAY_NAME, dataType.getDisplayNameMap(), true);
-			document.addKeyword(IcecapDataTypeAttributes.STATUS, dataType.getStatus());
 			
 			try {
 				JSONObject jsonDataStructure = _dataTypeLocalService.getDataTypeStructureJSONObject( dataType.getPrimaryKey() );
@@ -56,14 +55,14 @@ public class DataTypeModelDocumentContributor implements ModelDocumentContributo
 				
 				document.addText("terms", termNames.toString());
 				
-				System.out.println("Term names of "+dataType.getPrimaryKey());
+				//System.out.println("Term names of "+dataType.getPrimaryKey());
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			Debug.printFooter("DataTypeModelDocumentContributor");
+			//Debug.printFooter("DataTypeModelDocumentContributor");
 	}
 	
 	@Reference

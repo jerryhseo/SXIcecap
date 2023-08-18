@@ -621,8 +621,11 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	
 			for( int i=0; i<terms.length(); i++ ) {
 				JSONObject term = terms.getJSONObject(i);
+				if( term.getString(IcecapSSSTermAttributes.TERM_TYPE).equalsIgnoreCase(IcecapSSSTermTypes.GROUP)) {
+					continue;
+				}
 	
-				boolean definedValue = (term.has("searchable") && term.getBoolean("searchable") == true) ? true : false;
+				boolean definedValue = (term.has("searchable") && term.getBoolean("searchable") == false) ? false : true;
 				if( definedValue == searchable ) {
 					searchableFieldList.add(term.getString("termName"));
 				}

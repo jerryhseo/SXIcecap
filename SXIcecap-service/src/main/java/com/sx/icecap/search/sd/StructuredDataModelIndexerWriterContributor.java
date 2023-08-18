@@ -24,7 +24,7 @@ public class StructuredDataModelIndexerWriterContributor implements ModelIndexer
 			ModelIndexerWriterDocumentHelper modelIndexerWriterDocumentHelper) {
 		Debug.printHeader("StructuredDataModelIndexerWriterContributor");
 		batchIndexingActionable.setPerformActionMethod((StructuredData structuredData) -> {
-//			System.out.println("setPerformActionMethod....");
+			System.out.println("Structured Data ID: " + structuredData.getPrimaryKey() );
 			Document document = modelIndexerWriterDocumentHelper.getDocument(structuredData);
 
 			batchIndexingActionable.addDocuments(document);

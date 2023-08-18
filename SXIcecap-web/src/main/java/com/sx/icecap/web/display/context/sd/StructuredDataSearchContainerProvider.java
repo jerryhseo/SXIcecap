@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapSDSearchFields;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
@@ -107,14 +108,14 @@ public class StructuredDataSearchContainerProvider {
 		if ((_assetCategoryId != 0) || Validator.isNotNull(_assetTagName)) {
 			_trySearchThroughCategoryTree();
 		}
-		else if( ! _query.isEmpty() ) {
+		else if( Validator.isNotNull(  _query ) ) {
 			_tryAdvancedSearch();
 		}
-		else if( _keywords.isEmpty() ) {
-			_trySearchThroughService();
+		else if( Validator.isNotNull( _keywords ) ) {
+			_trySearchWithKeywords();
 		}
 		else {
-			_trySearchWithKeywords();
+			_trySearchThroughService();
 		}
 
 		return _searchContainer;
@@ -159,6 +160,7 @@ public class StructuredDataSearchContainerProvider {
 	}
 	
 	private boolean _tryAdvancedSearch() {
+		Debug.printHeader("_tryAdvancedSearch");
 		Indexer<StructuredData> indexer = IndexerRegistryUtil.getIndexer(StructuredData.class);
 
 		
@@ -239,6 +241,7 @@ public class StructuredDataSearchContainerProvider {
 			Collectors.toList()
 		);
 		*/
+		Debug.printFooter("_tryAdvancedSearch");
 		return true;
 	}
 	
@@ -295,7 +298,7 @@ public class StructuredDataSearchContainerProvider {
 	}
 	
 	private boolean _trySearchWithKeywords() {
-		
+		Debug.printHeader("_trySearchWithKeywords");
 		if( _keywords.isEmpty() ) {
 			return false;
 		}
@@ -343,11 +346,14 @@ public class StructuredDataSearchContainerProvider {
 		try {
 			hits = indexer.search(searchContext);
 		} catch (Exception e1) {
+			System.out.println("Search has some ploblem: " + e1.getMessage() );
 			_searchContainer.setTotal( 0 );
 			_searchContainer.setResults(entriesResults);
 			
 			return true;
 		}
+		
+		System.out.println("Search Result count: " + hits.getLength() );
 
 		_searchContainer.setTotal( hits.getLength() );
 
@@ -392,6 +398,7 @@ public class StructuredDataSearchContainerProvider {
 			Collectors.toList()
 		);
 		*/
+		Debug.printFooter("_trySearchWithKeywords");
 		return true;
 	}
 	

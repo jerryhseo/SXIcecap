@@ -22,6 +22,9 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
@@ -288,6 +291,21 @@ public class StructuredDataLocalServiceImpl
 		for( long structuredDataId : structuredDataIds ) {
 			this.removeStructuredData(structuredDataId);
 		}
+	}
+	
+	public JSONObject getStructuredDataJSON( long structuredDataId ) throws PortalException {
+		
+		StructuredData structuredData = super.getStructuredData(structuredDataId);
+		
+		JSONObject jsonStructuredData = null;
+		
+		try {
+			jsonStructuredData = JSONFactoryUtil.createJSONObject( structuredData.getStructuredData() );
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return jsonStructuredData;
 	}
 	
 	public List<StructuredData> getAllStructuredDatas(){

@@ -25,7 +25,7 @@ public class DataTypeModelIndexerWriterContributor implements ModelIndexerWriter
 	@Override
 	public void customize(BatchIndexingActionable batchIndexingActionable,
 			ModelIndexerWriterDocumentHelper modelIndexerWriterDocumentHelper) {
-		Debug.printHeader("DataTypeModelIndexerWriterContributor");
+		//Debug.printHeader("DataTypeModelIndexerWriterContributor");
 
 		batchIndexingActionable.setPerformActionMethod((DataType dataType) -> {
 			Document document = modelIndexerWriterDocumentHelper.getDocument(dataType);
@@ -33,7 +33,7 @@ public class DataTypeModelIndexerWriterContributor implements ModelIndexerWriter
 			batchIndexingActionable.addDocuments(document);
 		});
 		
-		Debug.printFooter("DataTypeModelIndexerWriterContributor");
+		//Debug.printFooter("DataTypeModelIndexerWriterContributor");
 	}
 
 	@Override

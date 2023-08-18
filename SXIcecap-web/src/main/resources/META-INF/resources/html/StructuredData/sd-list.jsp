@@ -42,9 +42,14 @@
 		text-align:center;
 	}
 	
+	.form-section {
+		background-color: rgba(230, 230, 230, 0.777) !important;
+	}
+	
 </style>
 
 <%
+
 	DataType dataType = (DataType)renderRequest.getAttribute(StationXWebKeys.DATATYPE);
 	List<String> abstractFieldList  = (List<String>)renderRequest.getAttribute(StationXWebKeys.ABSTRACT_FIELDS);
 
@@ -58,6 +63,7 @@
 							StationXConstants.VIEW_TYPE_TABLE);
 	
 	PortletRequest portletRequest = (PortletRequest)renderRequest.getAttribute("javax.portlet.request");
+	
 %>
 
 <portlet:renderURL var="editStructuredDataURL">
@@ -80,21 +86,30 @@
 </portlet:renderURL>
 
 <aui:container cssClass="SXIcecap-web">
-		<aui:row cssClass="form-section">
+		<aui:row>
+			<aui:col md="12">
+				<aui:a href="<%= backURL %>" label="previous-page" style="width:20%;"></aui:a>
+				<hr style="height:1px;background-color:#ddd;border-top: solid #aaa 2px;border-bottom:solid #eee;margin-top:5px;">
+			</aui:col>
+		</aui:row>
+		<aui:row cssClass="form-section datatype-section">
 			<aui:col md="12">
 					<aui:fieldset-group markupView="lexicon">
 						<aui:fieldset label="datatype">
-							<span style="display:table-cell; width:10%;">
-							<aui:input name="datatype-id" disabled="true" value="<%= dataType.getPrimaryKey() %>"></aui:input>
+							<span style="display:inline-block; width:10%;">
+								<aui:input name="datatype-id" disabled="true" value="<%= dataType.getPrimaryKey() %>"></aui:input>
 							</span>
-							<span style="display:table-cell; width:40%;">
-							<aui:input name="datatype-name" disabled="true" value="<%= dataType.getDataTypeName() %>"></aui:input>
+							<span style="display:inline-block; width:40%;">
+								<aui:input name="datatype-name" disabled="true" value="<%= dataType.getDataTypeName() %>"></aui:input>
 							</span>
-							<span style="display:table-cell; width:10%;">
-							<aui:input name="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
+							<span style="display:inline-block; width:10%;">
+								<aui:input name="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
 							</span>
-							<span style="display:table-cell; width:10%;">
-							<aui:input name="datatype-extension" disabled="true" value="<%= dataType.getExtension() %>"></aui:input>
+							<span style="display:inline-block; width:10%;">
+								<aui:input name="datatype-extension" disabled="true" value="<%= dataType.getExtension() %>"></aui:input>
+							</span>
+							<span style="display: inline-block;width:20%;float:right;">
+								<a class="btn" href="<%= backURL %>" style="float:right;"><liferay-ui:message key="view-datatype-list"/></a>
 							</span>
 						</aui:fieldset>
 					</aui:fieldset-group>
@@ -118,119 +133,118 @@
 					name="<%= structuredDataManagementToolbarDisplayContext.getSearchFormName() %>">
 			<aui:input name="cmd" type="hidden"></aui:input>
 			<aui:input name="redirect" type="hidden"></aui:input>
+		</aui:form>
 		
-			<liferay-ui:search-container 
-				 		id="<%= structuredDataManagementToolbarDisplayContext.getSearchContainerId() %>"
-					    searchContainer="<%= structuredDataManagementToolbarDisplayContext.getSearchContainer() %>" >
-		    
-		        <liferay-ui:search-container-row
-							className="com.sx.icecap.model.StructuredData" 
-							keyProperty="structuredDataId" 
-							modelVar="structuredData">
-					<%
-						Map<String, Object> rowData = new HashMap<>();
+		<liferay-ui:search-container 
+			 		id="<%= structuredDataManagementToolbarDisplayContext.getSearchContainerId() %>"
+				    searchContainer="<%= structuredDataManagementToolbarDisplayContext.getSearchContainer() %>" >
+	    
+	        <liferay-ui:search-container-row
+						className="com.sx.icecap.model.StructuredData" 
+						keyProperty="structuredDataId" 
+						modelVar="structuredData">
+				<%
+					Map<String, Object> rowData = new HashMap<>();
 
-						row.setData(rowData);
+					row.setData(rowData);
 
-						PortletURL rowURL = renderResponse.createRenderURL();
+					PortletURL rowURL = renderResponse.createRenderURL();
 
-						rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_FULL_CONTENT);
-						rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
-						rowURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredData.getPrimaryKey()));
-						
-						JSONObject jsonData = JSONFactoryUtil.createJSONObject( structuredData.getStructuredData() );
-						
-						String abstractData = "";
-						
-						Iterator<String> keys = jsonData.keys();
-						for( String field : abstractFieldList ){ 
-							if( jsonData.has(field) ){
-								abstractData +=  field + ":" + jsonData.getString(field) ;
-								if(  abstractFieldList.indexOf(field) < (abstractFieldList.size() - 1) ){
-									abstractData += ", ";
-								}
+					rowURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_STRUCTURED_DATA_FULL_CONTENT);
+					rowURL.setParameter(StationXWebKeys.REDIRECT, currentURL);
+					rowURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredData.getPrimaryKey()));
+					
+					JSONObject jsonData = JSONFactoryUtil.createJSONObject( structuredData.getStructuredData() );
+					
+					String abstractData = "";
+					
+					Iterator<String> keys = jsonData.keys();
+					for( String field : abstractFieldList ){ 
+						if( jsonData.has(field) ){
+							abstractData +=  field + ":" + jsonData.getString(field) ;
+							if(  abstractFieldList.indexOf(field) < (abstractFieldList.size() - 1) ){
+								abstractData += ", ";
 							}
 						}
-					%>
-					
-					<c:choose>
-						<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_CARDS) %>">
-							<%
-								row.setCssClass("lfr-asset-item col-md-3 col-sm-4 col-xs-6");
-								RowChecker rowChecker = searchContainer.getRowChecker();
-								if( Validator.isNull(rowChecker) ){
-									out.println("<h1>rowChecker is null...</h1>" );
-								}
-								/*
-								rowChecker.setData( rowData );
-								*/
-								StructuredDataVerticalCard dataTypeVerticalCard = new StructuredDataVerticalCard(
-										structuredData, 
-										renderRequest, 
-										renderResponse, 
-										rowChecker, 
-										rowURL.toString(),
-										structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()));
-							%>
-						</c:when>
-						<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_LIST) %>">
-							<liferay-ui:search-container-column-text href="<%=rowURL.toString() %>" >
-								<h5 class="€œtext-default"€><%= structuredData.getStructuredDataId() %></h5>
-							</liferay-ui:search-container-column-text>
-							<liferay-ui:search-container-column-text >
-	  								<%= abstractData %>
-							</liferay-ui:search-container-column-text>
-							<liferay-ui:search-container-column-text>
-								<clay:dropdown-actions
-									dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()) %>"
-								/>
-							</liferay-ui:search-container-column-text>
-						</c:when>
-						<c:otherwise>
-							<%
-								row.setCssClass("col-md-12 "+row.getCssClass() );
-							%>
-							<liferay-ui:search-container-column-text
-							 			name="id"
-							 			href="<%=rowURL.toString() %>"
-							 			cssClass="id-width"
-										value="<%= String.valueOf(structuredData.getStructuredDataId()) %>"/>
-							<liferay-ui:search-container-column-text
-							 			name="abstract"
-							 			href="<%=rowURL.toString() %>"
-							 			cssClass="abstract-width"
-										value="<%= abstractData %>"/>
-										
-							<liferay-ui:search-container-column-status 
-										name="status"
-										cssClass="status-width"
-										property="status" />
-			
-							<liferay-ui:search-container-column-text 
-										name="actions"
-										cssClass="actions-width">
-								<clay:dropdown-actions
-									dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()) %>"
-								/>
-							</liferay-ui:search-container-column-text>
-						</c:otherwise>
-					</c:choose>
-				</liferay-ui:search-container-row>
+					}
+				%>
 				
 				<c:choose>
-					<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_TABLE) %>">
-						<liferay-ui:search-iterator
-								markupView="lexicon" />
+					<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_CARDS) %>">
+						<%
+							row.setCssClass("lfr-asset-item col-md-3 col-sm-4 col-xs-6");
+							RowChecker rowChecker = searchContainer.getRowChecker();
+							if( Validator.isNull(rowChecker) ){
+								out.println("<h1>rowChecker is null...</h1>" );
+							}
+							/*
+							rowChecker.setData( rowData );
+							*/
+							StructuredDataVerticalCard dataTypeVerticalCard = new StructuredDataVerticalCard(
+									structuredData, 
+									renderRequest, 
+									renderResponse, 
+									rowChecker, 
+									rowURL.toString(),
+									structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()));
+						%>
+					</c:when>
+					<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_LIST) %>">
+						<liferay-ui:search-container-column-text href="<%=rowURL.toString() %>" >
+							<h5 class="€œtext-default"€><%= structuredData.getStructuredDataId() %></h5>
+						</liferay-ui:search-container-column-text>
+						<liferay-ui:search-container-column-text >
+  								<%= abstractData %>
+						</liferay-ui:search-container-column-text>
+						<liferay-ui:search-container-column-text>
+							<clay:dropdown-actions
+								dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()) %>"
+							/>
+						</liferay-ui:search-container-column-text>
 					</c:when>
 					<c:otherwise>
-						<liferay-ui:search-iterator
-								displayStyle = "<%= viewStyle %>"
-								markupView="lexicon" />
+						<%
+							row.setCssClass("col-md-12 "+row.getCssClass() );
+						%>
+						<liferay-ui:search-container-column-text
+						 			name="id"
+						 			href="<%=rowURL.toString() %>"
+						 			cssClass="id-width"
+									value="<%= String.valueOf(structuredData.getStructuredDataId()) %>"/>
+						<liferay-ui:search-container-column-text
+						 			name="abstract"
+						 			href="<%=rowURL.toString() %>"
+						 			cssClass="abstract-width"
+									value="<%= abstractData %>"/>
+									
+						<liferay-ui:search-container-column-status 
+									name="status"
+									cssClass="status-width"
+									property="status" />
+		
+						<liferay-ui:search-container-column-text 
+									name="actions"
+									cssClass="actions-width">
+							<clay:dropdown-actions
+								dropdownItems="<%= structuredDataManagementToolbarDisplayContext.getItemActionDropdownItems(portletRequest, structuredData.getPrimaryKey()) %>"
+							/>
+						</liferay-ui:search-container-column-text>
 					</c:otherwise>
 				</c:choose>
-			</liferay-ui:search-container>
+			</liferay-ui:search-container-row>
 			
-		</aui:form>
+			<c:choose>
+				<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_TABLE) %>">
+					<liferay-ui:search-iterator
+							markupView="lexicon" />
+				</c:when>
+				<c:otherwise>
+					<liferay-ui:search-iterator
+							displayStyle = "<%= viewStyle %>"
+							markupView="lexicon" />
+				</c:otherwise>
+			</c:choose>
+		</liferay-ui:search-container>
 	</div>
 </div>
 

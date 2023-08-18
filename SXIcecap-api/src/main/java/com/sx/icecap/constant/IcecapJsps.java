@@ -23,6 +23,7 @@ public class IcecapJsps {
 
 	public static final String STRUCTURED_DATA_TERMPLATE_PATH = "/html/StructuredData/";
 	public static final String STRUCTURED_DATA_LIST_VIEW = "/html/StructuredData/sd-list.jsp";
+	public static final String STRUCTURED_DATA_FULL_CONTENT_VIEW = "/html/StructuredData/sd-full-content.jsp";
 	public static final String STRUCTURED_DATA_ADVANCED_SEARCH_VIEW = "/html/StructuredData/sd-advanced-search.jsp";
 	public static final String STRUCTURED_DATA_EDIT = "/html/StructuredData/sd-edit.jsp";
 

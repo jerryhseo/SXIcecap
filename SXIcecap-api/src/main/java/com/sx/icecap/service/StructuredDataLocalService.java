@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -319,6 +320,10 @@ public interface StructuredDataLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public StructuredData getStructuredDataByUuidAndGroupId(
 			String uuid, long groupId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getStructuredDataJSON(long structuredDataId)
 		throws PortalException;
 
 	/**

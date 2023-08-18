@@ -38,7 +38,7 @@ public class StructuredDataBatchReindexerImpl implements StructuredDataBatchRein
 
 		batchIndexingActionable.performActions();
 		
-Debug.printFooter("StructuredDataBatchReindexerImpl");
+		Debug.printFooter("StructuredDataBatchReindexerImpl");
 	}
 
 	@Reference(

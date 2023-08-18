@@ -26,8 +26,8 @@
 
 <%
 	String currentURL = themeDisplay.getURLCurrent();
-	String backURL = ParamUtil.getString(renderRequest, StationXWebKeys.BACK_URL, "");
-	String redirect = ParamUtil.getString(renderRequest, StationXWebKeys.REDIRECT, "");
+	String backURL = ParamUtil.getString(renderRequest, StationXWebKeys.BACK_URL, "/");
+	String redirect = ParamUtil.getString(renderRequest, StationXWebKeys.REDIRECT, "/");
 	
 	Locale defaultLocale = PortalUtil.getSiteDefaultLocale(themeDisplay.getScopeGroupId());
 	
