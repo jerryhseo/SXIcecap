@@ -12,6 +12,7 @@ import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebKeys;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
@@ -46,13 +47,12 @@ public class StructuredDataAdvancedSearchRenderCommand implements MVCRenderComma
 
 	@Override
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
-		
 		long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID, 0);
 		
 		if( dataTypeId <= 0 ) {
 			throw new PortletException( "A Data type ID is needed to edit or add a structured data..." );
 		}
-
+		
 		DataType dataType = null;
 		JSONObject dataStructure = null;
 		try {

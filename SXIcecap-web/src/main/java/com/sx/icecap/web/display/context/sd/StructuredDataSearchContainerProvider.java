@@ -57,7 +57,7 @@ public class StructuredDataSearchContainerProvider {
 	private PortletURL _searchURL = null;
 	private StructuredDataLocalService _structuredDataLocalService = null;
 	private ThemeDisplay _themeDisplay = null;
-	private String _query = "";
+	private String _advancedQuery = "";
 	long _assetCategoryId = 0; 
 	String _assetTagName = "";
 	String _keywords = "";
@@ -70,7 +70,7 @@ public class StructuredDataSearchContainerProvider {
 
 	public StructuredDataSearchContainerProvider( 
 			DataType dataType,
-			String strQuery,
+			String strAdvancedQuery,
 			RenderRequest renderRequest,
 			RenderResponse renderResponse,
 			String searchContainerId,
@@ -84,7 +84,7 @@ public class StructuredDataSearchContainerProvider {
 			this._structuredDataLocalService = structuredDataLocalService;
 			this._themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 			this._keywords = ParamUtil.getString(renderRequest, StationXWebKeys.KEYWORDS, "");
-			this._query = strQuery;
+			this._advancedQuery = strAdvancedQuery;
 			System.out.println("Keywords: " + this._keywords);
 			
 			_assetCategoryId = ParamUtil.getLong(renderRequest, StationXWebKeys.CATEGORY_ID);
@@ -108,7 +108,7 @@ public class StructuredDataSearchContainerProvider {
 		if ((_assetCategoryId != 0) || Validator.isNotNull(_assetTagName)) {
 			_trySearchThroughCategoryTree();
 		}
-		else if( Validator.isNotNull(  _query ) ) {
+		else if( Validator.isNotNull(  _advancedQuery ) ) {
 			_tryAdvancedSearch();
 		}
 		else if( Validator.isNotNull( _keywords ) ) {

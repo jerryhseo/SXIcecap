@@ -92,11 +92,12 @@ $(document).ready(function(){
 	
 	$('#<portlet:namespace/>btnSearch').click(function(event){
 		console.log('submit: ', dataStructure );
-		let query = dataStructure.getSearchQuery();
+		let query = dataStructure.getSearchQueryString();
 		
-		$('#<portlet:namespace/>structuredDataQuery').val( JSON.stringify( query) );
+		console.log('searchQuery: ', query );
+		$('#<portlet:namespace/>structuredDataQuery').val(  query );
 		
-		//$('#<portlet:namespace/>fm').submit();
+		$('#<portlet:namespace/>fm').submit();
 	});
 	
 	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_KEYWORD_CHANGED, function(evt){
@@ -116,6 +117,20 @@ $(document).ready(function(){
 	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_TO_NUMERIC_CHANGED, function(evt){
 		let eventData = evt.sxeventData;
 		console.log( 'SD_SEARCH_TO_NUMERIC_CHANGED ' , eventData );
+		
+		
+	});
+	
+	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_FROM_DATE_CHANGED, function(evt){
+		let eventData = evt.sxeventData;
+		console.log( 'SD_SEARCH_FROM_DATE_CHANGED ' , eventData );
+		
+		
+	});
+	
+	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_TO_DATE_CHANGED, function(evt){
+		let eventData = evt.sxeventData;
+		console.log( 'SD_SEARCH_TO_DATE_CHANGED ' , eventData );
 		
 		
 	});

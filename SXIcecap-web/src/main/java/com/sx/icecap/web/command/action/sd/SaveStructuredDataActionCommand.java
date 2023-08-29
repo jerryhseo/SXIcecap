@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
+import com.sx.debug.Debug;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapMVCCommands;
@@ -66,7 +67,8 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 	@Override
 	public void doProcessAction(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 		
-		System.out.println("SaveStructuredDataActionCommand");
+		Debug.printHeader("SaveStructuredDataActionCommand");
+		
 		String cmd = ParamUtil.getString(actionRequest, StationXWebKeys.CMD);
 		System.out.println("cmd: " + cmd);
 		
@@ -145,6 +147,7 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 			jsonStructuredData.put(termName, jsonFile);
 			
 			System.out.println(jsonStructuredData.toString(4));
+			
 		}
 		
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(StructuredData.class.getName(), actionRequest);
@@ -169,6 +172,8 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 		renderURL.setParameter(StationXWebKeys.BACK_URL, backURL );
 		
 		actionResponse.sendRedirect(renderURL.toString());
+		
+		Debug.printFooter("SaveStructuredDataActionCommand");
 	}
 	
 	@Reference
