@@ -101,7 +101,6 @@ $(document).ready(function(){
 	
 	let dataStructure = SX.newDataStructure(  jsonDataStructure) ;
 	if( <%= cmd.equalsIgnoreCase("update") %> === true ){
-		console.log( 'Called update process....');
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
 	}
 	
@@ -125,8 +124,8 @@ $(document).ready(function(){
 		}
 		
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
-		console.log( 'Changed Term Value: ' + eventData.term.value);
-		console.log("Data Structure after value changed... ", dataStructure.terms);
+		console.log( 'Changed Term Value: ', eventData.term.value);
+		console.log("Data Structure after value changed... ", term);
 	});
 });
 </script>

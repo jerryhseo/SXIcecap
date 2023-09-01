@@ -122,6 +122,7 @@ public class StructuredDataSearchContainerProvider {
 	}
 	
 	private void _trySearchThroughCategoryTree() throws PortalException {
+		Debug.printHeader("_trySearchThroughCategoryTree");
 		
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery(StructuredData.class.getName(), _searchContainer);
 
@@ -157,6 +158,8 @@ public class StructuredDataSearchContainerProvider {
 		 */
 		
 		_searchContainer.setResults(entriesResults);
+		
+		Debug.printFooter("_trySearchThroughCategoryTree");
 	}
 	
 	private boolean _tryAdvancedSearch() {
@@ -193,7 +196,9 @@ public class StructuredDataSearchContainerProvider {
 		Hits hits = null;
 		try {
 			hits = indexer.search(searchContext);
+			System.out.println("Advanced Search Result Count: " + hits.getLength());
 		} catch (Exception e1) {
+			e1.printStackTrace();
 			_searchContainer.setTotal( 0 );
 			_searchContainer.setResults(entriesResults);
 			
@@ -215,6 +220,7 @@ public class StructuredDataSearchContainerProvider {
 				structuredData = _structuredDataLocalService.getStructuredData( structuredDataId );
 				entriesResults.add(structuredData);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
 			System.out.println( "==== Begin Document Fields - "+doc.get(Field.ENTRY_CLASS_PK) );
@@ -246,9 +252,10 @@ public class StructuredDataSearchContainerProvider {
 	}
 	
 	private void _trySearchThroughService () {
+		Debug.printHeader("_trySearchThroughService");
+		
 		List<StructuredData> entriesResults = null;
 
-		
 		if ( _navigation.equals(StationXConstants.NAVIGATION_MINE) ) {
 			_searchContainer.setTotal(
 					_structuredDataLocalService.countStructuredDatasByDataTypeId_U_S(
@@ -295,6 +302,8 @@ public class StructuredDataSearchContainerProvider {
 		
 		System.out.println("Search Result: "+entriesResults.size());
 		_searchContainer.setResults(entriesResults);
+		
+		Debug.printFooter("_trySearchThroughService");
 	}
 	
 	private boolean _trySearchWithKeywords() {
@@ -316,6 +325,7 @@ public class StructuredDataSearchContainerProvider {
 		searchContext.setKeywords(_keywords);
 		searchContext.setLocale(_themeDisplay.getLocale());
 		
+		/*
 		System.out.println("Search Container Attributes.....");
 		Map<String, Serializable> attrs = searchContext.getAttributes();
 		Set<String> keySet = attrs.keySet();
@@ -326,6 +336,7 @@ public class StructuredDataSearchContainerProvider {
 			System.out.println(key + " - " + attrs.get(key) );
 		}
 		System.out.println("End of Search Container Attributes.....");
+		*/
 
 		if (!_navigation.equals(StationXConstants.NAVIGATION_MINE)) {
 			searchContext.setOwnerUserId(_themeDisplay.getUserId());
@@ -345,15 +356,14 @@ public class StructuredDataSearchContainerProvider {
 		Hits hits = null;
 		try {
 			hits = indexer.search(searchContext);
+			System.out.println("Keyword Search Result count: " + hits.getLength() );
 		} catch (Exception e1) {
-			System.out.println("Search has some ploblem: " + e1.getMessage() );
 			_searchContainer.setTotal( 0 );
 			_searchContainer.setResults(entriesResults);
 			
+			e1.printStackTrace();
 			return true;
 		}
-		
-		System.out.println("Search Result count: " + hits.getLength() );
 
 		_searchContainer.setTotal( hits.getLength() );
 
@@ -370,8 +380,10 @@ public class StructuredDataSearchContainerProvider {
 				structuredData = _structuredDataLocalService.getStructuredData( structuredDataId );
 				entriesResults.add(structuredData);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
+			/*
 			System.out.println( "==== Begin Document Fields in SD search container - "+doc.get(Field.ENTRY_CLASS_PK) );
 			
 			Map<String, Field> fields = doc.getFields();
@@ -379,6 +391,7 @@ public class StructuredDataSearchContainerProvider {
 				System.out.println(key + ": (" + field.getName() + "-"+ field.getValue());
 			});
 			System.out.println( "==== End Document Fields" );
+			*/
 		}
 		
 		_searchContainer.setResults(entriesResults);
