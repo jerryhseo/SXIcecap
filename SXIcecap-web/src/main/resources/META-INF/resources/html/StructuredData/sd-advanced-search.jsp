@@ -109,7 +109,7 @@
 		<aui:col md="7"   cssClass="show-border" id="resultSection">
 			<aui:container>
 				<aui:row>
-					<aui:col></aui:col>
+					<aui:col><span  id="<portlet:namespace/>totalCount" style="float:right;"></span></aui:col>
 				</aui:row>
 			</aui:container>
 		</aui:col>
@@ -305,6 +305,7 @@ $(document).ready(function(){
 		
 		let results = andSearchBetweenFields( resultRows.searchFields );
 		
+		$('#<portlet:namespace/>totalCount').text( results.length + ' ' + Liferay.Language.get('found') );
 		displayHittedRows( results );
 	};
 	
@@ -336,6 +337,8 @@ $(document).ready(function(){
 		addSearchField( fieldName, rangeSearchResults );
 		
 		let results = andSearchBetweenFields( resultRows.searchFields );
+		
+		$('#<portlet:namespace/>totalCount').text( results.length + ' ' + Liferay.Language.get('found') );
 		
 		displayHittedRows( results );
 	};
