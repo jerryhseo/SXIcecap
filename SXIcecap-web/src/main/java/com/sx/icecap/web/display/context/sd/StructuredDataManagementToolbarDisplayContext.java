@@ -6,6 +6,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownGroupItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -157,6 +158,15 @@ public class StructuredDataManagementToolbarDisplayContext
 				};
 		
 		return menu;
+	}
+	
+	@Override
+	public String getClearResultsURL() {
+//		Debug.printHeader("DataTypeManagementToolbarDisplayContext.getClearResultsURL()");
+		PortletURL clearResultsURL = getPortletURL();
+		clearResultsURL.setParameter(StationXWebKeys.KEYWORDS, StringPool.BLANK);
+//		Debug.printFooter("DataTypeManagementToolbarDisplayContext.getClearResultsURL()");
+		return clearResultsURL.toString();
 	}
 	
 	@Override

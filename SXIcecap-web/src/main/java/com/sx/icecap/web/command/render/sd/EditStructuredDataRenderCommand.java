@@ -85,13 +85,13 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 			throw new PortletException("Cannot find the data type: " + dataTypeId);
 		}
 		
-		String dataStructure = _dataTypeLocalService.getDataTypeStructure( dataTypeId ); 
 		
 		JSONObject jsonData = null;
 		try {
+			String dataStructure = _dataTypeLocalService.getDataTypeStructure( dataTypeId ); 
 			jsonData = JSONFactoryUtil.createJSONObject( dataStructure );
 		} catch (Exception e) {
-			throw new PortletException("Cannot create JSONObject: " + dataStructure);
+			throw new PortletException("Cannot create JSONObject: ");
 		}
 		
 		if( structuredDataId > 0 ) {
@@ -130,7 +130,13 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 			JSONObject term = terms.getJSONObject(i);
 			String termName = term.getString("termName");
 			if( keySet.contains( termName ) ) {
-				term.put("value",jsonData.getString(termName));
+				String termType = term.getString("termType");
+				if( termType.equalsIgnoreCase("List") ) {
+					term.put("value", jsonData.getJSONArray(termName) );
+				}
+				else {
+					term.put("value",jsonData.getString(termName));
+				}
 			}
 		}
 		

@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -524,21 +525,30 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		return orderByComparator;
 	}
 	
-	public String getDataTypeStructure( long dataTypeId ){
-		try {
+	public String getDataTypeStructure( long dataTypeId ) throws NoSuchDataTypeStructureException{
 			return super.dataTypeStructurePersistence.findByPrimaryKey(dataTypeId).getStructure();
-		} catch (NoSuchDataTypeStructureException e) {
-			return "";
-		}
 	}
 	
+	/**
+	 * Get data structure as a JSON object.
+	 * 
+	 *  @return
+	 *  	null,	if the data type has no structure
+	 *  	JSONObject, if has a proper structure.
+	 */
+	
 	public JSONObject getDataTypeStructureJSONObject( long dataTypeId ) throws JSONException{
-		String dataStructureString = getDataTypeStructure( dataTypeId );
+		String dataStructureString = "";
+		
+		try {
+			dataStructureString = getDataTypeStructure( dataTypeId );
+		} catch (NoSuchDataTypeStructureException e) {
+			dataStructureString = "";
+		}
 		
 		JSONObject jsonObject = null;
 		if( !dataStructureString.isEmpty() ) {
-				jsonObject = JSONFactoryUtil.createJSONObject(
-						getDataTypeStructure( dataTypeId ) );
+				jsonObject = JSONFactoryUtil.createJSONObject( dataStructureString );
 		}
 		
 		return jsonObject;
@@ -588,6 +598,116 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	}
 	public List<StructuredData> getStructuredDatas( long dataTypeId, int start, int end ){
 		return super.structuredDataPersistence.findByDataTypeId(dataTypeId, start, end);
+	}
+	
+	public List<StructuredData> performAdvancedSearchOnStructuredData( long dataTypeId, String advancedQuery, int start, int end ) throws JSONException{
+		
+		JSONObject dataStructure = this.getDataTypeStructureJSONObject(dataTypeId);
+		if( Validator.isNull(dataStructure) ) {
+			return null;
+		}
+		
+		List<StructuredData> results = new ArrayList<>();
+		
+		List<StructuredData> allData = getStructuredDatas(dataTypeId);
+		JSONObject jsonQuery = JSONFactoryUtil.createJSONObject(advancedQuery);
+		String fieldOperator = jsonQuery.getString("fieldOperator");
+		JSONObject jsonClauses = jsonQuery.getJSONObject("clauses");
+		
+		for( int i=0; i<allData.size(); i++ ) {
+			StructuredData data = allData.get(i);
+			String structuredData = data.getStructuredData();
+			JSONObject dataJson = JSONFactoryUtil.createJSONObject( structuredData );
+			
+			Iterator<String> fieldIter = jsonClauses.keys();
+			while( fieldIter.hasNext() ) {
+				String field = fieldIter.next();
+				
+				JSONObject clause = jsonClauses.getJSONObject(field);
+				
+				String inFieldOperator = clause.getString("operator");
+				boolean rangeSearch = clause.getBoolean("searchType");
+				
+				if( rangeSearch == true ) {
+					
+				}
+				else {
+					JSONArray keywords;
+				}
+			}
+		}
+		
+		
+		try {
+			JSONObject query = JSONFactoryUtil.createJSONObject(advancedQuery);
+			
+			JSONObject andQuery = null;
+			if( query.has("and") ) {
+				andQuery = query.getJSONObject("and");
+				_processAndQuery( allData, dataStructure, andQuery, start, end );
+			}
+			
+			JSONObject orQuery = null;
+			if( query.has("or") ) {
+				orQuery = query.getJSONObject("or");
+				_processOrQuery( allData, dataStructure, orQuery, start, end );
+			}
+			
+			boolean hit = false;
+			
+			Iterator<String> queryIter = query.keys();
+			while( queryIter.hasNext() ) {
+				String key = queryIter.next();
+				
+				String queryVal = query.getString(key);
+				
+				for( int i=0; i<allData.size(); i++ ) {
+					StructuredData structuredData = allData.get(i);
+					JSONObject data = JSONFactoryUtil.createJSONObject(structuredData.getStructuredData());
+					
+				}
+				
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	private List<StructuredData> _processAndQuery( List<StructuredData> dataList, JSONObject dataStructure, JSONObject query, int start, int end ) {
+		List<StructuredData> results = new ArrayList<>();
+		
+		int delta =end - start + 1;
+		int resultCount = 0;
+		
+		Iterator<String> queryIter = query.keys();
+		
+		List<StructuredData> qualifiedDataList = dataList;
+		
+		while( queryIter.hasNext() ) {
+			String field = queryIter.next();
+			
+			JSONObject fieldQuery = query.getJSONObject(field);
+			String operator = fieldQuery.getString("operator");
+			
+			if( operator.equalsIgnoreCase("and") ) {
+				
+			}
+			else {
+				
+			}
+		}
+		
+		return results;
+	}
+	
+	private List<StructuredData> _processOrQuery( List<StructuredData> dataList, 	JSONObject dataStructure, JSONObject andQuery, int start, int end ) {
+		List<StructuredData> results = new ArrayList<>();
+		
+		return results;
 	}
 	
 	public List<String> getAbstractFields( long dataTypeId, boolean abstractKey ) throws JSONException{
@@ -659,7 +779,12 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 
 	public JSONObject getStructuredDataWithValues( 
 			long dataTypeId, long structuredDataId ) throws JSONException {
-		String dataStructure = getDataTypeStructure( dataTypeId ); 
+		String dataStructure = "";
+		try {
+			dataStructure = getDataTypeStructure( dataTypeId );
+		} catch (NoSuchDataTypeStructureException e) {
+			return null;
+		} 
 		
 		StructuredData structuredData = 
 				super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
@@ -669,7 +794,12 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	
 	public JSONObject getStructuredDataWithValues( 
 			long dataTypeId, String structuredData ) throws JSONException {
-		String dataStructure = getDataTypeStructure( dataTypeId ); 
+		String dataStructure = "";
+		try {
+			dataStructure = getDataTypeStructure( dataTypeId );
+		} catch (NoSuchDataTypeStructureException e) {
+			return null;
+		} 
 		
 		return _fillDataStructureWithValues( dataStructure, structuredData );
 	}
@@ -682,11 +812,17 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		
 		JSONArray terms = jsonStructure.getJSONArray(IcecapDataTypeAttributes.TERMS);
 		
-		terms.forEach( term -> {
+		terms.forEach(  term -> {
 			JSONObject jsonTerm = (JSONObject)term;
 			if( valueKeys.contains( jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME) ) ){
-				jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
+				if( IcecapSSSTermTypes.LIST.equalsIgnoreCase( jsonTerm.getString(IcecapSSSTermAttributes.TERM_TYPE) ) ) {
+					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
+							jsonValues.getJSONArray(jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME)));
+				}
+				else {
+					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
 											jsonValues.getString(jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME)));
+				}
 			}
 		});
 		

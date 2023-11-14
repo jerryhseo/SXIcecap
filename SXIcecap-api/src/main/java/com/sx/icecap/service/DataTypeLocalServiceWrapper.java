@@ -591,10 +591,18 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
-	public String getDataTypeStructure(long dataTypeId) {
+	public String getDataTypeStructure(long dataTypeId)
+		throws com.sx.icecap.exception.NoSuchDataTypeStructureException {
+
 		return _dataTypeLocalService.getDataTypeStructure(dataTypeId);
 	}
 
+	/**
+	 * Get data structure as a JSON object.
+	 *
+	 * @return null,	if the data type has no structure
+	 JSONObject, if has a proper structure.
+	 */
 	@Override
 	public com.liferay.portal.kernel.json.JSONObject
 			getDataTypeStructureJSONObject(long dataTypeId)
@@ -730,6 +738,16 @@ public class DataTypeLocalServiceWrapper
 
 		return _dataTypeLocalService.parseStructuredData(
 			termDelimiter, valueDelimiter, structuredData);
+	}
+
+	@Override
+	public java.util.List<com.sx.icecap.model.StructuredData>
+			performAdvancedSearchOnStructuredData(
+				long dataTypeId, String advancedQuery, int start, int end)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return _dataTypeLocalService.performAdvancedSearchOnStructuredData(
+			dataTypeId, advancedQuery, start, end);
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package com.sx.icecap.web.command.render.sd;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -17,7 +15,6 @@ import com.sx.constant.StationXWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.DataTypeStructure;
-import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
 import com.sx.icecap.web.display.context.sd.StructuredDataManagementToolbarDisplayContext;
@@ -63,6 +60,7 @@ public class StructuredDataListRenderCommand implements MVCRenderCommand {
 
 	@Override
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
+		
 		System.out.println("StructuredDataListRenderCommand.render()");
 		String strAdvancedQuery = ParamUtil.getString(renderRequest, IcecapWebKeys.STRUCTURED_DATA_QUERY, "");
 		System.out.println("SD Advanced SearchQuery: " + strAdvancedQuery);

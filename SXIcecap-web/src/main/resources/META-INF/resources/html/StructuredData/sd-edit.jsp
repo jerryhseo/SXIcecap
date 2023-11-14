@@ -22,6 +22,9 @@
 <%@page import="com.sx.icecap.model.DataType"%>
 <%@ include file="../init.jsp" %>
 
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/samples/crf-data-samples-fixed.js"></script>
+
+
 <%
 	DataType dataType = (DataType)renderRequest.getAttribute(DataType.class.getName());
 	JSONObject structuredData = (JSONObject)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT);
@@ -42,6 +45,10 @@
 	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%=String.valueOf(dataType.getDataTypeId()) %>"/>
 	<portlet:param name="<%= IcecapWebKeys.STRUCTURED_DATA_ID %>" value="<%= structuredDataId %>"/>
 </portlet:actionURL>
+
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_STRUCTURED_DATA_ADD_SAMPLE %>" var="addSampleData">
+	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%=String.valueOf(dataType.getDataTypeId()) %>"/>
+</portlet:resourceURL>
 
 <aui:container cssClass="SXIcecap-web">
 	<aui:row cssClass="form-section">
@@ -83,6 +90,7 @@
 							<aui:button type="submit" name="update"></aui:button>
 						</c:otherwise>
 					</c:choose>
+					<aui:button name="addSamples" value="add-samples"></aui:button>
 					<aui:button name="delete" value="delete"></aui:button>
 				</aui:button-row>
 			</aui:form>
@@ -126,6 +134,45 @@ $(document).ready(function(){
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
 		console.log( 'Changed Term Value: ', eventData.term.value);
 		console.log("Data Structure after value changed... ", term);
+	});
+	
+	$('#<portlet:namespace/>addSamples').click( function(event){
+		crfSampleData.forEach( data =>{
+				$.ajax({
+					url: '<%=  addSampleData.toString() %>',
+					method: 'post',
+					dataType: 'text',
+					data: {
+						<portlet:namespace/>sampleData: JSON.stringify(data)
+					},
+					success: function( result ){
+						console.log( result );
+					}
+				});
+		});
+		/*
+		crfSampleData.forEach( data =>{
+			Object.keys( data ).forEach( key =>{
+				if( !data[key] ){
+					delete data[key];
+				}
+				else{
+					let term = dataStructure.getTermByName( key );
+					if( term.termType === "List" ){
+						if( term.displayStyle === 'select'){
+							data[key] = [data[key]];
+						}
+					}
+					else if( term.termType === 'Numeric'){
+						data[key] = Number(data[key]);
+					}
+					else if( term.termType === 'Date'){
+						data[key] = new Date(data[key]).getTime();
+					}
+				}
+			});
+		});
+		*/
 	});
 });
 </script>

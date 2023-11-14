@@ -71,19 +71,8 @@
     		name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
     		value="<%= IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT %>"/>
     <portlet:param 
-    		name="<%= StationXWebKeys.BACK_URL %>" 
+    		name="<%= StationXWebKeys.REDIRECT %>" 
     		value="<%= currentURL %>"/>
-	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
-</portlet:renderURL>
-
-<portlet:renderURL var="advancedSearchURL">
-	<portlet:param 
-    		name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
-    		value="<%= IcecapMVCCommands.RENDER_STRUCTURED_DATA_ADVANCED_SEARCH %>"/>
-    <portlet:param 
-    		name="<%= StationXWebKeys.BACK_URL %>" 
-    		value="<%= currentURL %>"/>
-	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:renderURL>
 
 <aui:container cssClass="SXIcecap-web">
@@ -118,20 +107,11 @@
 		</aui:row>
 </aui:container>
 
-<aui:container>
-	<aui:row>
-		<aui:col>
-	<a class="btn btn-primary" href="<%=editStructuredDataURL.toString() %>" style="width:50px; float:left;margin-left:50px;">
-		<svg class="lexicon-icon lexicon-icon-plus" focusable="false" role="presentation" viewBox="0 0 512 512">
-			<path class="lexicon-icon-outline" d="M479.82 224.002h-192.41v-191.91c0-17.6-14.4-32-32-32v0c-17.6 0-32 14.4-32 32v191.91h-191.41c-17.6 0-32 14.4-32 32v0c0 17.6 14.4 32 32 32h191.41v191.91c0 17.6 14.4 32 32 32v0c17.6 0 32-14.4 32-32v-191.909h192.41c17.6 0 32-14.4 32-32v0c0-17.6-14.4-32-32-32z"></path>
-		</svg>
-	</a>
-	<a href="<%= advancedSearchURL %>" class="btn btn-info" style="float:right;margin-right:50px;">Search Data </a>
-		</aui:col>
-	</aui:row>
-</aui:container>
-
-<div class="closed container-fluid container-fluid-max-xl sidenav-container sidenav-right" id="<portlet:namespace />structuredDataInfoPanelId" style="margin-top:10px;">
+<clay:management-toolbar
+	displayContext="<%= structuredDataManagementToolbarDisplayContext %>"
+/>
+	
+<div class="closed container-fluid container-fluid-max-xl sidenav-container sidenav-right" id="<portlet:namespace />structuredDataInfoPanelId">
 	<liferay-frontend:sidebar-panel
 		searchContainerId="<%= structuredDataManagementToolbarDisplayContext.getSearchContainerId() %>"
 	>	</liferay-frontend:sidebar-panel>

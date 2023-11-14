@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 import com.sx.icecap.exception.NoSuchDataTypeException;
+import com.sx.icecap.exception.NoSuchDataTypeStructureException;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
 
@@ -411,8 +412,15 @@ public interface DataTypeLocalService
 	public int getDataTypesCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getDataTypeStructure(long dataTypeId);
+	public String getDataTypeStructure(long dataTypeId)
+		throws NoSuchDataTypeStructureException;
 
+	/**
+	 * Get data structure as a JSON object.
+	 *
+	 * @return null,	if the data type has no structure
+	 JSONObject, if has a proper structure.
+	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getDataTypeStructureJSONObject(long dataTypeId)
 		throws JSONException;
@@ -483,6 +491,10 @@ public interface DataTypeLocalService
 
 	public Map<String, Object> parseStructuredData(
 		String termDelimiter, String valueDelimiter, String structuredData);
+
+	public List<StructuredData> performAdvancedSearchOnStructuredData(
+			long dataTypeId, String advancedQuery, int start, int end)
+		throws JSONException;
 
 	@Indexable(type = IndexableType.DELETE)
 	public DataType removeDataType(long dataTypeId) throws PortalException;

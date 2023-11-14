@@ -19,6 +19,7 @@ import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.portlet.PortletException;
@@ -44,24 +45,51 @@ public class StructuredDataAdvancedSearchRenderCommand implements MVCRenderComma
 	@Reference
 	StructuredDataLocalService _structuredDataLocalService;
 	
-
 	@Override
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
-		long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID, 0);
+		System.out.println("StructuredDataListRenderCommand.render()");
+		String strAdvancedQuery = ParamUtil.getString(renderRequest, IcecapWebKeys.STRUCTURED_DATA_QUERY, "");
+		System.out.println("SD Advanced SearchQuery: " + strAdvancedQuery);
+		long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID );
 		
-		if( dataTypeId <= 0 ) {
-			throw new PortletException( "A Data type ID is needed to edit or add a structured data..." );
-		}
+		System.out.println("datatype id: "+dataTypeId);
+		String backURL = ParamUtil.getString(renderRequest, StationXWebKeys.BACK_URL );
+		System.out.println("backURL: "+backURL);
 		
-		DataType dataType = null;
-		JSONObject dataStructure = null;
 		try {
-			dataType = _dataTypeLocalService.getDataType( dataTypeId );
-			dataStructure = _dataTypeLocalService.getDataTypeStructureJSONObject(dataTypeId);
-			renderRequest.setAttribute(IcecapWebKeys.DATATYPE, dataType);
-			renderRequest.setAttribute(IcecapWebKeys.DATA_STRUCTURE, dataStructure);
+			DataType dataType = _dataTypeLocalService.getDataType( dataTypeId );
+			JSONObject dataStructure = _dataTypeLocalService.getDataTypeStructureJSONObject(dataTypeId);
+			
+			List<StructuredData> dataList = _dataTypeLocalService.getStructuredDatas(dataTypeId);
+			
+			JSONArray structuredDataList = JSONFactoryUtil.createJSONArray();
+			for( int i=0; i<dataList.size(); i++ ) {
+				StructuredData structuredData = dataList.get(i);
+				structuredDataList.put( JSONFactoryUtil.createJSONObject(structuredData.getStructuredData()) );
+			}
+			
+			List<String> abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId, true );
+			JSONArray jsonAbstractFields = JSONFactoryUtil.createJSONArray();
+			abstractFieldList.forEach(abstractField ->{
+				jsonAbstractFields.put(abstractField);
+			});
+			
+			renderRequest.setAttribute(
+					StationXWebKeys.DATATYPE, 
+					dataType );
+			renderRequest.setAttribute(
+					IcecapWebKeys.DATA_STRUCTURE, 
+					dataStructure );
+			renderRequest.setAttribute(
+					StationXWebKeys.ABSTRACT_FIELDS, 
+					jsonAbstractFields );
+			renderRequest.setAttribute(
+					"structuredDataList",
+					structuredDataList);
+			
 		} catch (Exception e) {
-			throw new PortletException( "Cannot find data type: " + dataTypeId );
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return IcecapJsps.STRUCTURED_DATA_ADVANCED_SEARCH_VIEW;

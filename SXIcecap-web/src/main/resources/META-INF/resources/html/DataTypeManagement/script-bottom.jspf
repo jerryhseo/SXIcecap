@@ -585,7 +585,13 @@ $(document).ready(function(){
 	});
 
 	$('#<portlet:namespace/>btnImportTerm').click(function(){
+		dataStructure = SX.newDataStructure(
+												crfSampleDataType, 
+												SX.SXConstants.FOR_PREVIEW, 
+												$('#<portlet:namespace/>previewPanel'));
 		
+		dataStructure.render(SX.SXConstants.FOR_PREVIEW);
+		console.log( 'Imported Data Type: ', dataStructure );
 	});
 	
 	SX.ListTerm.$BTN_NEW_OPTION.click(function(){

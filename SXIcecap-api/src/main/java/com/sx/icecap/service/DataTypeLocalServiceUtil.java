@@ -503,10 +503,18 @@ public class DataTypeLocalServiceUtil {
 		return getService().getDataTypesCount();
 	}
 
-	public static String getDataTypeStructure(long dataTypeId) {
+	public static String getDataTypeStructure(long dataTypeId)
+		throws com.sx.icecap.exception.NoSuchDataTypeStructureException {
+
 		return getService().getDataTypeStructure(dataTypeId);
 	}
 
+	/**
+	 * Get data structure as a JSON object.
+	 *
+	 * @return null,	if the data type has no structure
+	 JSONObject, if has a proper structure.
+	 */
 	public static com.liferay.portal.kernel.json.JSONObject
 			getDataTypeStructureJSONObject(long dataTypeId)
 		throws com.liferay.portal.kernel.json.JSONException {
@@ -621,6 +629,15 @@ public class DataTypeLocalServiceUtil {
 
 		return getService().parseStructuredData(
 			termDelimiter, valueDelimiter, structuredData);
+	}
+
+	public static List<com.sx.icecap.model.StructuredData>
+			performAdvancedSearchOnStructuredData(
+				long dataTypeId, String advancedQuery, int start, int end)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return getService().performAdvancedSearchOnStructuredData(
+			dataTypeId, advancedQuery, start, end);
 	}
 
 	public static DataType removeDataType(long dataTypeId)

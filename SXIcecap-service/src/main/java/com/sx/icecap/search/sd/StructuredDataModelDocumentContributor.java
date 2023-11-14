@@ -66,10 +66,10 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 		JSONObject data = null;
 		try {
 			data = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredData.getStructuredData());
-			System.out.println("dataSetId: " + dataSetId);
-			System.out.println("dataTypeId: " + dataTypeId);
-			System.out.println("structuredDataId: " + structuredDataId);
-			System.out.println("structuredData: " + structuredData.getStructuredData());
+//			System.out.println("dataSetId: " + dataSetId);
+//			System.out.println("dataTypeId: " + dataTypeId);
+//			System.out.println("structuredDataId: " + structuredDataId);
+//			System.out.println("structuredData: " + structuredData.getStructuredData());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,11 +78,9 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 //		String data = structuredData.getStructuredData();
 		
 		document.addDate(Field.MODIFIED_DATE, structuredData.getModifiedDate());
-		document.addKeyword(IcecapSDSearchFields.DATASET_ID, dataSetId);
+		document.addNumber(IcecapSDSearchFields.DATASET_ID, dataSetId);
 		document.addLocalizedKeyword(IcecapSDSearchFields.DATASET_NAME, structuredData.getDataSetDisplayNameMap(), true);
-		document.addKeyword(IcecapSDSearchFields.DATASET_ID, dataSetId);
-		document.addLocalizedKeyword(IcecapSDSearchFields.DATASET_NAME, structuredData.getDataSetDisplayNameMap(), true);
-		document.addKeyword(IcecapSDSearchFields.DATATYPE_ID, dataTypeId);
+		document.addNumber(IcecapSDSearchFields.DATATYPE_ID, dataTypeId);
 		document.addLocalizedKeyword(IcecapSDSearchFields.DATATYPE_NAME, structuredData.getDataTypeDisplayNameMap(), true);
 		
 		List<String> searchableFieldList = null;
@@ -97,6 +95,8 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 		JSONArray terms = data.getJSONArray("terms");
 		System.out.println("Document terms: " + searchableFieldList.toString() );
 		
+		StringBuilder content = new StringBuilder();
+		
 		for( int i=0; i< terms.length(); i++) {
 			JSONObject term = terms.getJSONObject(i);
 			if( searchableFieldList.contains(term.getString(IcecapSSSTermAttributes.TERM_NAME)) ) {
@@ -106,7 +106,7 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 				//Object value = term.get( IcecapSSSTermAttributes.VALUE);
 				
 				if( Validator.isNull(term.get( IcecapSSSTermAttributes.VALUE)) ) {
-					System.out.println("No value: " + fieldName);
+					//System.out.println("No value: " + fieldName);
 					continue;
 				}
 				
@@ -137,7 +137,9 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 					
 					document.addDate(fieldName, date);
 					System.out.println( fieldName + " is added as an index date: " + date.toString());
-					
+
+					content.append( date.getTime() );
+					content.append(StringPool.BLANK);
 				}
 				else if( fieldType.equalsIgnoreCase(IcecapSSSTermTypes.STRING) || 
 							 fieldType.equalsIgnoreCase(IcecapSSSTermTypes.FILE) ) {
@@ -150,32 +152,24 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 					document.addKeywords(Field.CONTENT, keywords);
 					*/
 					document.addText(fieldName, value);
-					document.addText(Field.CONTENT, value);
+					content.append( value );
+					content.append(StringPool.BLANK);
+
 					
 					System.out.println( fieldName + " is added as an index text: " + fieldType + " - " + value);
 				}
 				else if( fieldType.equalsIgnoreCase(IcecapSSSTermTypes.LIST) ) {
 					try {
-						System.out.println("List Term Indexing........" + term.toString(4) );
-					} catch (JSONException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					//JSONArray values = term.getJSONArray(IcecapSSSTermAttributes.VALUE);
-					/*
-					for( int j=0; j<jsonValues.length(); j++) {
-						document.addKeyword( fieldName, jsonValues.getString(j) );
-						document.addKeyword( Field.CONTENT, jsonValues.getString(j) );
-						System.out.println( fieldName + " is added as an index keyword: " + fieldType + " - " + jsonValues.getString(j) + ",  Value Mode: " + term.getString("valueMode") );
-					}
-					*/
-					try {
-						JSONArray values = JSONFactoryUtil.createJSONArray(term.getString(IcecapSSSTermAttributes.VALUE) );
-						//JSONArray values = term.getJSONArray(IcecapSSSTermAttributes.VALUE);
-						System.out.println("Value JSON: " + values.toString());
-						document.addText( fieldName, values.join(StringPool.BLANK) );
-						document.addText( Field.CONTENT, values.join(StringPool.BLANK) );
-						System.out.println( fieldName + " is added as an index keyword: " + fieldType + " - " + values.join(StringPool.BLANK)  );
+					JSONArray aryValues = JSONFactoryUtil.createJSONArray(term.getString(IcecapSSSTermAttributes.VALUE) );
+					
+						for( int j=0; j<aryValues.length(); j++) {
+							document.addText( fieldName, aryValues.getString(j) );
+//							document.addText( Field.CONTENT, aryValues.getString(j) );
+							content.append(aryValues.getString(j));
+							content.append(StringPool.BLANK);
+							System.out.println( fieldName + " is added as an index keyword: " + fieldType + " - " + aryValues.getString(j)  );
+						}
+					
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -183,21 +177,26 @@ public class StructuredDataModelDocumentContributor implements ModelDocumentCont
 				}
 				else if( fieldType.equalsIgnoreCase(IcecapSSSTermTypes.BOOLEAN) ) {
 					boolean value = term.getBoolean(IcecapSSSTermAttributes.VALUE);
-					document.addKeyword(fieldName, value );
-					document.addKeyword(Field.CONTENT, value );
+					document.addText(fieldName, String.valueOf(value) );
+					content.append( value);
+					content.append(StringPool.BLANK);
+
 					System.out.println( fieldName + " is added as an index keyword: " + fieldType + " - " + value);
 				}
 				else if( fieldType.equalsIgnoreCase(IcecapSSSTermTypes.NUMERIC) ){
 					double value = term.getDouble(IcecapSSSTermAttributes.VALUE);
 					document.addNumber( fieldName,  value );
-					document.addKeyword(Field.CONTENT, String.valueOf(value) );
+					content.append( value);
+					content.append(StringPool.BLANK);
 					System.out.println( fieldName + " is added as an index number: " + fieldType + " - " + value);
 				}
 				else {
 					System.out.println("Un-recognizable term type: " + fieldType);
 				}
 			}
-		}
+		} // end og for()
+		
+//		document.addText(Field.CONTENT, content.toString() );
 			
 		Debug.printFooter("StructuredDataModelDocumentContributor");
 	}

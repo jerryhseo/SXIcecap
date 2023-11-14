@@ -16,6 +16,8 @@
 <%@page import="com.sx.icecap.model.DataTypeStructure"%>
 <%@ include file="../init.jsp" %>
 
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/samples/crf-datatype-sample.js"></script>
+
 <%
 	long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID, 0);
 

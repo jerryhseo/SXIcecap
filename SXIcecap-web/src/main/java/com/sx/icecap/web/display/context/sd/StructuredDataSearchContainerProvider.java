@@ -7,6 +7,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
@@ -28,7 +29,9 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.sx.constant.StationXConstants;
 import com.sx.constant.StationXWebKeys;
 import com.sx.debug.Debug;
+import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapSDSearchFields;
+import com.sx.icecap.constant.IcecapWebKeys;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.StructuredDataLocalService;
@@ -64,6 +67,9 @@ public class StructuredDataSearchContainerProvider {
 	String _navigation = "";
 	String _orderByCol = "";
 	String _orderByType = "";
+	int _cur = 1;
+	int _delta = 20;
+	boolean _resetCur = false;
 	int _status = WorkflowConstants.STATUS_APPROVED;
 	DataType _dataType = null;
 
@@ -80,6 +86,7 @@ public class StructuredDataSearchContainerProvider {
 			this._renderRequest = renderRequest;
 			this._renderResponse = renderResponse;
 			this._searchContainerId = searchContainerId;
+			System.out.println("==========");
 			this._searchURL = _getSearchURL(); 
 			this._structuredDataLocalService = structuredDataLocalService;
 			this._themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
@@ -87,12 +94,21 @@ public class StructuredDataSearchContainerProvider {
 			this._advancedQuery = strAdvancedQuery;
 			System.out.println("Keywords: " + this._keywords);
 			
-			_assetCategoryId = ParamUtil.getLong(renderRequest, StationXWebKeys.CATEGORY_ID);
-			_assetTagName = ParamUtil.getString(renderRequest, StationXWebKeys.TAG);
-			_navigation = ParamUtil.getString( renderRequest, StationXWebKeys.NAVIGATION, StationXConstants.NAVIGATION_ALL);
-			_orderByCol = ParamUtil.getString( renderRequest, StationXWebKeys.ORDER_BY_COL, IcecapSDSearchFields.DATATYPE_NAME);
-			_orderByType = ParamUtil.getString( renderRequest, StationXWebKeys.ORDER_BY_TYPE, StationXConstants.ASC);
-			_status = ParamUtil.getInteger( _renderRequest, IcecapSDSearchFields.STATUS, WorkflowConstants.STATUS_APPROVED);
+			this._assetCategoryId = ParamUtil.getLong(renderRequest, StationXWebKeys.CATEGORY_ID);
+			this._assetTagName = ParamUtil.getString(renderRequest, StationXWebKeys.TAG);
+			this._navigation = ParamUtil.getString( renderRequest, StationXWebKeys.NAVIGATION, StationXConstants.NAVIGATION_ALL);
+			this._orderByCol = ParamUtil.getString( renderRequest, StationXWebKeys.ORDER_BY_COL, IcecapSDSearchFields.DATATYPE_NAME);
+			this._orderByType = ParamUtil.getString( renderRequest, StationXWebKeys.ORDER_BY_TYPE, StationXConstants.ASC);
+			
+			this._status = ParamUtil.getInteger( _renderRequest, IcecapSDSearchFields.STATUS, WorkflowConstants.STATUS_APPROVED);
+			
+			this._cur = ParamUtil.getInteger(renderRequest, "cur");
+			this._delta = ParamUtil.getInteger(renderRequest, "delta");
+			this._resetCur = ParamUtil.getBoolean(renderRequest, "resetCur");
+			
+			System.out.println("cur: " + this._cur);
+			System.out.println("delta: " + this._delta);
+			System.out.println("resetCur: " + this._resetCur);
 	}
 	
 	public SearchContainer<StructuredData> createSearchContainer() throws PortalException{
@@ -171,6 +187,7 @@ public class StructuredDataSearchContainerProvider {
 
 		searchContext.setAttribute( Field.STATUS, String.valueOf(_status) );
 		searchContext.setAttribute("pagenationType", "more");
+		searchContext.setAttribute("advancedQuery", _advancedQuery);
 		searchContext.setStart(_searchContainer.getStart());
 		searchContext.setEnd(_searchContainer.getEnd());
 		searchContext.setIncludeDiscussions(true);
@@ -191,12 +208,11 @@ public class StructuredDataSearchContainerProvider {
 		Sort sort = SortFactoryUtil.create(_orderByCol, Sort.STRING_TYPE, reverseSort);
 
 		searchContext.setSorts(sort);
-
+		
 		List<StructuredData> entriesResults = new ArrayList<StructuredData>();
 		Hits hits = null;
 		try {
 			hits = indexer.search(searchContext);
-			System.out.println("Advanced Search Result Count: " + hits.getLength());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			_searchContainer.setTotal( 0 );
@@ -205,14 +221,19 @@ public class StructuredDataSearchContainerProvider {
 			return true;
 		}
 
-		_searchContainer.setTotal( hits.getLength() );
-
-		List<SearchResult> searchResults =
-				SearchResultUtil.getSearchResults( hits, _themeDisplay.getLocale() );
+//		List<SearchResult> searchResults =
+//				SearchResultUtil.getSearchResults( hits, _themeDisplay.getLocale() );
 
 		// Imperative programming
-		Document[] docs = hits.getDocs();
+		_searchContainer.setTotal( hits.getLength() );
 		
+		Document[] docs = hits.getDocs();
+		System.out.println("Advanced Search Result Count: " + hits.getLength());
+//		System.out.println("Advanced Search Results Count: " + searchResults.size() );
+		
+		List<Document> reList = hits.toList();
+
+		int count = 1;
 		for( Document doc : docs ) {
 			long structuredDataId = GetterUtil.getLong( doc.get(Field.ENTRY_CLASS_PK) );
 			StructuredData structuredData = null;
@@ -223,7 +244,8 @@ public class StructuredDataSearchContainerProvider {
 				e.printStackTrace();
 			}
 			
-			System.out.println( "==== Begin Document Fields - "+doc.get(Field.ENTRY_CLASS_PK) );
+			System.out.println( "==== Begin Document Fields - "+doc.get(Field.ENTRY_CLASS_PK) + ", " + count );
+			count++;
 			
 			Map<String, Field> fields = doc.getFields();
 			fields.forEach((key, field) ->{
@@ -231,6 +253,8 @@ public class StructuredDataSearchContainerProvider {
 			});
 			System.out.println( "==== End Document Fields" );
 		}
+		
+		_searchContainer.setResults(entriesResults);
 		
 		/* Functional programming
 		 * 
@@ -417,9 +441,17 @@ public class StructuredDataSearchContainerProvider {
 	
 	
 	private PortletURL _getSearchURL() {
-		PortletURL searchURL = _renderResponse.createRenderURL(Copy.ALL);
+		// PortletURL searchURL = _renderResponse.createRenderURL();
+		PortletURL searchURL = PortletURLUtil.getCurrent(_renderRequest, _renderResponse);
+		searchURL.setParameter(StationXWebKeys.MVC_RENDER_COMMAND_NAME,
+					IcecapMVCCommands.RENDER_STRUCTURED_DATA_LIST);
+		searchURL.setParameter(IcecapWebKeys.DATATYPE_ID, String.valueOf(_dataType.getPrimaryKey()) );
+		/*
 		Map<String, String[]> params = searchURL.getParameterMap();
 		params.forEach( (k, v) -> System.out.println("key: "+k+", value: "+v));
+		*/
+		
+		System.out.println("_getSearchURL: " + searchURL.toString() );
 		
 		return searchURL;
 	}

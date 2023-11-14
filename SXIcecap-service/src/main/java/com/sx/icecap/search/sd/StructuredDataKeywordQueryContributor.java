@@ -22,6 +22,7 @@ import com.sx.icecap.constant.IcecapWebKeys;
 import com.sx.icecap.service.DataTypeLocalService;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,98 +48,36 @@ public class StructuredDataKeywordQueryContributor implements KeywordQueryContri
 			String keywords, 
 			BooleanQuery booleanQuery,
 			KeywordQueryContributorHelper keywordQueryContributorHelper) {
-		Debug.printHeader("StructuredDataKeywordQueryContributor: contribute");
+		Debug.printHeader("StructuredDataKeywordQueryContributor");
 		SearchContext searchContext = keywordQueryContributorHelper.getSearchContext();
 		String query = searchContext.getKeywords();
 		String advancedQuery = (String)searchContext.getAttribute(IcecapWebKeys.STRUCTURED_DATA_QUERY);
 		
 		System.out.println( "Boolean Query at Start: " + booleanQuery.toString() );
+//		System.out.println( "Search context Boolean Query at Start: " + booleanQuery.get );
 		
-		System.out.println("Query: " + query);
-		
-		Map<String, Serializable> attrs = searchContext.getAttributes();
-		attrs.forEach((String key, Serializable content ) ->{
-			System.out.println( key + " : " + content);
-		});
-		
+		System.out.println("Advanced Query: " + advancedQuery);
 		
 //		queryHelper.addSearchTerm( booleanQuery, searchContext, Field.CONTENT, true );
 		long dataTypeId = Validator.isNotNull(searchContext.getAttribute(IcecapDataTypeAttributes.DATATYPE_ID)) ?
 													Long.parseLong( searchContext.getAttribute(IcecapDataTypeAttributes.DATATYPE_ID).toString() ) : 0;
-		/**
-		 *  I added a MUST query field to restrain search.  
-		 */
-		if( dataTypeId > 0 ) {
-			booleanQuery.addRequiredTerm(IcecapDataTypeAttributes.DATATYPE_ID, dataTypeId);
-			queryHelper.addSearchTerm(booleanQuery, searchContext,IcecapDataTypeAttributes.DATATYPE_ID, false);
-		}
 		
-		if( Validator.isNotNull(advancedQuery) && !advancedQuery.isEmpty() ) {
-			//BooleanClause<Query> booleanClause = BooleanClauseFactoryUtil.;
-			
+													/*
+		if( dataTypeId > 0 ) {
+			//booleanQuery.addRequiredTerm(IcecapDataTypeAttributes.DATATYPE_ID, dataTypeId);
 			try {
-				JSONObject jsonAdvanceQuery = JSONFactoryUtil.createJSONObject(advancedQuery);
-				
-				JSONArray searchFields = jsonAdvanceQuery.getJSONArray("fields");
-				
-				for( int i=0; i<searchFields.length(); i++ ) {
-					JSONObject searchField = searchFields.getJSONObject(i);
-					System.out.println( searchField.toString(4) );
-					String fieldName = searchField.getString("fieldName");
-					String fieldType = searchField.getString("type");
-					if( fieldType.equalsIgnoreCase("String") ) {
-						JSONArray searchTerms = searchField.getJSONArray("keywords");
-						for(int j=0; j<searchTerms.length(); j++ ) {
-							booleanQuery.addTerm(fieldName, searchTerms.getString(j), true);
-							queryHelper.addSearchTerm(booleanQuery, searchContext, fieldName, true);
-						}
-					}
-					else if( fieldType.equalsIgnoreCase("Numeric") ) {
-						boolean isRange = searchField.has("range");
-						
-						if( isRange ) {
-							JSONObject jsonRange = searchField.getJSONObject("range");
-							long gte = jsonRange.getLong("gte");
-							long lte = jsonRange.getLong("lte");
-							
-							booleanQuery.addNumericRangeTerm(fieldName, gte, lte);
-						}
-						else {
-							JSONArray searchTerms = searchField.getJSONArray("keywords");
-							for(int j=0; j<searchTerms.length(); j++ ) {
-								searchTerms.forEach(value->{
-									booleanQuery.addExactTerm(fieldName, (Double)value );
-									queryHelper.addSearchTerm(booleanQuery, searchContext, fieldName, true);
-								});
-							}
-						}
-					}
-				}
-				
-			} catch (JSONException e) {
-				e.printStackTrace();
+//				booleanQuery.addTerm(IcecapDataTypeAttributes.DATATYPE_ID, dataTypeId);
+				queryHelper.addSearchTerm(booleanQuery, searchContext, IcecapDataTypeAttributes.DATATYPE_ID, false);
 			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			try {
-				List<String> searchableFields = _dataTypeLocalService.getSearchableFields(dataTypeId, true);
-				searchableFields.forEach( field -> {
-					queryHelper.addSearchTerm( booleanQuery, searchContext, field, false );
-					System.out.println("Search field: " + field );;
-				});
-			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			// queryHelper.addSearchTerm(booleanQuery, searchContext,IcecapDataTypeAttributes.DATATYPE_ID, false);
 		}
+		*/
 		
-		//queryHelper.addSearchLocalizedTerm( booleanQuery, searchContext, "dataTypeDisplayName", true);
-		//queryHelper.addSearchTerm( booleanQuery, searchContext, "status", false);
-		// queryHelper.addSearchTerm( booleanQuery, searchContext, Field.MODIFIED_DATE, false);
-		
-		//System.out.println( "Boolean Query: " + booleanQuery.toString() );
+		//queryHelper.addSearchTerm(booleanQuery, searchContext, IcecapDataTypeAttributes.DATATYPE_ID, false);
+		//queryHelper.addSearchTerm(booleanQuery, searchContext, Field.CONTENT, false);
 		
 		Debug.printFooter("StructuredDataKeywordQueryContributor");
 	}

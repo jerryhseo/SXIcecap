@@ -37,11 +37,11 @@ public class StructuredDataSearchRegistrar {
 										Field.CONTENT,
 										IcecapSDSearchFields.DATASET_ID,
 										IcecapSDSearchFields.DATATYPE_ID
-								);
+										);
 								
-								modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
-										IcecapSDSearchFields.DATASET_NAME,
-										IcecapSDSearchFields.DATATYPE_NAME );
+//								modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
+//										IcecapSDSearchFields.DATASET_NAME,
+//										IcecapSDSearchFields.DATATYPE_NAME );
 
 								modelSearchDefinition.setModelIndexWriteContributor(
 										_modelIndexWriterContributor);

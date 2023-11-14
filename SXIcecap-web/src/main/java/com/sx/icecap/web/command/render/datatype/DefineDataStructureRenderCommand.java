@@ -49,12 +49,13 @@ public class DefineDataStructureRenderCommand implements MVCRenderCommand {
 		}
 		
 		if( dataType.getHasDataStructure() ) {
-			String strDataStructure = _dataTypeLocalService.getDataTypeStructure(dataTypeId);
-
 			JSONObject jsonDataStructure = null;
-			try{
+			try {
+				String strDataStructure = _dataTypeLocalService.getDataTypeStructure(dataTypeId);
 				jsonDataStructure = JSONFactoryUtil.createJSONObject(strDataStructure);
-			} catch( JSONException e ) {
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 				throw new PortletException(e.getMessage());
 			}
 			
