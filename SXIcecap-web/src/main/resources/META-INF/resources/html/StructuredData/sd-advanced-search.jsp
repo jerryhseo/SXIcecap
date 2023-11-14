@@ -1,4 +1,5 @@
 
+<%@page import="com.sx.icecap.web.command.render.sd.EditStructuredDataRenderCommand"%>
 <%@page import="com.sx.icecap.constant.IcecapWebPortletKeys"%>
 <%@page import="com.sx.icecap.constant.IcecapWebKeys"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
@@ -62,9 +63,11 @@
     		name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
     		value="<%= IcecapMVCCommands.RENDER_STRUCTURED_DATA_EDIT %>"/>
     <portlet:param 
-    		name="<%= StationXWebKeys.REDIRECT %>" 
+    		name="<%= StationXWebKeys.BACK_URL %>" 
     		value="<%= currentURL %>"/>
 </portlet:renderURL>
+
+
 
 <aui:container cssClass="SXIcecap-web">
 		<aui:row>
@@ -104,10 +107,15 @@
 		aaaaa
 		</aui:col>
 		<aui:col md="7"   cssClass="show-border" id="resultSection">
+			<aui:container>
+				<aui:row>
+					<aui:col></aui:col>
+				</aui:row>
+			</aui:container>
 		</aui:col>
 	</aui:row>
 </aui:container>
-<script type="text/javascript">
+<aui:script use="liferay-util-window, liferay-portlet-url">
 $(document).ready(function(){
 	let SX = StationX(  '<portlet:namespace/>', 
 			'<%= defaultLocale.toString() %>',
@@ -120,46 +128,63 @@ $(document).ready(function(){
 	
 	
 	let structuredDataList = <%= structuredDataList.toJSONString() %>;
-	console.log( structuredDataList );
+	//console.log( structuredDataList );
 	
 	let $resultSection = $('#<portlet:namespace/>resultSection');
 	
 	let renderResult = function( structuredData, abstractFields ){
-		let $row = $('<div class="row">');
+		let data = structuredData.data;
+		let id = structuredData.id;
+		
+		let $row = $('<div class="row" style="padding-top:3px; padding-bottom:3px;">');
 		
 		let $col_1 = $('<div class="col-md-1 index-col" style:"text-align:right;">');
 		//$col_1.text( index );
 		$row.append( $col_1 );
 		
 		let $col_2 = $('<div class="col-md-10 abstract-col">');
+		let $href = $('<a>');
+		
+		
+		let renderUrl = Liferay.PortletURL.createURL('<%= editStructuredDataURL.toString() %>');
+		renderUrl.setParameter("structuredDataId", id);
+		renderUrl.setParameter("dataTypeId", "<%= dataType.getDataTypeId() %>");
+		
+		$href.prop('href', renderUrl.toString() );
+		$col_2.append( $href );
 		
 		let abstractContent = '';
 		
 		abstractFields.forEach( field => {
-			if( structuredData.hasOwnProperty( field ) ){
+			if( data.hasOwnProperty( field ) ){
 				let term = dataStructure.getTermByName( field );
-				console.log( 'term.termType: ' + term.termType );
 				if( term.termType === 'Date' ){
-					console.log( 'enableTime: ' + term.enableTime);
-					console.log( 'date: ' + term.toDateString() );
 					if( term.enableTime ){
-						abstractContent += field + ':' + SX.Util.toDateTimeString( structuredData[field] ) + ' ';
+						abstractContent += field + ':' + SX.Util.toDateTimeString( data[field] ) + ' ';
 					}
 					else{
-						abstractContent += field + ':' + SX.Util.toDateString( structuredData[field] ) + ' ';
+						abstractContent += field + ':' + SX.Util.toDateString( data[field] ) + ' ';
 					}
 				}
 				else{
-					abstractContent += field + ':' + structuredData[field] + ' ';
+					abstractContent += field + ':' + data[field] + ' ';
 				}
 			}
 		})
-		$col_2.text( abstractContent );
+		$href.text( abstractContent );
 		$row.append( $col_2 );
 		
+		/*
 		let $col_3 = $('<div class="col-md-1 action-col">');
-		$col_3.text( 'act' );
+		$col_3.html( '<div class="dropdown dropdown-action" id="mazj">' + 
+									'<button aria-expanded="false" aria-haspopup="true" class="dropdown-toggle btn btn-unstyled" data-onclick="toggle" data-onkeydown="null" ref="triggerButton" title="Actions" type="button">' +
+										'<svg class="lexicon-icon lexicon-icon-ellipsis-v" focusable="false" role="presentation" viewBox="0 0 512 512">'+
+											'<path class="lexicon-icon-outline ellipsis-v-dot-2" d="M319 255.5c0 35.346-28.654 64-64 64s-64-28.654-64-64c0-35.346 28.654-64 64-64s64 28.654 64 64z"></path>' +
+											'<path class="lexicon-icon-outline ellipsis-v-dot-3" d="M319 448c0 35.346-28.654 64-64 64s-64-28.654-64-64c0-35.346 28.654-64 64-64s64 28.654 64 64z"></path>' +
+											'<path class="lexicon-icon-outline ellipsis-v-dot-1" d="M319 64c0 35.346-28.654 64-64 64s-64-28.654-64-64c0-35.346 28.654-64 64-64s64 28.654 64 64z"></path>' +
+										'</svg></button></div>' );
 		$row.append( $col_3 );
+		*/
 		
 		return $row;
 	};
@@ -173,77 +198,12 @@ $(document).ready(function(){
 		$resultSection.append( $row );
 		
 		let row = new Object();
-		row.order = index++;
+		row.id = structuredData.id;
 		row.$rendered = $row;
-		row.data = structuredData;
+		row.data = structuredData.data;
 		
 		resultRows.rows.push( row );
 	});
-	
-	console.log( 'resultRows: ', resultRows);
-	
-	let hitList = new Array();
-
-	let removeSearchField = function( fieldName ){
-		delete row.hits[fieldName];
-		
-		let hitKeys = Object.keys(row.hits);
-		if( hitKeys.length === 0 ){
-			delete row.hits;
-			row.$rendered.hide();
-		}
-		else{
-			if( !row.$rendered.is(':visible') ){
-				row.$rendered.show();
-			}
-		}
-	}
-	
-	let setHitKeyword = function( row, fieldName, keyword ){
-		if( !keyword && !row.hits ){
-			row.$rendered.hide();
-			return;
-		}
-		
-		if( keyword ){
-			if( !row.hits ){
-				row.hits = new Object();
-			}
-			
-			row.hits[fieldName] = keyword;
-			row.$rendered.show();
-		}
-		else{
-			removeHitField( row, fieldName );
-		}
-	};
-	
-	
-	let getHittedRows = function(){
-		return resultRows.filter( row => {
-			return row.hits ? true:false;
-		});
-	};
-	
-	let redisplayOrders = function(){
-		let hittedRows = getHittedRows();
-		
-		for( let i=0; i<hittedRows.length; i++ ) {
-			hittedRows[i].$rendered.find( '.index-col' ).text( i+1 );
-			if( i % 2 ){
-				hittedRows[i].$rendered.css('background', '#fff');
-			}
-			else{
-				hittedRows[i].$rendered.css('background', '#eee');
-			}
-		}
-	};
-	
-	let isSearchField = function( fieldName ){
-		let found = resultRows.searchField.find(element=> element === fieldName);
-		
-		return found ? true : false;
-	};
 	
 	let addSearchField = function( fieldName, searchResults ){
 		if( !resultRows.searchFields ){
@@ -260,15 +220,9 @@ $(document).ready(function(){
 			resultRows.searchFields[ fieldName ] = searchResults;
 		}
 		
-		console.log( 'resultRows search fields: ', resultRows.searchFields );
-	};
-	
-	let isHittedRow = function( row ){
-		return rows.hits ? true : false;
 	};
 	
 	let orSearchWithinField = function( rowList, fieldName, keywords ){
-		console.log('keywords: ', keywords);
 		let results = rowList.filter( row => {
 			if( keywords ){
 				for( keyword of keywords ){
@@ -291,7 +245,6 @@ $(document).ready(function(){
 			return false;
 		});
 		
-		console.log('or result: ', results);
 		return results;
 	};
 	
@@ -301,8 +254,6 @@ $(document).ready(function(){
 				return mem_1 === mem_2;
 			});
 		});
-		
-		console.log('and resultList: ', resultList );
 		
 		return resultList;
 	}
@@ -323,7 +274,6 @@ $(document).ready(function(){
 			results = andOperation( results, searchFields[fields[i]]);
 		}
 		
-		console.log( 'and results: ', results );
 		return results;
 	};
 	
@@ -355,8 +305,6 @@ $(document).ready(function(){
 		
 		let results = andSearchBetweenFields( resultRows.searchFields );
 		
-		console.log( 'Final results: ', results );
-		
 		displayHittedRows( results );
 	};
 	
@@ -378,7 +326,6 @@ $(document).ready(function(){
 			return false;
 		});
 		
-		console.log('range search result: ', results);
 		return results;
 	};
 	
@@ -389,8 +336,6 @@ $(document).ready(function(){
 		addSearchField( fieldName, rangeSearchResults );
 		
 		let results = andSearchBetweenFields( resultRows.searchFields );
-		
-		console.log( 'Final results: ', results );
 		
 		displayHittedRows( results );
 	};
@@ -508,4 +453,4 @@ Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_C
 			});
 		});
 	});
-</script>
+</aui:script>

@@ -65,7 +65,10 @@ public class StructuredDataAdvancedSearchRenderCommand implements MVCRenderComma
 			JSONArray structuredDataList = JSONFactoryUtil.createJSONArray();
 			for( int i=0; i<dataList.size(); i++ ) {
 				StructuredData structuredData = dataList.get(i);
-				structuredDataList.put( JSONFactoryUtil.createJSONObject(structuredData.getStructuredData()) );
+				JSONObject jsonData = JSONFactoryUtil.createJSONObject();
+				jsonData.put("id", structuredData.getPrimaryKey() );
+				jsonData.put("data", JSONFactoryUtil.createJSONObject(structuredData.getStructuredData()) );
+				structuredDataList.put( jsonData );
 			}
 			
 			List<String> abstractFieldList = _dataTypeLocalService.getAbstractFields( dataTypeId, true );
