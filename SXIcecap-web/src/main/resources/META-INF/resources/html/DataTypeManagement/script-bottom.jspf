@@ -78,6 +78,15 @@ $(document).ready(function(){
 		dataStructure.highlightTerm( currentTerm );
 	}
 	
+	/*
+	let fileInputs = $( ':file');
+	console.log( 'fileInputs: ', fileInputs);
+	$(fileInputs[0]).FancyFileUpload({
+				params:{
+					action:'fileUploader'
+				}
+			});
+	*/
 	/**************************************************************
 	* Change Event handlers for form controls 
 	***************************************************************/
@@ -430,6 +439,11 @@ $(document).ready(function(){
 	SX.DateTerm.$DEFAULT_END_YEAR_FORM_CTRL.change(function(event){
 		currentTerm.getEndYearFormValue();
 		dataStructure.refreshTerm( currentTerm );
+	});
+	
+	$('#<portlet:namespace/>allowedExtensions').change(function(event){
+		currentTerm.setDirty( true );
+		console.log( 'allowed extensions: ', SX.FormUIUtil.getFormValue( 'allowedExtensions' ).split(',') ); 
 	});
 	
 

@@ -80,6 +80,7 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			String termType = term.getString("termType");
 			String termName = term.getString("termName");
 			String termVersion = term.getString("termVersion");
+			System.out.println("Term Version: " + termVersion);
 			if( termVersion.isEmpty() ) {
 				termVersion = "1.0.0";
 			}

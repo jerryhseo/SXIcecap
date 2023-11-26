@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.json.JSONException"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
@@ -40,9 +41,25 @@
 	Calendar today = Calendar.getInstance(locale);
 %>
 
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_STRUCTURED_DATA_DELETE_FILE %>" var="deleteFileURL">
+</portlet:resourceURL>
+
+<%
+	JSONArray terms = structuredData.getJSONArray("terms");
+	for( int i=0; i<terms.length(); i++ ){
+		JSONObject termData = terms.getJSONObject(i);
+		if( termData.getString("termType").equalsIgnoreCase("File")){
+			termData.put( "deleteFileURL", deleteFileURL.toString() );
+			
+		}
+	}
+%>
+
 <portlet:actionURL name="<%= IcecapMVCCommands.ACTION_STRUCTURED_DATA_ADD %>" var="saveActionURL">
 	<portlet:param name="<%= StationXWebKeys.CMD %>" value="<%= cmd %>"/>
 	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%=String.valueOf(dataType.getDataTypeId()) %>"/>
+	<portlet:param name="dataTypeName" value="<%=dataType.getDataTypeName() %>"/>
+	<portlet:param name="dataTypeVersion" value="<%=dataType.getDataTypeVersion() %>"/>
 	<portlet:param name="<%= IcecapWebKeys.STRUCTURED_DATA_ID %>" value="<%= structuredDataId %>"/>
 </portlet:actionURL>
 
@@ -53,16 +70,17 @@
 <aui:container cssClass="SXIcecap-web">
 	<aui:row cssClass="form-section">
 		<aui:col md="12" >
+			<aui:form action="<%= saveActionURL %>" enctype="multipart/form-data" method="POST" name="fm" inlineLabels="true" >
 				<aui:fieldset-group markupView="lexicon">
 					<aui:fieldset label="datatype">
 						<span style="display:table-cell; width:40%;">
-						<aui:input name="datatype-name" disabled="true" value="<%= dataType.getDataTypeName() %>"></aui:input>
+						<aui:input name="dataTypeName" label="datatype-name" disabled="true" value="<%= dataType.getDataTypeName() %>"></aui:input>
 						</span>
 						<span style="display:table-cell; width:10%;">
-						<aui:input name="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
+						<aui:input name="dataTypeVersion" label="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
 						</span>
 						<span style="display:table-cell; width:10%;">
-						<aui:input name="datatype-extention" disabled="true" value="<%= dataType.getExtension() %>"></aui:input>
+						<aui:input name="dataTypeExtension" label="datatype-extention" disabled="true" value="<%= dataType.getExtension() %>"></aui:input>
 						</span>
 					</aui:fieldset>
 				</aui:fieldset-group>
@@ -71,16 +89,14 @@
 				</div>
 				<hr class=""></hr>
 				
+				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
+				<input type="hidden" id="<portlet:namespace/>uploadParams" name="<portlet:namespace/>uploadParams"/>
+				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-12"  id="<portlet:namespace/>canvasPanel"></div>
 					</div>
 				</div>
-				
-			<aui:form action="<%= saveActionURL %>" enctype="multipart/form-data" escapeXml="true" method="POST" name="fm" inlineLabels="true" >
-				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
-				<input type="hidden" id="<portlet:namespace/>uploadParamName" name="<portlet:namespace/>uploadParamName"/>
-				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
 				<aui:button-row>
 					<c:choose>
 						<c:when test="<%= cmd.equalsIgnoreCase(StationXConstants.CMD_ADD) %>">
@@ -114,6 +130,8 @@ $(document).ready(function(){
 	
 	dataStructure.render( SX.SXConstants.FOR_EDITOR, $('#<portlet:namespace/>canvasPanel') );
 	
+	let uploadParams = new Object();
+	
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED, function( event ){
 		event.stopPropagation();
 		event.preventDefault();
@@ -125,15 +143,22 @@ $(document).ready(function(){
 		}
 		
 		let term = eventData.term;
+		
 		if( term.termType === SX.TermTypes.FILE){
 			$('#<portlet:namespace/>hasFile').val(true);
-			$('#<portlet:namespace/>uploadParamName').val( 
-						term.termName );
+		
+			if( term.value ){
+				uploadParams[term.termName] = term.getJsonValue();
+			}
+			else{
+				delete uploadParams[term.termName];
+			}
+			
+			$('#<portlet:namespace/>uploadParams').val( 
+						JSON.stringify(uploadParams) );
 		}
 		
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
-		console.log( 'Changed Term Value: ', eventData.term.value);
-		console.log("Data Structure after value changed... ", term);
 	});
 	
 	$('#<portlet:namespace/>addSamples').click( function(event){

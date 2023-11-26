@@ -554,6 +554,24 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		return jsonObject;
 	}
 	
+	public JSONObject getTermByName( long dataTypeId, String termName ) throws JSONException {
+		JSONObject term = null;
+		
+		JSONObject structure = getDataTypeStructureJSONObject(dataTypeId);
+		
+		JSONArray terms = structure.getJSONArray("terms");
+		
+		for( int i=0; i<terms.length(); i++ ) {
+			term = terms.getJSONObject(i);
+			
+			if( termName.equalsIgnoreCase( term.getString("termName")) ) {
+				break;
+			}
+		}
+		
+		return term;
+	}
+	
 	public StructuredData addStructuredData(
 			long dataSetId, 
 			long dataTypeId,

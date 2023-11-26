@@ -62,6 +62,7 @@ public class IcecapMVCCommands {
 	public static final String RESOURCE_STRUCTURED_DATA_ADD_SAMPLE = "/html/StructuredData/ajax/add-structured-data-sample";
 	public static final String RESOURCE_STRUCTURED_DATA_UPDATE = "/html/StructuredData/ajax/update-structured-data";
 	public static final String RESOURCE_TEMP_STRUCTURED_DATA_DELETE = "/html/StructuredData/ajax/delete-structured-data-temp-file";
+	public static final String RESOURCE_STRUCTURED_DATA_DELETE_FILE = "/html/StructuredData/ajax/delete-file";
 	public static final String RESOURCE_STRUCTURED_DATA_SAVE = "/html/StructuredData/ajax/save-structured-data";
 	public static final String RESOURCE_STRUCTURED_DATA_UPLOAD_FILE = "/html/StructuredData/ajax/upload-structured-data-file";
 

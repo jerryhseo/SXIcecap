@@ -1,10 +1,16 @@
 package com.sx.icecap.web.command.render.sd;
 
+import com.liferay.document.library.kernel.service.DLAppService;
+import com.liferay.document.library.kernel.util.DLUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
@@ -17,6 +23,8 @@ import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.portlet.PortletException;
@@ -42,7 +50,9 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 	@Reference
 	StructuredDataLocalService _structuredDataLocalService;
 	
-
+	@Reference
+	DLAppService _dlAppService;
+	
 	@Override
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
 		
@@ -133,6 +143,38 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 				String termType = term.getString("termType");
 				if( termType.equalsIgnoreCase("List") ) {
 					term.put("value", jsonData.getJSONArray(termName) );
+				}
+				else if( termType.equalsIgnoreCase("File") ) {
+					JSONObject folderInfo = jsonData.getJSONObject(termName);
+					if( Validator.isNull(folderInfo) ) {
+						System.out.println("Term "+termName+" has no folder information");
+					}
+					else if( folderInfo.length() == 0 ){
+						System.out.println("Term "+termName+" has empty information.");
+					}
+					else {
+						List<FileEntry> fileEntries = null;
+						try {
+							fileEntries = _dlAppService.getFileEntries( folderInfo.getLong("repositoryId"), folderInfo.getLong("folderId") );
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						JSONObject value = JSONFactoryUtil.createJSONObject();
+						for( FileEntry fileEntry : fileEntries ) {
+							JSONObject fileInfo = JSONFactoryUtil.createJSONObject();
+							fileInfo.put("parentFolderId", fileEntry.getFolderId() );
+							fileInfo.put("fileId", fileEntry.getFileEntryId() );
+							fileInfo.put("name", fileEntry.getFileName() );
+							fileInfo.put("size", fileEntry.getSize() );
+							fileInfo.put("type", fileEntry.getMimeType() );
+							fileInfo.put("downloadURL", "/documents/" + fileEntry.getGroupId() + StringPool.BACK_SLASH + fileEntry.getFolderId() + StringPool.BACK_SLASH + fileEntry.getFileName() + StringPool.BACK_SLASH + fileEntry.getUuid() );
+							
+							value.put( fileEntry.getFileName(), fileInfo);
+						}
+						term.put("value", value );
+					}
 				}
 				else {
 					term.put("value",jsonData.getString(termName));

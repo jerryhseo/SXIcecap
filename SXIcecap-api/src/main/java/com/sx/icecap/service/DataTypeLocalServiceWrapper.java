@@ -733,6 +733,14 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.json.JSONObject getTermByName(
+			long dataTypeId, String termName)
+		throws com.liferay.portal.kernel.json.JSONException {
+
+		return _dataTypeLocalService.getTermByName(dataTypeId, termName);
+	}
+
+	@Override
 	public java.util.Map<String, Object> parseStructuredData(
 		String termDelimiter, String valueDelimiter, String structuredData) {
 

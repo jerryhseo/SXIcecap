@@ -67,7 +67,7 @@
     		value="<%= currentURL %>"/>
 </portlet:renderURL>
 
-
+<inpur type="hidden" id="<portlet:namespace/>searchResults" id="<portlet:namespace/>searchResults"/> 
 
 <aui:container cssClass="SXIcecap-web">
 		<aui:row>
@@ -280,6 +280,7 @@ $(document).ready(function(){
 	let displayHittedRows = function( rows ){
 		let i = 1;
 		
+		let resultData = new Object();
 		resultRows.rows.forEach( row => {
 			if( rows.find( hittedRow => row === hittedRow ) ){
 				row.$rendered.find( '.index-col' ).text( i++ );
@@ -291,11 +292,15 @@ $(document).ready(function(){
 				}
 				
 				row.$rendered.show();
+				resultData[row.id] = row.data;
 			}
 			else{
 				row.$rendered.hide();
 			}
 		});
+
+		$('#<portlet:namespace/>searchResults').val( JSON.stringify(resultData) );
+		
 	};
 	
 	let doKeywordSearch = function( dataList, fieldName, keywords ){
@@ -305,8 +310,9 @@ $(document).ready(function(){
 		
 		let results = andSearchBetweenFields( resultRows.searchFields );
 		
-		$('#<portlet:namespace/>totalCount').text( results.length + ' ' + Liferay.Language.get('found') );
 		displayHittedRows( results );
+		
+		$('#<portlet:namespace/>totalCount').text( results.length + ' ' + Liferay.Language.get('found') );
 	};
 	
 	let rangeSearch = function( dataList, fieldName, fromValue, toValue ){
