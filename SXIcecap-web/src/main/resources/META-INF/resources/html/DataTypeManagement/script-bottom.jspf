@@ -463,6 +463,18 @@ $(document).ready(function(){
 		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 	});
 	
+	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_COPY_TERM, function(event){
+		let eventData = event.sxeventData;
+		 
+		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
+			return;
+		}
+		
+		console.log('DATATYPE_PREVIEW_COPY_TERM', eventData);
+		
+		dataStructure.copyTerm( eventData.term );
+	});
+	
 	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
 		let eventData = event.sxeventData;
 		// console.log('DATATYPE_PREVIEW_TERM_SELECTED', eventData, currentTerm);
