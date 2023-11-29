@@ -144,6 +144,10 @@ $(document).ready(function(){
 		
 		let term = eventData.term;
 		
+		if( term.termType === 'List' ){
+			dataStructure.activateSlaveTerms( term );
+		}
+		
 		if( term.termType === SX.TermTypes.FILE){
 			$('#<portlet:namespace/>hasFile').val(true);
 		

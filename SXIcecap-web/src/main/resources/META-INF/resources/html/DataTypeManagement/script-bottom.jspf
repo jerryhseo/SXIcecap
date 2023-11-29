@@ -568,6 +568,11 @@ $(document).ready(function(){
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
+		
+		let term = eventData.term;
+		if( term.termType === 'List' ){
+			dataStructure.activateSlaveTerms( term );
+		}
 	});
 	
 	/*******************************************************************************
@@ -603,7 +608,7 @@ $(document).ready(function(){
 
 	$('#<portlet:namespace/>btnCopyTerm').click(function(){
 		// setCurrentTerm( dataStructure.copyTerm( currentTerm ) );
-		dataStructure.addTestSet( SX.SXConstants.FOR_PREVIEW, $('#<portlet:namespace/>previewPanel') );
+		dataStructure.copyTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>btnClear').click(function(){
@@ -735,7 +740,7 @@ $(document).ready(function(){
 			return;
 		}
 		
-		// console.log( 'Before Save: ', dataStructure, JSON.stringify(dataStructure, null, 4) );
+		/*  console.log( 'Before Save: ', dataStructure ); */
 		
 		$.ajax({
 			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
@@ -752,7 +757,6 @@ $(document).ready(function(){
 				console.log('error');
 			}
 		});
-		
 	});
 	
 	$('#<portlet:namespace/>btnSaveAndViewDataTypeList').click(function(event){
