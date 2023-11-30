@@ -74,6 +74,15 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
+	public com.sx.icecap.model.DataType copyDataType(
+			long dataTypeId,
+			com.liferay.portal.kernel.service.ServiceContext sc)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _dataTypeLocalService.copyDataType(dataTypeId, sc);
+	}
+
+	@Override
 	public int countAllDataTypes() {
 		return _dataTypeLocalService.countAllDataTypes();
 	}

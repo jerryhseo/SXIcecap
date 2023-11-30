@@ -355,6 +355,18 @@ public class DataTypeManagementToolbarDisplayContext
 						if (_hasUpdatePermission( dataTypeId )) {
 							add(dropdownItem -> {
 								dropdownItem.setHref(
+										liferayPortletResponse.createActionURL(), 
+										ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_DATATYPE_COPY, 
+										StationXWebKeys.BACK_URL, _themeDisplay.getURLCurrent(), 
+										StationXWebKeys.DATATYPE_ID, dataTypeId);
+									dropdownItem.setIcon("copy");
+									dropdownItem.setLabel(LanguageUtil.get(_locale, "copy"));
+							});
+						}
+						
+						if (_hasUpdatePermission( dataTypeId )) {
+							add(dropdownItem -> {
+								dropdownItem.setHref(
 										getPortletURL(), 
 										StationXWebKeys.MVC_RENDER_COMMAND_NAME, IcecapMVCCommands.RENDER_DATATYPE_EDIT, 
 										Constants.CMD, Constants.UPDATE,

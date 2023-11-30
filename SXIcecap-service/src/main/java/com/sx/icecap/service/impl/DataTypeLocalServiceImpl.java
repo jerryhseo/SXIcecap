@@ -309,6 +309,30 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		}
 	}
 	
+	public DataType copyDataType( long dataTypeId, ServiceContext sc ) throws PortalException {
+		DataType dataType = super.dataTypePersistence.fetchByPrimaryKey(dataTypeId);
+		if( Validator.isNull(dataType) ) {
+			throw new PortalException( "Cannot find data type to be copied: " + dataTypeId );
+		}
+		
+		DataType copiedDataType = this.addDataType(
+																				dataType.getDataTypeName() + "_copied", 
+																				"1.0.0", 
+																				dataType.getExtension(), 
+																				dataType.getDisplayNameMap(), 
+																				dataType.getDescriptionMap(), 
+																				dataType.getTooltipMap(), 
+																				WorkflowConstants.STATUS_DRAFT, 
+																				sc);
+		
+		if( dataType.isHasDataStructure() ) {
+			DataTypeStructure structure = super.dataTypeStructurePersistence.fetchByPrimaryKey(dataTypeId);
+			this.setDataTypeStructure( copiedDataType.getPrimaryKey(), structure.getStructure() );
+		}
+		
+		return copiedDataType;
+	}
+	
 	/**
 	 *  Set the data structure for the dataType specified by dataTypeId.
 	 *  

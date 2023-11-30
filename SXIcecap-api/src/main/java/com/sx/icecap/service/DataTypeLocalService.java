@@ -101,6 +101,9 @@ public interface DataTypeLocalService
 			ServiceContext sc)
 		throws PortalException;
 
+	public DataType copyDataType(long dataTypeId, ServiceContext sc)
+		throws PortalException;
+
 	public int countAllDataTypes();
 
 	public int countApprovedDataTypes(long groupId);

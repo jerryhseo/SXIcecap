@@ -83,6 +83,14 @@ public class DataTypeLocalServiceUtil {
 			dataSetId, dataTypeId, data, status, sc);
 	}
 
+	public static DataType copyDataType(
+			long dataTypeId,
+			com.liferay.portal.kernel.service.ServiceContext sc)
+		throws PortalException {
+
+		return getService().copyDataType(dataTypeId, sc);
+	}
+
 	public static int countAllDataTypes() {
 		return getService().countAllDataTypes();
 	}

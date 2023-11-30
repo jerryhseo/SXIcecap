@@ -31,6 +31,7 @@ public class IcecapMVCCommands {
 	
 	public static final String ACTION_CHANGE_VIEW_TYPE = "/html/DataTypeManagement/change-view-type";
 	public static final String ACTION_DATATYPE_ADD = "/html/DataTypeManagement/add-datatype";
+	public static final String ACTION_DATATYPE_COPY = "/html/DataTypeManagement/copy-datatype";
 	public static final String ACTION_DATATYPE_CREATE_AND_DEFINE_STRUCTURE = "/html/DataTypeManagement/add-and-define-structure";
 	public static final String ACTION_DATATYPE_UPDATE = "/html/DataTypeManagement/update-datatype";
 	public static final String ACTION_DATATYPE_UPDATE_AND_DEFINE_STRUCTURE = "/html/DataTypeManagement/update-and-define-structure";
