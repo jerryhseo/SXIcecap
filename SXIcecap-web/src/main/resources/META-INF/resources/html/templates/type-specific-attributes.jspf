@@ -263,6 +263,13 @@
 	</div>
 	
 	<div id="<portlet:namespace/>groupAttributes" class="type-specific-attrs hide">
+		<aui:input 
+					type="checkbox"
+					name="extended" 
+					label="extended"
+					helpMessage="extended-help">
+		</aui:input>
+		
 		<aui:button-row>
 			<aui:button id="btnChooseGroupTerms" value="choose-group-terms"/>
 		</aui:button-row>

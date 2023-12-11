@@ -1,4 +1,7 @@
 
+<%@page import="com.liferay.portal.util.Constants"%>
+<%@page import="javax.portlet.ActionRequest"%>
+<%@page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList"%>
 <%@page import="com.sx.icecap.web.command.render.sd.EditStructuredDataRenderCommand"%>
 <%@page import="com.sx.icecap.constant.IcecapWebPortletKeys"%>
 <%@page import="com.sx.icecap.constant.IcecapWebKeys"%>
@@ -104,13 +107,16 @@
 <aui:container  cssClass="SXIcecap-web">
 	<aui:row >
 		<aui:col md="5"   cssClass="show-border" id="searchSection">
-		aaaaa
 		</aui:col>
 		<aui:col md="7"   cssClass="show-border" id="resultSection">
 			<aui:container>
 				<aui:row>
-					<aui:col><span  id="<portlet:namespace/>totalCount" style="float:right;"></span></aui:col>
+					<aui:col md="10"><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
+					<aui:col md="2">
+						<aui:button name="history" value="history" cssClass="btn-info"></aui:button>
+					</aui:col>
 				</aui:row>
+				
 			</aui:container>
 		</aui:col>
 	</aui:row>
@@ -174,17 +180,9 @@ $(document).ready(function(){
 		$href.text( abstractContent );
 		$row.append( $col_2 );
 		
-		/*
 		let $col_3 = $('<div class="col-md-1 action-col">');
-		$col_3.html( '<div class="dropdown dropdown-action" id="mazj">' + 
-									'<button aria-expanded="false" aria-haspopup="true" class="dropdown-toggle btn btn-unstyled" data-onclick="toggle" data-onkeydown="null" ref="triggerButton" title="Actions" type="button">' +
-										'<svg class="lexicon-icon lexicon-icon-ellipsis-v" focusable="false" role="presentation" viewBox="0 0 512 512">'+
-											'<path class="lexicon-icon-outline ellipsis-v-dot-2" d="M319 255.5c0 35.346-28.654 64-64 64s-64-28.654-64-64c0-35.346 28.654-64 64-64s64 28.654 64 64z"></path>' +
-											'<path class="lexicon-icon-outline ellipsis-v-dot-3" d="M319 448c0 35.346-28.654 64-64 64s-64-28.654-64-64c0-35.346 28.654-64 64-64s64 28.654 64 64z"></path>' +
-											'<path class="lexicon-icon-outline ellipsis-v-dot-1" d="M319 64c0 35.346-28.654 64-64 64s-64-28.654-64-64c0-35.346 28.654-64 64-64s64 28.654 64 64z"></path>' +
-										'</svg></button></div>' );
+		$col_3.append( SX.FormUIUtil.$getActionButton() );
 		$row.append( $col_3 );
-		*/
 		
 		return $row;
 	};

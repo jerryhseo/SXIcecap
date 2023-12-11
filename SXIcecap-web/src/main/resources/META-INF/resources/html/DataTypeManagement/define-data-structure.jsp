@@ -53,6 +53,16 @@
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:renderURL>
 
+<liferay-portlet:renderURL
+		var="sdeURL"
+		portletName="com_sx_visualizers_sde_StructuredDataEditorPortlet"
+		windowState="<%= LiferayWindowState.POP_UP.toString() %>" >
+		<liferay-portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" value="<%= IcecapMVCCommands.RENDER_ROOT %>" />
+		<liferay-portlet:param name="dataTypeId" value="<%= String.valueOf(dataTypeId) %>" />
+		<liferay-portlet:param name="structuredDataId" value="<%= String.valueOf(0) %>" />
+</liferay-portlet:renderURL>
+
+
 <aui:form action="" name="defineFm">
 <aui:container cssClass="SXIcecap-web" id="dataTypeDefiner">
 
@@ -219,6 +229,12 @@
 							name="abstractKey" 
 							label="abstract-key" 
 							helpMessage="abstract-key-help">
+				</aui:input>
+				<aui:input 
+							type="checkbox"
+							name="disabled" 
+							label="disabled" 
+							helpMessage="disabled-help">
 				</aui:input>
 				<aui:input 
 							type="checkbox"

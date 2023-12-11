@@ -48,18 +48,16 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		long dataTypeId = ParamUtil.getLong(resourceRequest, "dataTypeId");
 		String dataStructure = ParamUtil.getString(resourceRequest, "dataStructure");
 		
-//		System.out.println("dataTypeId: " + dataTypeId);
-		System.out.println( "+++++ Data Structure Length: \n" + dataStructure );
+//		System.out.println("dataStructure: " + dataStructure);
 		
 		JSONObject jsonDataStructure = JSONFactoryUtil.createJSONObject(dataStructure);
 		if( jsonDataStructure.length() == 0 ) {
 			return;
 		}
-
-//		System.out.println(jsonDataStructure.toString(4));
 		
 		JSONArray terms = jsonDataStructure.getJSONArray("terms");
-//		System.out.println(terms.toString(4));
+		
+//		System.out.println(terms.toString());
 //		System.out.println("Term Count: "+terms.length());
 		
 		ServiceContext sc = ServiceContextFactory.getInstance(Term.class.getName(), resourceRequest);
@@ -94,6 +92,7 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			String synonyms = term.getString("synonyms");
 			boolean mandatory = term.getBoolean("mandatory");
 			boolean abstractKey = term.getBoolean("abstractKey");
+			boolean disabled = term.getBoolean("disabled");
 			boolean searchable = term.getBoolean("searchable");
 			boolean downloadable = term.getBoolean("downloadable");
 			String value = term.getString("value");
@@ -219,6 +218,9 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		else if( termType.equalsIgnoreCase(IcecapSSSTermTypes.FILE)) {
 			return _extractFileAttributes(jsonObj);
 		}
+		else if( termType.equalsIgnoreCase(IcecapSSSTermTypes.GROUP)) {
+			return _extractGroupAttributes(jsonObj);
+		}
 		else {
 			return "";
 		}
@@ -300,11 +302,11 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 	private String _extractListAttributes( JSONObject jsonObj ) {
 		JSONObject json = JSONFactoryUtil.createJSONObject();
 		
-		if( !jsonObj.isNull("displayStyle") ) {
+		if( jsonObj.has("displayStyle") ) {
 			json.put("displayStyle",  jsonObj.getString("displayStyle"));
 		}
 		
-		if( !jsonObj.isNull("options") ) {
+		if( jsonObj.has("options") ) {
 			JSONArray jsonOptions = jsonObj.getJSONArray("options");
 			
 			if( jsonOptions != null ) {
@@ -328,6 +330,16 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 	
 	private String _extractFileAttributes(JSONObject jsonObj) {
 		JSONObject json = JSONFactoryUtil.createJSONObject();
+		
+		return json.toJSONString();
+	}
+	
+	private String _extractGroupAttributes(JSONObject jsonObj) {
+		JSONObject json = JSONFactoryUtil.createJSONObject();
+		
+		if(  jsonObj.has("extended") ) {
+			json.put("extended",jsonObj.getBoolean("extended"));
+		}
 		
 		return json.toJSONString();
 	}

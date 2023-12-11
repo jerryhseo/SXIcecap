@@ -1,3 +1,14 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
+<%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
+<%@page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
+<%@page import="com.sx.util.portlet.SXPortletURLUtil"%>
+<%@page import="com.sx.constant.StationXWebKeys"%>
+<%@page import="com.sx.constant.StationXConstants"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortlet"%>
+<%@page import="com.sx.util.SXPortalUtil"%>
+<%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
+<%@page import="com.sx.icecap.constant.IcecapWebKeys"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <aui:script use="aui-base, liferay-form, liferay-menu">
 var _ = AUI._;
 
@@ -43,10 +54,10 @@ $(document).ready(function(){
 		}
 		
 		if( currentTerm.isGroupTerm() ){
-			dataStructure.disable(['mandatory', 'abstractKey'], true);
+			dataStructure.disable(['mandatory', 'abstractKey', 'downloadable', 'searchable'], true);
 		}
 		else{
-			dataStructure.disable(['mandatory', 'abstractKey'], false);
+			dataStructure.disable(['mandatory', 'abstractKey', 'downloadable', 'searchable'], false);
 		}
 		
 		// console.log( 'Current term rendered: ' + currentTerm.isRendered() );
@@ -213,7 +224,12 @@ $(document).ready(function(){
 	$('#<portlet:namespace/>abstractKey').change(function(eventObj){
 		// console.log( 'abstractKey changed...', currentTerm);
 		currentTerm.getAbstractKeyFormValue(true);
-		currentTerm.setDirty( true );
+	});
+	
+	$('#<portlet:namespace/>disabled').change(function(eventObj){
+		// console.log( 'abstractKey changed...', currentTerm);
+		currentTerm.getDisabledFormValue(true);
+		dataStructure.disableTerm( currentTerm, currentTerm.disabled, SX.SXConstants.FOR_PREVIEW );
 	});
 	
 	$('#<portlet:namespace/>searchable').change(function(eventObj){
@@ -446,6 +462,9 @@ $(document).ready(function(){
 		console.log( 'allowed extensions: ', SX.FormUIUtil.getFormValue( 'allowedExtensions' ).split(',') ); 
 	});
 	
+	$('#<portlet:namespace/>extended').change(function(event){
+		dataStructure.extendGroup( currentTerm, SX.FormUIUtil.getFormCheckboxValue('extended') );
+	});
 
 	/**************************************************************
 	* Custom Liferay event handlers
@@ -740,8 +759,6 @@ $(document).ready(function(){
 			return;
 		}
 		
-		/*  console.log( 'Before Save: ', dataStructure ); */
-		
 		$.ajax({
 			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
 			method: 'post',
@@ -781,6 +798,65 @@ $(document).ready(function(){
 				console.log('error');
 			}
 		});
+	});
+	
+	$('#<portlet:namespace/>btnShowSDE').click( function(event){
+		let promise = new Promise( (resolve, reject) => {
+			$.ajax({
+				url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>" ><portlet:param name="portletName" value="com_sx_visualizers_sde_StructuredDataEditorPortlet" /></portlet:resourceURL>',
+				type: 'post',
+				dataType: 'text',
+				data: {
+					<portlet:namespace/>portletName: 'com_sx_visualizers_sde_StructuredDataEditorPortlet'
+				},
+				success: function(result){
+					resolve( result );
+				},
+				error: function( error ){
+					reject( error );
+				}
+			});
+		});
+
+		promise.then( portletInstanceId => {
+				let sdeURL = Liferay.PortletURL.createURL(portletInstanceId);
+                sdeURL.setParameter('dataTypeId', '<%= String.valueOf(dataTypeId) %>');
+                sdeURL.setParameter('enableMenu', 'false');
+                
+				$.ajax({
+		                url: sdeURL.toString(),
+		                success: function(data) {
+		                	$dialog = $('<div></div>')
+		                		.html(data)
+		                		.dialog({
+		                			autoOpen: true,
+		                			modal: false,
+		                			height: 800,
+		                			width:800,
+		                			title: Liferay.Language.get('structured-data-editor'),
+		                			buttons:[
+		                				{
+		                					text: 'Ok',
+		                					icon: 'ui-icon-heart',
+		                					click: ()=>{
+		                						alert('OK');
+		                					}
+		                				}
+		                			]
+		                		});
+		                },
+		                error: function(jqXHR){
+		                    //Do something here
+		                }
+              });
+		})
+		.catch( error => {
+			alert( error );
+		});
+	});
+	
+	Liferay.on('jquery_alert', function(e){
+		alert('JQuery Alert');
 	});
 });
 </aui:script>

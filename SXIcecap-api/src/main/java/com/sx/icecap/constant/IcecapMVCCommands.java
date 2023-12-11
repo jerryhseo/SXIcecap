@@ -66,5 +66,9 @@ public class IcecapMVCCommands {
 	public static final String RESOURCE_STRUCTURED_DATA_DELETE_FILE = "/html/StructuredData/ajax/delete-file";
 	public static final String RESOURCE_STRUCTURED_DATA_SAVE = "/html/StructuredData/ajax/save-structured-data";
 	public static final String RESOURCE_STRUCTURED_DATA_UPLOAD_FILE = "/html/StructuredData/ajax/upload-structured-data-file";
+	
+	public static final String RESOURCE_CREATE_PORTLET_INSTANCE = "/create-portlet-instance";
+	
+	
 
 }
