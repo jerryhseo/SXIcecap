@@ -70,7 +70,7 @@
     		value="<%= currentURL %>"/>
 </portlet:renderURL>
 
-<inpur type="hidden" id="<portlet:namespace/>searchResults" id="<portlet:namespace/>searchResults"/> 
+<input type="hidden" id="<portlet:namespace/>searchResults" id="<portlet:namespace/>searchResults"/> 
 
 <aui:container cssClass="SXIcecap-web">
 		<aui:row>
@@ -108,19 +108,27 @@
 	<aui:row >
 		<aui:col md="5"   cssClass="show-border" id="searchSection">
 		</aui:col>
-		<aui:col md="7"   cssClass="show-border" id="resultSection">
+		<aui:col md="7"   cssClass="show-border">
 			<aui:container>
 				<aui:row>
-					<aui:col md="10"><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
-					<aui:col md="2">
-						<aui:button name="history" value="history" cssClass="btn-info"></aui:button>
+					<aui:col md="9"><span id="<portlet:namespace/>mainPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
+					<aui:col md="3">
+						<aui:button name="queryHistory" value="query-history" cssClass="btn-info"></aui:button>
 					</aui:col>
 				</aui:row>
-				
+			</aui:container>
+			<aui:container id="resultSection">
 			</aui:container>
 		</aui:col>
 	</aui:row>
 </aui:container>
+
+<div id="<portlet:namespace/>historyDialog" class="pagination" style="width:100%; display:none;" ></div>
+<div id="<portlet:namespace/>itemResultDialog" class="container" style="width:100%; display:none;" >
+	<div id="<portlet:namespace/>itemTable" class="container" style="width:100%;"></div>
+	<div id="<portlet:namespace/>itemPagination" class="pagination" style="margin-top:30px; width:100%; display:flex; justify-content:center;"></div>
+</div>
+
 <aui:script use="liferay-util-window, liferay-portlet-url">
 $(document).ready(function(){
 	let SX = StationX(  '<portlet:namespace/>', 
@@ -203,21 +211,32 @@ $(document).ready(function(){
 		resultRows.rows.push( row );
 	});
 	
-	let addSearchField = function( fieldName, searchResults ){
+	let addSearchField = function( fieldName, keywords, searchResults ){
 		if( !resultRows.searchFields ){
 			resultRows.searchFields = new Object();
 		}
 		
-		if( searchResults.length === 0 ){
-			delete resultRows.searchFields[fieldName];
-			if( Object.keys(resultRows.searchFields).length === 0 ){
-				delete resultRows.searchFields;
-			}
+		if( typeof keywords === 'undefined' ){
+			delete resultRows.searchFields[ fieldName ];
 		}
 		else{
-			resultRows.searchFields[ fieldName ] = searchResults;
+			let searchObject = {
+							keywords: keywords,
+							results: searchResults
+			};
+			
+			resultRows.searchFields[ fieldName ] = {
+							keywords: keywords,
+							results: searchResults
+			}
+		};
+	};
+	
+	let removeSearchField = function( fieldName ){
+		delete resultRows.searchFields[fieldName];
+		if( Object.keys(resultRows.searchFields).length === 0 ){
+			delete resultRows.searchFields;
 		}
-		
 	};
 	
 	let orSearchWithinField = function( rowList, fieldName, keywords ){
@@ -264,25 +283,29 @@ $(document).ready(function(){
 		let fields = Object.keys( searchFields );
 		
 		if( fields.length === 0 )	return [];
-		if( fields.length === 1 )	return searchFields[fields[0]];
+		if( fields.length === 1 )	return searchFields[fields[0]].results;
 		
-		let results = andOperation( searchFields[fields[0]], searchFields[fields[1]]);
+		let results = andOperation( searchFields[fields[0]].results, searchFields[fields[1]].results);
 		
 		for( let i=2; i<fields.length; i++ ){
-			results = andOperation( results, searchFields[fields[i]]);
+			results = andOperation( results, searchFields[fields[i]].results);
 		}
 		
 		return results;
 	};
 	
-	let displayHittedRows = function( rows ){
+	let displayHittedRows = function( ){
+		let rows = resultRows.finalResults;
+		
 		let i = 1;
 		
+		resultRows.rows.forEach( row => row.$rendered.hide() );
+		
+		/*
 		let resultData = new Object();
-		resultRows.rows.forEach( row => {
-			if( rows.find( hittedRow => row === hittedRow ) ){
-				row.$rendered.find( '.index-col' ).text( i++ );
-				if( i % 2 ){
+		rows.forEach( (row, index) => {
+				row.$rendered.find( '.index-col' ).text( index+1 );
+				if( index % 2 ){
 					row.$rendered.css('background', '#fff');
 				}
 				else{
@@ -291,26 +314,68 @@ $(document).ready(function(){
 				
 				row.$rendered.show();
 				resultData[row.id] = row.data;
-			}
-			else{
-				row.$rendered.hide();
-			}
 		});
 
 		$('#<portlet:namespace/>searchResults').val( JSON.stringify(resultData) );
+		*/
+		
+		$('#<portlet:namespace/>mainPagination').pagination({
+			items: rows.length,
+			itemsOnPage: 20,
+			displayedPages: 3,
+			onPageClick: function( pageNumber, event){
+				let delta = this.itemsOnPage;	
+				
+				rows.forEach( (row, index) => {
+					if( index >= delta * (pageNumber-1) && index < delta*pageNumber ){
+						row.$rendered.show();
+					}
+					else{
+						row.$rendered.hide();
+					}
+				});
+			},
+			onInit: function(){
+				let resultData = new Object();
+				
+				rows.forEach( (row, index) => {
+					let delta = this.itemsOnPage;	
+					row.$rendered.find( '.index-col' ).text( index+1 );
+					
+					if( index % 2 ){
+						row.$rendered.css('background', '#fff');
+					}
+					else{
+						row.$rendered.css('background', '#eee');
+					}
+					
+					if( index < delta ){
+						row.$rendered.show();
+					}
+					
+					resultData[row.id] = row.data;
+				});	
+				
+				$('#<portlet:namespace/>searchResults').val( JSON.stringify(resultData) );	
+			}
+		});
 		
 	};
+	
+	let setResults = function( results ){
+		resultRows.finalResults = results;
+	}
 	
 	let doKeywordSearch = function( dataList, fieldName, keywords ){
 		let orResults = orSearchWithinField( dataList, fieldName, keywords );
 		
-		addSearchField( fieldName, orResults );
+		addSearchField( fieldName, keywords, orResults );
 		
-		let results = andSearchBetweenFields( resultRows.searchFields );
+		setResults( andSearchBetweenFields( resultRows.searchFields ) );
 		
-		displayHittedRows( results );
+		displayHittedRows();
 		
-		$('#<portlet:namespace/>totalCount').text( results.length + ' ' + Liferay.Language.get('found') );
+		$('#<portlet:namespace/>totalCount').text( resultRows.finalResults.length + ' ' + Liferay.Language.get('found') );
 	};
 	
 	let rangeSearch = function( dataList, fieldName, fromValue, toValue ){
@@ -335,16 +400,19 @@ $(document).ready(function(){
 	};
 	
 	let doRangeSearch = function( dataList, fieldName, fromValue, toValue ){
+		if( typeof fromValue === 'undefined' && typeof toValue === 'undefined' ){
+			return;
+		}
 		
 		let rangeSearchResults = rangeSearch( dataList, fieldName, fromValue, toValue );
 		
-		addSearchField( fieldName, rangeSearchResults );
+		addSearchField( fieldName, { from: fromValue, to:toValue}, rangeSearchResults );
 		
-		let results = andSearchBetweenFields( resultRows.searchFields );
+		setResults( andSearchBetweenFields( resultRows.searchFields ) );
 		
-		$('#<portlet:namespace/>totalCount').text( results.length + ' ' + Liferay.Language.get('found') );
+		displayHittedRows();
 		
-		displayHittedRows( results );
+		$('#<portlet:namespace/>totalCount').text( resultRows.finalResults.length + ' ' + Liferay.Language.get('found') );
 	};
 	
 	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_KEYWORD_CHANGED, function(evt){
@@ -427,7 +495,105 @@ $(document).ready(function(){
 			doKeywordSearch( resultRows.rows, term.termName, term.searchDates );
 		}
 	});
+	
+	$('#<portlet:namespace/>queryHistory').click(function(event){
+		let queries = resultRows.searchFields;
+		if( !queries )	{
+			alert( 'No queries exist!' );
+			return;
+		}
+		
+		let $dialog = $('#<portlet:namespace/>historyDialog').empty();
+		
+		let $table = $('<table style="width:100%;">').appendTo( $dialog );
+		$table.append( $('<thead style="background:#c5c5c5">'+'<tr>'+'<th style="text-align:center;">'+'<liferay-ui:message key="item"/>'+'</th>'+
+														'<th style="text-align:center;">'+'<liferay-ui:message key="keywords"/>'+'</th>' +
+														'<th style="text-align:center;">'+'<liferay-ui:message key="results"/>'+'</th>' +
+														'</tr>'+'</thead>'));
+		
+		let $tbody = $('<tbody>').appendTo($table);
+		
+		let queryFields = Object.keys( queries );
+		queryFields.forEach( (queryField, index) => {
+			let query = queries[queryField];
+			
+			let $row = $('<tr>').appendTo($tbody);
+			
+			if( query.keywords instanceof Array ){
+				$row.append( $('<td style="text-align:center;">'+queryField+'</td>'+'<td style="text-align:center;">'+query.keywords+'</td>'+'<td style="text-align:center;">'+query.results.length+'</td>'))
+			}
+			else{
+				$row.append( $('<td style="text-align:center;">'+queryField+'</td>'+'<td style="text-align:center;">'+(query.keywords.from ? query.keywords.from:'') + ' ~ ' + (query.keywords.to ? query.keywords.to:'') +'</td>'+'<td style="text-align:center;">'+query.results.length+'</td>'))
+			}
+			
+			$row.click( function(event){
+				event.stopPropagation();
+				
+				let $itemResultDlg = $('#<portlet:namespace/>itemResultDialog');
+
+				let delta = 10;
+				let page = (query.results.length % delta) + 1;			
+				
+				$('#<portlet:namespace/>itemPagination').pagination({
+					items: query.results.length,
+					itemsOnPage: 10,
+					onPageClick: function( pageNumber, event){
+						let delta = this.itemsOnPage;	
+						let $items = $('#<portlet:namespace/>itemTable').children();
+						
+						$items.each( (index, item) => {
+							if( index >= delta * (pageNumber-1) && index < delta*pageNumber ){
+								$(item).show();
+							}
+							else{
+								$(item).hide();
+							}
+						});							
+					},
+					onInit: function(){
+						let $itemTable = $('#<portlet:namespace/>itemTable').empty();
+						let delta = this.itemsOnPage;
+						query.results.forEach( (result, index) => {
+							let clone = result.$rendered.clone();
+							clone.find('.index-col').text( index+1);
+							clone.css('width', '100%');
+							if( delta > index )	clone.show();
+							else								clone.hide();
+							$itemTable.append( clone );
+						});
+					}
+				});
+					
+				$itemResultDlg.dialog({
+					title: queryField,
+					width:800,
+					buttons:[{
+						text: '<liferay-ui:message key="ok"/>',
+						click: function(){
+							$(this).dialog('destroy');
+						}
+					}]
+				});
+				
+			});
+		});
+		
+		$tbody.find("tr").filter(":even").css('background', 'rgb(238,238,238)');
+		
+		$('#<portlet:namespace/>historyDialog').dialog({
+			width:600,
+			modal: true,
+			buttons:[{
+				text: '<liferay-ui:message key="ok"/>',
+				click: function(){
+					$(this).dialog('destroy');
+				}
+			}]
+		});
+	});
 });
+
+
 
 Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_COMPONENT_ID %>').then(function(
 		managementToolbar
