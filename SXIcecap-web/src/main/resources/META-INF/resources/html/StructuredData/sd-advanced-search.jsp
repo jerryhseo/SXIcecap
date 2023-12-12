@@ -399,14 +399,26 @@ $(document).ready(function(){
 		return results;
 	};
 	
-	let doRangeSearch = function( dataList, fieldName, fromValue, toValue ){
+	let doRangeSearch = function( dataList, fieldName, fromValue, toValue, dateType ){
 		if( typeof fromValue === 'undefined' && typeof toValue === 'undefined' ){
 			return;
 		}
 		
 		let rangeSearchResults = rangeSearch( dataList, fieldName, fromValue, toValue );
 		
-		addSearchField( fieldName, { from: fromValue, to:toValue}, rangeSearchResults );
+		if( dateType === 'Date' ){
+			let fromDate = fromValue ? new Date( fromValue ) : undefined;			
+			let toDate = toValue ? new Date( toValue ) : undefined;			
+			addSearchField( fieldName, 
+											{ 
+												from: fromDate? fromDate.getFullYear()+'/'+fromDate.getMonth()+'/'+fromDate.getDate() : '', 
+												to:toDate? toDate.getFullYear()+'/'+toDate.getMonth()+'/'+toDate.getDate() : ''
+											}, 
+											rangeSearchResults );
+		}
+		else{
+			addSearchField( fieldName, { from: fromValue, to:toValue}, rangeSearchResults );
+		}
 		
 		setResults( andSearchBetweenFields( resultRows.searchFields ) );
 		
@@ -467,10 +479,10 @@ $(document).ready(function(){
 		
 		let term = eventData.term;
 		if( term.rangeSearch ){
-			doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate );
+			doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
 		}
 		else{
-			doKeywordSearch( resultRows.rows, term.termName, term.searchDates );
+			doKeywordSearch( resultRows.rows, term.termName, term.searchDates, term.termType );
 		}
 	});
 	
@@ -479,7 +491,7 @@ $(document).ready(function(){
 		console.log( 'SD_SEARCH_TO_DATE_CHANGED ' , eventData );
 		
 		let term = eventData.term;
-		doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate );
+		doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
 	});
 	
 	Liferay.on(SX.SXIcecapEvents.SD_DATE_RANGE_SEARCH_STATE_CHANGED, function(evt){
@@ -489,10 +501,10 @@ $(document).ready(function(){
 		let term = eventData.term;
 		
 		if( term.rangeSearch ){
-			doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate );
+			doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
 		}
 		else{
-			doKeywordSearch( resultRows.rows, term.termName, term.searchDates );
+			doKeywordSearch( resultRows.rows, term.termName, term.searchDates, term.termType );
 		}
 	});
 	
