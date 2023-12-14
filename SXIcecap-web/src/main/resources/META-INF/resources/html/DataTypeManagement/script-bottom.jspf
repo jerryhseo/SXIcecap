@@ -821,7 +821,7 @@ $(document).ready(function(){
 		promise.then( portletInstanceId => {
 				let sdeURL = Liferay.PortletURL.createURL(portletInstanceId);
                 sdeURL.setParameter('dataTypeId', '<%= String.valueOf(dataTypeId) %>');
-                sdeURL.setParameter('enableMenu', 'false');
+                sdeURL.setParameter('enableMenu', 'true');
                 
 				$.ajax({
 		                url: sdeURL.toString(),

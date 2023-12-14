@@ -68,6 +68,9 @@
     <portlet:param 
     		name="<%= StationXWebKeys.BACK_URL %>" 
     		value="<%= currentURL %>"/>
+    <portlet:param 
+    		name="<%= StationXWebKeys.DATATYPE_ID %>" 
+    		value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:renderURL>
 
 <input type="hidden" id="<portlet:namespace/>searchResults" id="<portlet:namespace/>searchResults"/> 
@@ -111,7 +114,7 @@
 		<aui:col md="7"   cssClass="show-border">
 			<aui:container>
 				<aui:row>
-					<aui:col md="9"><span id="<portlet:namespace/>mainPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
+					<aui:col md="9"><span id="<portlet:namespace/>resultPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
 					<aui:col md="3">
 						<aui:button name="queryHistory" value="query-history" cssClass="btn-info"></aui:button>
 					</aui:col>
@@ -136,296 +139,25 @@ $(document).ready(function(){
 			'<%= locale.toString() %>',
 			<%= jsonLocales.toJSONString() %> );
 	
+	/*
 	let dataStructure = SX.newDataStructure(  <%= dataStructure.toString() %> );
 	let abstractFields = <%= abstractFields.toJSONString() %>;
 	dataStructure.render( SX.SXConstants.FOR_SEARCH, $('#<portlet:namespace/>searchSection') );
+	*/
 	
-	
-	let structuredDataList = <%= structuredDataList.toJSONString() %>;
-	//console.log( structuredDataList );
-	
-	let $resultSection = $('#<portlet:namespace/>resultSection');
-	
-	let renderResult = function( structuredData, abstractFields ){
-		let data = structuredData.data;
-		let id = structuredData.id;
-		
-		let $row = $('<div class="row" style="padding-top:3px; padding-bottom:3px;">');
-		
-		let $col_1 = $('<div class="col-md-1 index-col" style:"text-align:right;">');
-		//$col_1.text( index );
-		$row.append( $col_1 );
-		
-		let $col_2 = $('<div class="col-md-10 abstract-col">');
-		let $href = $('<a>');
-		
-		
-		let renderUrl = Liferay.PortletURL.createURL('<%= editStructuredDataURL.toString() %>');
-		renderUrl.setParameter("structuredDataId", id);
-		renderUrl.setParameter("dataTypeId", "<%= dataType.getDataTypeId() %>");
-		
-		$href.prop('href', renderUrl.toString() );
-		$col_2.append( $href );
-		
-		let abstractContent = '';
-		
-		abstractFields.forEach( field => {
-			if( data.hasOwnProperty( field ) ){
-				let term = dataStructure.getTermByName( field );
-				if( term.termType === 'Date' ){
-					if( term.enableTime ){
-						abstractContent += field + ':' + SX.Util.toDateTimeString( data[field] ) + ' ';
-					}
-					else{
-						abstractContent += field + ':' + SX.Util.toDateString( data[field] ) + ' ';
-					}
-				}
-				else{
-					abstractContent += field + ':' + data[field] + ' ';
-				}
-			}
-		})
-		$href.text( abstractContent );
-		$row.append( $col_2 );
-		
-		let $col_3 = $('<div class="col-md-1 action-col">');
-		$col_3.append( SX.FormUIUtil.$getActionButton() );
-		$row.append( $col_3 );
-		
-		return $row;
-	};
-	
-	let resultRows = new Object();
-	resultRows.rows = new Array();
-	let index = 1;
-	structuredDataList.forEach( structuredData => {
-		let $row = renderResult( structuredData, abstractFields );
-		$row.hide();
-		$resultSection.append( $row );
-		
-		let row = new Object();
-		row.id = structuredData.id;
-		row.$rendered = $row;
-		row.data = structuredData.data;
-		
-		resultRows.rows.push( row );
+	let advancedSearch = new SX.AdvancedSearch(
+						<%= dataStructure.toString() %>,
+						<%= abstractFields.toJSONString() %>,
+						<%= structuredDataList.toJSONString() %>,
+						$('#<portlet:namespace/>searchSection'),
+						$('#<portlet:namespace/>resultSection'),
+						$('#<portlet:namespace/>resultPagination'),
+						'<%= editStructuredDataURL.toString() %>' );
+						
+	$('#<portlet:namespace/>queryHistory').click(function(event){
+		advancedSearch.showSearchHistories( $('#<portlet:namespace/>mainPagination' ) );
 	});
 	
-	let addSearchField = function( fieldName, keywords, searchResults ){
-		if( !resultRows.searchFields ){
-			resultRows.searchFields = new Object();
-		}
-		
-		if( typeof keywords === 'undefined' ){
-			delete resultRows.searchFields[ fieldName ];
-		}
-		else{
-			let searchObject = {
-							keywords: keywords,
-							results: searchResults
-			};
-			
-			resultRows.searchFields[ fieldName ] = {
-							keywords: keywords,
-							results: searchResults
-			}
-		};
-	};
-	
-	let removeSearchField = function( fieldName ){
-		delete resultRows.searchFields[fieldName];
-		if( Object.keys(resultRows.searchFields).length === 0 ){
-			delete resultRows.searchFields;
-		}
-	};
-	
-	let orSearchWithinField = function( rowList, fieldName, keywords ){
-		let results = rowList.filter( row => {
-			if( keywords ){
-				for( keyword of keywords ){
-					if( row.data[fieldName] instanceof Array ){
-						let found = row.data[fieldName].find( element => element === keyword );
-						
-						if( found ){
-							return true;
-						}
-					}
-					else{
-						return row.data[fieldName] === keyword;
-					}
-				};
-			}
-			else{
-				return false;
-			}
-			
-			return false;
-		});
-		
-		return results;
-	};
-	
-	let andOperation = function( list_1, list_2 ){
-		let resultList = list_1.filter( mem_1 => {
-			return list_2.find( mem_2 => {
-				return mem_1 === mem_2;
-			});
-		});
-		
-		return resultList;
-	}
-	
-	let andSearchBetweenFields = function( searchFields ){
-		if( !searchFields ){
-			return [];	
-		}
-		
-		let fields = Object.keys( searchFields );
-		
-		if( fields.length === 0 )	return [];
-		if( fields.length === 1 )	return searchFields[fields[0]].results;
-		
-		let results = andOperation( searchFields[fields[0]].results, searchFields[fields[1]].results);
-		
-		for( let i=2; i<fields.length; i++ ){
-			results = andOperation( results, searchFields[fields[i]].results);
-		}
-		
-		return results;
-	};
-	
-	let displayHittedRows = function( ){
-		let rows = resultRows.finalResults;
-		
-		let i = 1;
-		
-		resultRows.rows.forEach( row => row.$rendered.hide() );
-		
-		/*
-		let resultData = new Object();
-		rows.forEach( (row, index) => {
-				row.$rendered.find( '.index-col' ).text( index+1 );
-				if( index % 2 ){
-					row.$rendered.css('background', '#fff');
-				}
-				else{
-					row.$rendered.css('background', '#eee');
-				}
-				
-				row.$rendered.show();
-				resultData[row.id] = row.data;
-		});
-
-		$('#<portlet:namespace/>searchResults').val( JSON.stringify(resultData) );
-		*/
-		
-		$('#<portlet:namespace/>mainPagination').pagination({
-			items: rows.length,
-			itemsOnPage: 20,
-			displayedPages: 3,
-			onPageClick: function( pageNumber, event){
-				let delta = this.itemsOnPage;	
-				
-				rows.forEach( (row, index) => {
-					if( index >= delta * (pageNumber-1) && index < delta*pageNumber ){
-						row.$rendered.show();
-					}
-					else{
-						row.$rendered.hide();
-					}
-				});
-			},
-			onInit: function(){
-				let resultData = new Object();
-				
-				rows.forEach( (row, index) => {
-					let delta = this.itemsOnPage;	
-					row.$rendered.find( '.index-col' ).text( index+1 );
-					
-					if( index % 2 ){
-						row.$rendered.css('background', '#fff');
-					}
-					else{
-						row.$rendered.css('background', '#eee');
-					}
-					
-					if( index < delta ){
-						row.$rendered.show();
-					}
-					
-					resultData[row.id] = row.data;
-				});	
-				
-				$('#<portlet:namespace/>searchResults').val( JSON.stringify(resultData) );	
-			}
-		});
-		
-	};
-	
-	let setResults = function( results ){
-		resultRows.finalResults = results;
-	}
-	
-	let doKeywordSearch = function( dataList, fieldName, keywords ){
-		let orResults = orSearchWithinField( dataList, fieldName, keywords );
-		
-		addSearchField( fieldName, keywords, orResults );
-		
-		setResults( andSearchBetweenFields( resultRows.searchFields ) );
-		
-		displayHittedRows();
-		
-		$('#<portlet:namespace/>totalCount').text( resultRows.finalResults.length + ' ' + Liferay.Language.get('found') );
-	};
-	
-	let rangeSearch = function( dataList, fieldName, fromValue, toValue ){
-		let results = dataList.filter( row => {
-			if(  ( typeof(fromValue) !== "undefined" && fromValue !== null )  &&
-				  ( typeof(toValue) !== "undefined" && toValue !== null ) ){
-					return row.data[fieldName] >= fromValue && row.data[fieldName] <= toValue ;
-			}
-			else if(  ( typeof(fromValue) === "undefined" || fromValue === null )  &&
-						  ( typeof(toValue) !== "undefined" && toValue !== null ) ){
-					return row.data[fieldName] <= toValue ;
-			}
-			else if(  ( typeof(fromValue) !== "undefined" && fromValue !== null )  &&
-						  ( typeof(toValue) === "undefined" || toValue === null ) ){
-						return row.data[fieldName] >= fromValue ;
-			}
-						  
-			return false;
-		});
-		
-		return results;
-	};
-	
-	let doRangeSearch = function( dataList, fieldName, fromValue, toValue, dateType ){
-		if( typeof fromValue === 'undefined' && typeof toValue === 'undefined' ){
-			return;
-		}
-		
-		let rangeSearchResults = rangeSearch( dataList, fieldName, fromValue, toValue );
-		
-		if( dateType === 'Date' ){
-			let fromDate = fromValue ? new Date( fromValue ) : undefined;			
-			let toDate = toValue ? new Date( toValue ) : undefined;			
-			addSearchField( fieldName, 
-											{ 
-												from: fromDate? fromDate.getFullYear()+'/'+fromDate.getMonth()+'/'+fromDate.getDate() : '', 
-												to:toDate? toDate.getFullYear()+'/'+toDate.getMonth()+'/'+toDate.getDate() : ''
-											}, 
-											rangeSearchResults );
-		}
-		else{
-			addSearchField( fieldName, { from: fromValue, to:toValue}, rangeSearchResults );
-		}
-		
-		setResults( andSearchBetweenFields( resultRows.searchFields ) );
-		
-		displayHittedRows();
-		
-		$('#<portlet:namespace/>totalCount').text( resultRows.finalResults.length + ' ' + Liferay.Language.get('found') );
-	};
 	
 	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_KEYWORD_CHANGED, function(evt){
 		let eventData = evt.sxeventData;
@@ -433,7 +165,16 @@ $(document).ready(function(){
 		
 		let term = eventData.term;
 
-		doKeywordSearch( resultRows.rows, term.termName, term.searchKeywords );
+		let hitCount = advancedSearch.doKeywordSearch(  term.termName, term.searchKeywords, term.termType );
+		
+		if( hitCount !== null ){
+			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+		}
+		else{
+			$('#<portlet:namespace/>totalCount').empty();
+		}
+		
+		//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
 	});
 	
 	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_FROM_NUMERIC_CHANGED, function(evt){
@@ -442,11 +183,20 @@ $(document).ready(function(){
 		
 		let term = eventData.term;
 		
+		let hitCount;
 		if( term.rangeSearch ){
-			doRangeSearch( resultRows.rows, term.termName, term.fromSearchValue, term.toSearchValue );
+			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchValue, term.toSearchValue, term.termType );
 		}
 		else{
-			doKeywordSearch( resultRows.rows, term.termName, term.searchValues );
+			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchValues, term.termType );
+		}
+		
+		if( hitCount !== null ){
+			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
+		}
+		else{
+			$('#<portlet:namespace/>totalCount').empty();
 		}
 	});
 	
@@ -456,7 +206,15 @@ $(document).ready(function(){
 		
 		let term = eventData.term;
 		
-		doRangeSearch( resultRows.rows, term.termName, term.fromSearchValue, term.toSearchValue );
+		let hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchValue, term.toSearchValue, term.termType );
+		console.log('hitCount: ' + hitCount );
+		if( hitCount !== null ){
+			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
+		}
+		else{
+			$('#<portlet:namespace/>totalCount').empty();
+		}
 	});
 	
 	Liferay.on(SX.SXIcecapEvents.SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED, function(evt){
@@ -465,11 +223,20 @@ $(document).ready(function(){
 		
 		let term = eventData.term;
 		
+		let hitCount;
 		if( term.rangeSearch ){
-			doRangeSearch( resultRows.rows, term.termName, term.fromSearchValue, term.toSearchValue );
+			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchValue, term.toSearchValue, term.termType );
 		}
 		else{
-			doKeywordSearch( resultRows.rows, term.termName, term.searchValues );
+			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchValues, term.termType );
+		}
+		
+		if( hitCount !== null ){
+			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
+		}
+		else{
+			$('#<portlet:namespace/>totalCount').empty();
 		}
 	});
 	
@@ -478,11 +245,21 @@ $(document).ready(function(){
 		console.log( 'SD_SEARCH_FROM_DATE_CHANGED ' , eventData );
 		
 		let term = eventData.term;
+		
+		let hitCount;
 		if( term.rangeSearch ){
-			doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
+			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
 		}
 		else{
-			doKeywordSearch( resultRows.rows, term.termName, term.searchDates, term.termType );
+			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchDate, term.termType  );
+		}
+		
+		if( hitCount !== null ){
+			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
+		}
+		else{
+			$('#<portlet:namespace/>totalCount').empty();
 		}
 	});
 	
@@ -491,7 +268,15 @@ $(document).ready(function(){
 		console.log( 'SD_SEARCH_TO_DATE_CHANGED ' , eventData );
 		
 		let term = eventData.term;
-		doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
+		let hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
+		
+		if( hitCount !== null ){
+			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
+		}
+		else{
+			$('#<portlet:namespace/>totalCount').empty();
+		}
 	});
 	
 	Liferay.on(SX.SXIcecapEvents.SD_DATE_RANGE_SEARCH_STATE_CHANGED, function(evt){
@@ -500,142 +285,28 @@ $(document).ready(function(){
 		
 		let term = eventData.term;
 		
+		let hitCount;
 		if( term.rangeSearch ){
-			doRangeSearch( resultRows.rows, term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
+			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
 		}
 		else{
-			doKeywordSearch( resultRows.rows, term.termName, term.searchDates, term.termType );
+			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchDate, term.termType );
 		}
+		
+		if( hitCount !== null ){
+			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
+		}
+		else{
+			$('#<portlet:namespace/>totalCount').empty();
+		}
+		
 	});
 	
-	$('#<portlet:namespace/>queryHistory').click(function(event){
-		let queries = resultRows.searchFields;
-		if( !queries )	{
-			alert( 'No queries exist!' );
-			return;
-		}
-		
-		let $dialog = $('#<portlet:namespace/>historyDialog').empty();
-		
-		let $table = $('<table style="width:100%;">').appendTo( $dialog );
-		$table.append( $('<thead style="background:#c5c5c5">'+'<tr>'+'<th style="text-align:center;">'+'<liferay-ui:message key="item"/>'+'</th>'+
-														'<th style="text-align:center;">'+'<liferay-ui:message key="keywords"/>'+'</th>' +
-														'<th style="text-align:center;">'+'<liferay-ui:message key="results"/>'+'</th>' +
-														'</tr>'+'</thead>'));
-		
-		let $tbody = $('<tbody>').appendTo($table);
-		
-		let queryFields = Object.keys( queries );
-		queryFields.forEach( (queryField, index) => {
-			let query = queries[queryField];
-			
-			let $row = $('<tr>').appendTo($tbody);
-			
-			if( query.keywords instanceof Array ){
-				$row.append( $('<td style="text-align:center;">'+queryField+'</td>'+'<td style="text-align:center;">'+query.keywords+'</td>'+'<td style="text-align:center;">'+query.results.length+'</td>'))
-			}
-			else{
-				$row.append( $('<td style="text-align:center;">'+queryField+'</td>'+'<td style="text-align:center;">'+(query.keywords.from ? query.keywords.from:'') + ' ~ ' + (query.keywords.to ? query.keywords.to:'') +'</td>'+'<td style="text-align:center;">'+query.results.length+'</td>'))
-			}
-			
-			$row.click( function(event){
-				event.stopPropagation();
-				
-				let $itemResultDlg = $('#<portlet:namespace/>itemResultDialog');
-
-				let delta = 10;
-				let page = (query.results.length % delta) + 1;			
-				
-				$('#<portlet:namespace/>itemPagination').pagination({
-					items: query.results.length,
-					itemsOnPage: 10,
-					onPageClick: function( pageNumber, event){
-						let delta = this.itemsOnPage;	
-						let $items = $('#<portlet:namespace/>itemTable').children();
-						
-						$items.each( (index, item) => {
-							if( index >= delta * (pageNumber-1) && index < delta*pageNumber ){
-								$(item).show();
-							}
-							else{
-								$(item).hide();
-							}
-						});							
-					},
-					onInit: function(){
-						let $itemTable = $('#<portlet:namespace/>itemTable').empty();
-						let delta = this.itemsOnPage;
-						query.results.forEach( (result, index) => {
-							let clone = result.$rendered.clone();
-							clone.find('.index-col').text( index+1);
-							clone.css('width', '100%');
-							if( delta > index )	clone.show();
-							else								clone.hide();
-							$itemTable.append( clone );
-						});
-					}
-				});
-					
-				$itemResultDlg.dialog({
-					title: queryField,
-					width:800,
-					buttons:[{
-						text: '<liferay-ui:message key="ok"/>',
-						click: function(){
-							$(this).dialog('destroy');
-						}
-					}]
-				});
-				
-			});
-		});
-		
-		$tbody.find("tr").filter(":even").css('background', 'rgb(238,238,238)');
-		
-		$('#<portlet:namespace/>historyDialog').dialog({
-			width:600,
-			modal: true,
-			buttons:[{
-				text: '<liferay-ui:message key="ok"/>',
-				click: function(){
-					$(this).dialog('destroy');
-				}
-			}]
-		});
+	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_HISTORY_CHANGED, function(evt){
+	
+		console.log('SD_SEARCH_HISTORY_CHANGED: ', advancedSearch.getSearchHistories() );
+		$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
 	});
 });
-
-
-
-Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_COMPONENT_ID %>').then(function(
-		managementToolbar
-	) {
-		
-		$('.input-group .input-group-item .input-group-inset-item .dropdown').on('click', function(e){
-			e.stopPropagation();
-			
-			let advancedSearchRenderURL = Liferay.PortletURL.createRenderURL();
-			
-			advancedSearchRenderURL.setPortletId('<%=IcecapWebPortletKeys.STRUCTURED_DATA %>');
-			advancedSearchRenderURL.setPlid('<%= themeDisplay.getPlid() %>');
-			advancedSearchRenderURL.setParameter('<%=IcecapWebKeys.DATATYPE_ID %>', '<%= dataType.getDataTypeId() %>');
-			advancedSearchRenderURL.setParameter('<%=StationXWebKeys.MVC_RENDER_COMMAND_NAME %>', '<%= IcecapMVCCommands.RENDER_STRUCTURED_DATA_ADVANCED_SEARCH %>');
-			console.log( 'Created advenced Search URL: ', advancedSearchRenderURL);
-			window.location.href = advancedSearchRenderURL;
-		});
-		
-		managementToolbar.on('actionItemClicked', function(event) {
-			confirm('confirm...');
-			console.log('Data CMD: ', event.data.item.data.cmd );
-			let form = document.getElementById('<portlet:namespace />fm');
-
-			Liferay.Util.postForm(form, {
-				data:{
-					cmd: event.data.item.data.cmd,
-					redirect: '<%= currentURL %>'
-				},
-				url: '<portlet:actionURL name="<%=IcecapMVCCommands.ACTION_BULK %>" />'
-			});
-		});
-	});
 </aui:script>
