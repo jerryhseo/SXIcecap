@@ -1,5 +1,7 @@
-package com.sx.icecap.web.command.resource.sd;
+package com.sx.icecap.web.command.resource.datatype;
 
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.LiferayPortletMode;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
@@ -47,8 +49,13 @@ public class CreatePortletInstanceIdResourceCommand extends BaseMVCResourceComma
 				LiferayPortletMode.VIEW,
 				LiferayWindowState.EXCLUSIVE );
 		 
+		JSONObject portletInstance = JSONFactoryUtil.createJSONObject();
+		portletInstance.put( "url" , portletURL );
+		portletInstance.put( "portletId", portletName+instance+portletInstanceId);
+		portletInstance.put( "namespace", "_"+portletName+instance+portletInstanceId+"_" );
+		
 		PrintWriter pw = resourceResponse.getWriter();
-		pw.write(portletURL);
+		pw.write(portletInstance.toString());
 		pw.flush();
 		pw.close();
 	}

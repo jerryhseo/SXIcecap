@@ -17,6 +17,8 @@ package com.sx.icecap.service.impl;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.document.library.kernel.service.DLAppService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
@@ -51,6 +53,7 @@ import com.sx.icecap.service.StructuredDataLocalServiceUtil;
 import com.sx.icecap.service.base.DataTypeLocalServiceBaseImpl;
 import com.sx.icecap.util.comparator.datatype.DataTypeModifiedDateComparator;
 import com.sx.icecap.util.comparator.datatype.DataTypeNameComparator;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +66,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Wing Shun Chan
@@ -72,6 +76,9 @@ import org.osgi.service.component.annotations.Component;
 	service = AopService.class
 )
 public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
+	
+	@Reference
+	private DLAppService _dlAppService;
 	
 	@Indexable(type = IndexableType.REINDEX)
 	public DataType addDataType(
@@ -856,14 +863,89 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		
 		terms.forEach(  term -> {
 			JSONObject jsonTerm = (JSONObject)term;
+			String termType = jsonTerm.getString( IcecapSSSTermAttributes.TERM_TYPE );
+			String termName = jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME);
+			
 			if( valueKeys.contains( jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME) ) ){
-				if( IcecapSSSTermTypes.LIST.equalsIgnoreCase( jsonTerm.getString(IcecapSSSTermAttributes.TERM_TYPE) ) ) {
+				if( IcecapSSSTermTypes.LIST.equalsIgnoreCase( termType ) ){
 					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
-							jsonValues.getJSONArray(jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME)));
+							jsonValues.getJSONArray(termName) );
+				}
+				else if(  IcecapSSSTermTypes.FILE.equalsIgnoreCase( jsonTerm.getString( termType )) ) {
+					JSONObject folderInfo = jsonValues.getJSONObject(termName);
+					
+					if( Validator.isNull(folderInfo) ) {
+						System.out.println("Term "+termName+" has no folder information");
+					}
+					else if( folderInfo.length() == 0 ){
+						System.out.println("Term "+termName+" has empty information.");
+					}
+					else {
+						List<FileEntry> fileEntries = null;
+						try {
+							fileEntries = _dlAppService.getFileEntries( folderInfo.getLong("repositoryId"), folderInfo.getLong("folderId") );
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						JSONObject value = JSONFactoryUtil.createJSONObject();
+						for( FileEntry fileEntry : fileEntries ) {
+							JSONObject fileInfo = JSONFactoryUtil.createJSONObject();
+							fileInfo.put("parentFolderId", fileEntry.getFolderId() );
+							fileInfo.put("fileId", fileEntry.getFileEntryId() );
+							fileInfo.put("name", fileEntry.getFileName() );
+							fileInfo.put("size", fileEntry.getSize() );
+							fileInfo.put("type", fileEntry.getMimeType() );
+							fileInfo.put("downloadURL", "/documents/" + fileEntry.getGroupId() + StringPool.BACK_SLASH + fileEntry.getFolderId() + StringPool.BACK_SLASH + fileEntry.getFileName() + StringPool.BACK_SLASH + fileEntry.getUuid() );
+							
+							value.put( fileEntry.getFileName(), fileInfo);
+						}
+						
+						jsonTerm.put("value", value );
+					}
+				}
+				else if(  IcecapSSSTermTypes.EMAIL.equalsIgnoreCase( jsonTerm.getString(termType)) ) {
+					String email = jsonValues.getString( termName );
+					
+					String[] parts = email.split("@");
+					
+					JSONArray value = JSONFactoryUtil.createJSONArray();
+					
+					value.put( parts[0] );
+					value.put( parts[1] );
+					
+					jsonTerm.put("value", value );
+				}
+				else if(  IcecapSSSTermTypes.PHONE.equalsIgnoreCase( jsonTerm.getString(termType)) ) {
+					String phone = jsonValues.getString( termName );
+					
+					String[] parts = phone.split("-");
+					
+					JSONArray value = JSONFactoryUtil.createJSONArray();
+					
+					value.put( parts[0] );
+					value.put( parts[1] );
+					value.put( parts[2] );
+					
+					jsonTerm.put("value", value );
+				}
+				else if(  IcecapSSSTermTypes.ADDRESS.equalsIgnoreCase( jsonTerm.getString(termType)) ) {
+					String address = jsonValues.getString( termName );
+					
+					String[] parts = address.split(", ");
+					
+					JSONArray value = JSONFactoryUtil.createJSONArray();
+					
+					value.put( parts[0] );
+					value.put( parts[1] );
+					value.put( parts[2] );
+					
+					jsonTerm.put("value", value );
 				}
 				else {
 					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
-											jsonValues.getString(jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME)));
+											jsonValues.getString(jsonTerm.getString(termName)));
 				}
 			}
 		});

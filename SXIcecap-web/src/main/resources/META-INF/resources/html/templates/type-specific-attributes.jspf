@@ -1,5 +1,5 @@
 <div id="<portlet:namespace/>typeSpecificSection">
-	<div id="<portlet:namespace/>stringAttributes" class="type-specific-attrs hide">
+	<div id="<portlet:namespace/>stringAttributes" class="type-specific-attrs">
 		<aui:container>
 			<aui:row>
 				<aui:col>
@@ -59,7 +59,7 @@
 		</aui:container>
 	</div>
 	
-	<div id="<portlet:namespace/>numericAttributes" class="type-specific-attrs hide">
+	<div id="<portlet:namespace/>numericAttributes" class="type-specific-attrs">
 		<aui:container>
 			<aui:row>
 				<aui:col md="6">
@@ -110,7 +110,7 @@
 		</aui:container>
 	</div>
 	
-	<div id="<portlet:namespace/>listAttributes" class="type-specific-attrs hide">
+	<div id="<portlet:namespace/>listAttributes" class="type-specific-attrs">
 		<aui:fieldset-group markupView="lexicon" >
 			<aui:fieldset label="display-style"  helpMessage="list-display-style-help">
 				<div style="display:inline-block; margin-left:10px; margin-right:10px;">
@@ -185,7 +185,7 @@
 			</div>
 	</div>
 
-	<div id="<portlet:namespace/>booleanAttributes" class="type-specific-attrs hide">
+	<div id="<portlet:namespace/>booleanAttributes" class="type-specific-attrs ">
 		<aui:fieldset-group markupView="lexicon" >
 			<aui:fieldset label="display-style"  helpMessage="boolean-display-style-help">
 				<div style="display:inline-block; margin-left:10px; margin-right:10px;">
@@ -227,7 +227,7 @@
 		</aui:fieldset-group> 
 	</div>
 	
-	<div id="<portlet:namespace/>fileAttributes" class="type-specific-attrs hide">
+	<div id="<portlet:namespace/>fileAttributes" class="type-specific-attrs">
 		<aui:container>
 			<aui:row>
 				<aui:col>
@@ -242,7 +242,7 @@
 		</aui:container>
 	</div>
 	 
-	 <div id="<portlet:namespace/>dateAttributes" class="type-specific-attrs hide">
+	 <div id="<portlet:namespace/>dateAttributes" class="type-specific-attrs ">
 		<aui:container>
 			<aui:row>
 				<aui:col md="6">
@@ -262,7 +262,25 @@
 		</aui:container>
 	</div>
 	
-	<div id="<portlet:namespace/>groupAttributes" class="type-specific-attrs hide">
+	<div id="<portlet:namespace/>matrixAttributes" class="type-specific-attrs ">
+		<aui:container>
+			<aui:row>
+				<aui:col md="4">
+					<aui:input type="number" name="rows" helpMessage="matrix-rows-help" required="true"></aui:input>
+				</aui:col>
+			</aui:row>
+			<aui:row>
+				<aui:col md="4">
+					<aui:input type="number" name="columns" helpMessage="matrix-columns-help" required="true"></aui:input>
+				</aui:col>
+				<aui:col md="4">
+					<aui:input type="number" name="columnWidth" helpMessage="matrix-columns-width-help"></aui:input>
+				</aui:col>
+			</aui:row>
+		</aui:container>
+	</div>
+	
+	<div id="<portlet:namespace/>groupAttributes" class="type-specific-attrs ">
 		<aui:input 
 					type="checkbox"
 					name="extended" 

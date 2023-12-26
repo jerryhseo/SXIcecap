@@ -178,23 +178,15 @@
 					<aui:select name="termType" label="term-type" helpMessage="term-type-select-help">
 						<aui:option label="String" value="String"/>
 						<aui:option label="Numeric" value="Numeric"/>
-						<aui:option label="Integer" value="Integer"/>
 						<aui:option label="List" value="List"/>
 						<aui:option label="Matrix" value="Matrix"/>
-						<aui:option label="Boolean" value="Boolean" selected="true"/>
-						<aui:option label="Array" value="Array"/>
+						<aui:option label="Boolean" value="Boolean"/>
 						<aui:option label="Address" value="Address"/>
-						<aui:option label="Phone" value="Phone"/>
+						<aui:option label="Phone" value="Phone" selected="true"/>
 						<aui:option label="EMail" value="EMail"/>
 						<aui:option label="Date" value="Date"/>
-						<aui:option label="Comment" value="Comment"/>
 						<aui:option label="Group" value="Group"/>
 						<aui:option label="File" value="File"/>
-						<aui:option label="FileArray" value="FileArray"/>
-						<aui:option label="Object" value="Object"/>
-						<aui:option label="ObjectArray" value="ObjectArray"/>
-						<aui:option label="DataLink" value="DataLink"/>
-						<aui:option label="DataLinkArray" value="DataLinkArray"/>
 					</aui:select>
 				</div>
 				

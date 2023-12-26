@@ -123,11 +123,12 @@ $(document).ready(function(){
 	
 	let jsonDataStructure = <%= structuredData.toString() %>;
 	
-	let dataStructure = SX.newDataStructure(  jsonDataStructure) ;
+	let dataStructure = SX.newDataStructure(  jsonDataStructure ) ;
 	if( <%= cmd.equalsIgnoreCase("update") %> === true ){
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
 	}
 	
+	console.log( 'Data Structure: ', dataStructure );
 	dataStructure.render( SX.SXConstants.FOR_EDITOR, $('#<portlet:namespace/>canvasPanel') );
 	
 	let uploadParams = new Object();

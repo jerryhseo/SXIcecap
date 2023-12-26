@@ -114,8 +114,8 @@
 		<aui:col md="7"   cssClass="show-border">
 			<aui:container>
 				<aui:row>
-					<aui:col md="9"><span id="<portlet:namespace/>resultPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
-					<aui:col md="3">
+					<aui:col md="8"><span id="<portlet:namespace/>resultPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
+					<aui:col md="4" style="text-align:right;">
 						<aui:button name="queryHistory" value="query-history" cssClass="btn-info"></aui:button>
 					</aui:col>
 				</aui:row>

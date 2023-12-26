@@ -465,7 +465,22 @@ $(document).ready(function(){
 	$('#<portlet:namespace/>extended').change(function(event){
 		dataStructure.extendGroup( currentTerm, SX.FormUIUtil.getFormCheckboxValue('extended') );
 	});
+	
+	$('#<portlet:namespace/>rows').change(function(event){
+		currentTerm.getRowsFormValue();;
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
+	$('#<portlet:namespace/>columns').change(function(event){
+		currentTerm.getColumnsFormValue();
+		dataStructure.refreshTerm( currentTerm );
+	});
 
+	$('#<portlet:namespace/>columnWidth').change(function(event){
+		currentTerm.getColumnWidthFormValue();;
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
 	/**************************************************************
 	* Custom Liferay event handlers
 	**************************************************************/
@@ -582,16 +597,25 @@ $(document).ready(function(){
 
 	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED, function( event ){
 		let eventData = event.sxeventData;
-		console.log( 'SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
+		console.log( 'SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED received...', eventData);
 		
 		let term = eventData.term;
 		if( term.termType === 'List' ){
 			dataStructure.activateSlaveTerms( term );
 		}
+	});
+	
+	Liferay.on( 'STRUCTURED_DATA_CHANGED', function(event){
+		let eventData = event.sxeventData;
+		
+		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
+			return;
+		}
+		console.log( 'SX.SXIcecapEvents.STRUCTURED_DATA_CHANGED received...', eventData);
 	});
 	
 	/*******************************************************************************
@@ -759,6 +783,7 @@ $(document).ready(function(){
 			return;
 		}
 		
+		console.log( 'dataStructure Terms: ', dataStructure.terms );
 		$.ajax({
 			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
 			method: 'post',
@@ -805,7 +830,7 @@ $(document).ready(function(){
 			$.ajax({
 				url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>" ><portlet:param name="portletName" value="com_sx_visualizers_sde_StructuredDataEditorPortlet" /></portlet:resourceURL>',
 				type: 'post',
-				dataType: 'text',
+				dataType: 'json',
 				data: {
 					<portlet:namespace/>portletName: 'com_sx_visualizers_sde_StructuredDataEditorPortlet'
 				},
@@ -818,13 +843,19 @@ $(document).ready(function(){
 			});
 		});
 
-		promise.then( portletInstanceId => {
-				let sdeURL = Liferay.PortletURL.createURL(portletInstanceId);
+		promise.then( portletInstance => {
+				let sdeURL = Liferay.PortletURL.createURL(portletInstance.url);
                 sdeURL.setParameter('dataTypeId', '<%= String.valueOf(dataTypeId) %>');
+                sdeURL.setParameter('basePortlet', '<portlet:namespace/>' );
                 sdeURL.setParameter('enableMenu', 'true');
+                
+                let data = new Object();
+                data[portletInstance.namespace+'dataStructure'] =  JSON.stringify( dataStructure );
                 
 				$.ajax({
 		                url: sdeURL.toString(),
+		                method:'post',
+		                data: data,
 		                success: function(data) {
 		                	$dialog = $('<div></div>')
 		                		.html(data)
@@ -839,7 +870,7 @@ $(document).ready(function(){
 		                					text: 'Ok',
 		                					icon: 'ui-icon-heart',
 		                					click: ()=>{
-		                						alert('OK');
+		                						$dialog.dialog('destroy');
 		                					}
 		                				}
 		                			]
