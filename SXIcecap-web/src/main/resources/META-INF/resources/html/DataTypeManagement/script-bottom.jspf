@@ -437,7 +437,7 @@ $(document).ready(function(){
 	});
 	
 	$('input[name="<portlet:namespace/>booleanDisplayStyle"]').change(function(event){
-		// console.log( 'Boolean display style changed: ', currentTerm.getDisplayStyleFormValue( true ) );
+		currentTerm.getDisplayStyleFormValue( true );
 		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
@@ -854,7 +854,7 @@ $(document).ready(function(){
                 
 				$.ajax({
 		                url: sdeURL.toString(),
-		                method:'post',
+		                type:'post',
 		                data: data,
 		                success: function(data) {
 		                	$dialog = $('<div></div>')
