@@ -167,7 +167,7 @@
 				</div>
 				<div id="<portlet:namespace/>manageListOptions">
 					<aui:fieldset-group markupView="lexicon" >
-							<aui:fieldset label="edit-list-optione"  helpMessage="edit-list-option-help">
+							<aui:fieldset label="edit-list-options"  helpMessage="edit-list-option-help">
 							<aui:field-wrapper name="optionLabel" label="option-label" required="true" helpMessage="option-label-help">
 								<liferay-ui:input-localized name="optionLabel" xml=""></liferay-ui:input-localized>
 							</aui:field-wrapper> 

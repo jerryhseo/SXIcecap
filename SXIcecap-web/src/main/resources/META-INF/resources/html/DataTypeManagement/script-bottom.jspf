@@ -40,7 +40,7 @@ $(document).ready(function(){
 	****************************************************************/
 	let setCurrentTerm = function( term ){
 		currentTerm = term;
-		// console.log( 'Current Term: ', term );
+		console.log( 'Current Term: ', term );
 		dataStructure.replaceVisibleTypeSpecificSection( currentTerm.termType );
 		currentTerm.setAllFormValues();
 		
