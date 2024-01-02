@@ -668,8 +668,8 @@ $(document).ready(function(){
 	});
 
 	$('#<portlet:namespace/>btnCopyTerm').click(function(){
-		// setCurrentTerm( dataStructure.copyTerm( currentTerm ) );
-		dataStructure.copyTerm( currentTerm );
+		setCurrentTerm( dataStructure.copyTerm( currentTerm ) );
+		//dataStructure.copyTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>btnClear').click(function(){
@@ -906,6 +906,7 @@ $(document).ready(function(){
 		                					text: 'Ok',
 		                					icon: 'ui-icon-heart',
 		                					click: ()=>{
+		                						console.log( 'Editted Data: ', dataStructure.toFileContent() );
 		                						$dialog.dialog('destroy');
 		                					}
 		                				}
