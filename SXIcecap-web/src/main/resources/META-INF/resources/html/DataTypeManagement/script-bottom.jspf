@@ -40,7 +40,7 @@ $(document).ready(function(){
 	****************************************************************/
 	let setCurrentTerm = function( term ){
 		currentTerm = term;
-		console.log( 'Current Term: ', term );
+		
 		dataStructure.replaceVisibleTypeSpecificSection( currentTerm.termType );
 		currentTerm.setAllFormValues();
 		
@@ -206,7 +206,13 @@ $(document).ready(function(){
 			
 		}
 		else{
-			$.alert( changedVersion + ' ' + validated );
+			if( !changedVersion ){
+				$.alert( Liferay.Language.get('term-version-is-required') );
+			}
+			else{
+				$.alert( Liferay.Language.get('wrong-term-version-format')  );
+			}
+			
 			currentTerm.setTermVersionFormValue();
 		} 
 	});
@@ -393,14 +399,13 @@ $(document).ready(function(){
 		if( Object.keys(labelMap).length === 0 ){
 			$.alert('<liferay-ui:message key="option-label-required"/>');
 			currentTerm.setOptionLabelFormValue();
-			SX.ListTerm.$OPTION_LABEL.focus();
+			SX.ListTerm.$OPTION_LABEL.trigger('focus');
 			
 			return;
 		}
 		
 		currentTerm.setOptionLabelMap( labelMap );
 		
-		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
@@ -441,6 +446,17 @@ $(document).ready(function(){
 		currentTerm.setDirty( true );
 		dataStructure.refreshTerm( currentTerm );
 	});
+	
+	$('#<portlet:namespace/>booleanTrueLabel').change(function(event){
+		currentTerm.getTrueLabelFormValue ();
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
+	$('#<portlet:namespace/>booleanFalseLabel').change(function(event){
+		currentTerm.getFalseLabelFormValue ();
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
 	
 	SX.DateTerm.$DEFAULT_ENABLE_TIME_FORM_CTRL.change(function(event){
 		currentTerm.getEnableTimeFormValue();
@@ -511,9 +527,11 @@ $(document).ready(function(){
 	
 	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
 		let eventData = event.sxeventData;
-		// console.log('DATATYPE_PREVIEW_TERM_SELECTED', eventData, currentTerm);
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			console.log( 'Return by different portlet!!!' );
+			return;
+		}
+		
+		if( currentTerm === eventData.term ){
 			return;
 		}
 		
@@ -676,7 +694,9 @@ $(document).ready(function(){
 		$listOptionManagementDlg.dialog( 'open' );
 		*/
 	
-		currentTerm.initOptionFormValues();
+		currentTerm.setEmptyHighlightedOption();
+		
+		//currentTerm.initOptionFormValues();
 		dataStructure.disable(['btnAddOption'], false);
 	
 		/*
@@ -741,6 +761,8 @@ $(document).ready(function(){
 	
 	$('#<portlet:namespace/>btnAddOption').click(function(event){
 		currentTerm.addOption();
+		
+		console.log( 'addOption: ', currentTerm.options );
 		dataStructure.disable(['btnAddOption'], true);
 		
 		dataStructure.refreshTerm( currentTerm );
@@ -793,6 +815,20 @@ $(document).ready(function(){
 				<portlet:namespace/>dataStructure: JSON.stringify(dataStructure)
 			},
 			success: function( result ){
+				$.confirm({
+					title: 'request-success',
+					content: 'data-structure-saved',
+					type: 'orange',
+					typeAnimated: true,
+					draggable: true,
+					buttons:{
+							ok: {
+								text: 'OK',
+								btnClass: 'btn-blue'
+							}
+					}
+				});
+				
 				dataStructure.clearTermsDirty();
 			},
 			error: function(){
