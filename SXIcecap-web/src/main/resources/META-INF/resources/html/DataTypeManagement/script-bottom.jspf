@@ -694,6 +694,7 @@ $(document).ready(function(){
 		$listOptionManagementDlg.dialog( 'open' );
 		*/
 	
+		$('#<portlet:namespace/>optionLabel').trigger('focus');
 		currentTerm.setEmptyHighlightedOption();
 		
 		//currentTerm.initOptionFormValues();
@@ -762,7 +763,6 @@ $(document).ready(function(){
 	$('#<portlet:namespace/>btnAddOption').click(function(event){
 		currentTerm.addOption();
 		
-		console.log( 'addOption: ', currentTerm.options );
 		dataStructure.disable(['btnAddOption'], true);
 		
 		dataStructure.refreshTerm( currentTerm );
