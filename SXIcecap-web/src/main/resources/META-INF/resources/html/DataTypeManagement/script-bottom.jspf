@@ -643,6 +643,7 @@ $(document).ready(function(){
 		// dataStructure.disable(['termType'], false);
 		
 		setCurrentTerm( dataStructure.createTerm(SX.Term.$DEFAULT_TERM_TYPE_FORM_CTRL.val()) );
+		$('#<portlet:namespace/>termType').trigger('focus');
 		
 		/*
 		$.confirm({
