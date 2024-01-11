@@ -188,7 +188,7 @@
 						value="<%= defineDataStructureBtnLabel %>" 
 						href="<%= defineStructureRenderURL.toString() %>">
 				</aui:button>
-				<aui:button id="btnDelete" value="delete" href="<%= deleteActionURL.toString() %>"></aui:button>
+				<aui:button id="btnDelete" value="delete"></aui:button>
 			</c:if>
 			<aui:button id="btnCancel" value="cancel" href="<%= backURL %>"></aui:button>
 		</aui:button-row>
@@ -214,6 +214,31 @@ $(document).ready(function(){
 		let actionURL = isUpdate ? '<%= updateToDefineStructureActionURL.toString() %>' : '<%= addToDefineStructureActionURL.toString() %>';
 		
 		$('#<portlet:namespace/>dataTypeForm').prop('action', actionURL);
+	});
+	
+	$('#<portlet:namespace/>btnDelete').click( function(){
+		$.confirm({
+			title: '<liferay-ui:message key="confirm-delete-datatype" />',
+			content: '<p><liferay-ui:message key="are-you-sure-to-delete-this-datatype-if-you-click-delete-then-it-is-impossible-to-get-back"/></p>',
+			type: 'orange',
+			typeAnimated: true,
+			columnClass: 'medium',
+			buttons:{
+				ok: {
+					text: '<liferay-ui:message key="delete"/>',
+					btnClass: 'btn-blue',
+					action: function(){
+						$('#<portlet:namespace/>dataTypeForm').prop('action', '<%= deleteActionURL.toString() %>');
+						$('#<portlet:namespace/>dataTypeForm').trigger('submit');
+					}
+				},
+				cancel:{
+					text: '<liferay-ui:message key="cancel"/>',
+					btnClass: 'btn-default'
+				}
+			},
+			draggable: true
+		});
 	});
 	
 });

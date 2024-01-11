@@ -65,6 +65,16 @@ $(document).ready(function(){
 			dataStructure.highlightTerm( currentTerm );
 		}
 	};
+	
+	let createEmptyDataStructure = function(){
+		$('#<portlet:namespace/>previewPanel').empty();
+		
+		dataStructure =  SX.newDataStructure(
+												new Object(), 
+												SX.Constants.FOR_PREVIEW, 
+												$('#<portlet:namespace/>previewPanel') );
+		setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
+	}
 
 	let dataStructure;
 	
@@ -74,30 +84,22 @@ $(document).ready(function(){
 	if( SX.Util.isEmptyObject(jsonDataStructure) ){
 		dataStructure =  SX.newDataStructure(
 												new Object(), 
-												SX.SXConstants.FOR_PREVIEW, 
+												SX.Constants.FOR_PREVIEW, 
 												$('#<portlet:namespace/>previewPanel'));
 		setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
 	}
 	else{
 		dataStructure =  SX.newDataStructure( 
 												jsonDataStructure,
-												SX.SXConstants.FOR_PREVIEW, 
+												SX.Constants.FOR_PREVIEW, 
 												$('#<portlet:namespace/>previewPanel'));
-		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
+		dataStructure.render( SX.Constants.FOR_PREVIEW );
 		
 		setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
 		dataStructure.highlightTerm( currentTerm );
 	}
 	
-	/*
-	let fileInputs = $( ':file');
-	console.log( 'fileInputs: ', fileInputs);
-	$(fileInputs[0]).FancyFileUpload({
-				params:{
-					action:'fileUploader'
-				}
-			});
-	*/
+	
 	/**************************************************************
 	* Change Event handlers for form controls 
 	***************************************************************/
@@ -148,6 +150,16 @@ $(document).ready(function(){
 	});
 	
 	SX.Term.$DEFAULT_TERM_NAME_FORM_CTRL.change(function(eventObj){
+		let changedName = currentTerm.getTermNameFormValue( false );
+		if( dataStructure.exist( changedName ) ){
+			$.alert( changedName + 'already exist. Should be changed another name.' );
+			currentTerm.setTermNameFormValue();
+		}
+		else 	if( currentTerm.validateNameExpression( changedName ) === false ){
+			$.alert( 'Term Name[' + changedName +'] is unvalid for a term name. Try another one.');
+			currentTerm.setTermNameFormValue();
+		} 
+		
 		if( currentTerm.$rendered ){
 			// It means the current term is one of the data structure and previewed on the preview panel.
 			// Therefore, we must confirm that the term's name be changed before the preview changed.
@@ -161,21 +173,8 @@ $(document).ready(function(){
 						text: 'OK',
 						btnClass: 'btn-blue',
 						action: function(){
-							let changedName = currentTerm.getTermNameFormValue( false );
-							if( dataStructure.exist( changedName ) ){
-								$.alert( changedName + 'already exist. Should be changed another name.' );
-								currentTerm.setTermNameFormValue();
-							}
-							else{
-								if( currentTerm.validateNameExpression( changedName ) === true ){
-									currentTerm.getTermNameFormValue(true);
-									dataStructure.refreshTerm( currentTerm );
-								}
-								else{
-									$.alert( 'Term Name[' + changedName +'] is unvalid. Try another one.');
-									currentTerm.setTermNameFormValue();
-								}
-							} 
+							currentTerm.getTermNameFormValue(true);
+							dataStructure.refreshTerm( currentTerm );
 						}
 					},
 					cancel: function(){
@@ -235,7 +234,7 @@ $(document).ready(function(){
 	$('#<portlet:namespace/>disabled').change(function(eventObj){
 		// console.log( 'abstractKey changed...', currentTerm);
 		currentTerm.getDisabledFormValue(true);
-		dataStructure.disableTerm( currentTerm, currentTerm.disabled, SX.SXConstants.FOR_PREVIEW );
+		dataStructure.disableTerm( currentTerm, currentTerm.disabled, SX.Constants.FOR_PREVIEW );
 	});
 	
 	$('#<portlet:namespace/>searchable').change(function(eventObj){
@@ -501,7 +500,7 @@ $(document).ready(function(){
 	* Custom Liferay event handlers
 	**************************************************************/
 	
-	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_DELETED, function(event){
+	Liferay.on(SX.Events.DATATYPE_PREVIEW_TERM_DELETED, function(event){
 		let eventData = event.sxeventData;
 		 
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
@@ -510,10 +509,10 @@ $(document).ready(function(){
 		
 		dataStructure.removeTerm( eventData.term.termName );
 		
-		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
+		dataStructure.render( SX.Constants.FOR_PREVIEW );
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_COPY_TERM, function(event){
+	Liferay.on(SX.Events.DATATYPE_PREVIEW_COPY_TERM, function(event){
 		let eventData = event.sxeventData;
 		 
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
@@ -525,7 +524,7 @@ $(document).ready(function(){
 		dataStructure.copyTerm( eventData.term );
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
+	Liferay.on(SX.Events.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
 		let eventData = event.sxeventData;
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -541,7 +540,7 @@ $(document).ready(function(){
 	});
 
 	
-	Liferay.on( SX.SXIcecapEvents.LIST_OPTION_PREVIEW_REMOVED, function( event ){
+	Liferay.on( SX.Events.LIST_OPTION_PREVIEW_REMOVED, function( event ){
 		let eventData = event.sxeventData;
 				
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
@@ -552,10 +551,10 @@ $(document).ready(function(){
 
 		currentTerm.removeOption( removedOption.value );
 		
-		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
+		dataStructure.render( SX.Constants.FOR_PREVIEW );
 	});
 
-	Liferay.on( SX.SXIcecapEvents.LIST_OPTION_PREVIEW_SELECTED, function( event ){
+	Liferay.on( SX.Events.LIST_OPTION_PREVIEW_SELECTED, function( event ){
 		let eventData = event.sxeventData;
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -565,31 +564,31 @@ $(document).ready(function(){
 		currentTerm.highlightOptionPreview(); 
 	});
 	
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS, function( event ){
+	Liferay.on( SX.Events.DATATYPE_FORM_UI_SHOW_TERMS, function( event ){
 		let eventData = event.sxeventData;
-		// console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS received...', eventData);
+		// console.log( 'SX.Events.DATATYPE_FORM_UI_SHOW_TERMS received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
 		
-		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.SXConstants.FOR_PREVIEW );
+		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.Constants.FOR_PREVIEW );
 	});
 	
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_FORM_UI_CHECKBOX_CHANGED, function( event ){
+	Liferay.on( SX.Events.DATATYPE_FORM_UI_CHECKBOX_CHANGED, function( event ){
 		let eventData = event.sxeventData;
-		// console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_CHECKBOX_CHANGED received...', eventData);
+		// console.log( 'SX.Events.DATATYPE_FORM_UI_CHECKBOX_CHANGED received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
 		
-		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.SXConstants.FOR_PREVIEW );
+		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.Constants.FOR_PREVIEW );
 	});
 	
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_PREVIEW_REMOVE_TERM, function( event ){
+	Liferay.on( SX.Events.DATATYPE_PREVIEW_REMOVE_TERM, function( event ){
 		let eventData = event.sxeventData;
-		// console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_REMOVE_TERM received...', eventData);
+		// console.log( 'SX.Events.DATATYPE_PREVIEW_REMOVE_TERM received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -600,9 +599,9 @@ $(document).ready(function(){
 		// console.log('Data Structure: ', dataStructure );
 	});
 	
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_PREVIEW_DELETE_TERM, function( event ){
+	Liferay.on( SX.Events.DATATYPE_PREVIEW_DELETE_TERM, function( event ){
 		let eventData = event.sxeventData;
-		// console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_DELETE_TERM received...', eventData);
+		// console.log( 'SX.Events.DATATYPE_PREVIEW_DELETE_TERM received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -613,13 +612,13 @@ $(document).ready(function(){
 		// console.log('Data Structure: ', dataStructure );
 	});
 
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED, function( event ){
+	Liferay.on( SX.Events.DATATYPE_SDE_VALUE_CHANGED, function( event ){
 		let eventData = event.sxeventData;
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
-		console.log( 'SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED received...', eventData);
+		console.log( 'SX.Events.DATATYPE_SDE_VALUE_CHANGED received...', eventData);
 		
 		let term = eventData.term;
 		if( term.termType === 'List' ){
@@ -633,7 +632,7 @@ $(document).ready(function(){
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
-		console.log( 'SX.SXIcecapEvents.STRUCTURED_DATA_CHANGED received...', eventData);
+		console.log( 'SX.Events.STRUCTURED_DATA_CHANGED received...', eventData);
 	});
 	
 	/*******************************************************************************
@@ -670,7 +669,6 @@ $(document).ready(function(){
 
 	$('#<portlet:namespace/>btnCopyTerm').click(function(){
 		setCurrentTerm( dataStructure.copyTerm( currentTerm ) );
-		//dataStructure.copyTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>btnClear').click(function(){
@@ -680,10 +678,10 @@ $(document).ready(function(){
 	$('#<portlet:namespace/>btnImportTerm').click(function(){
 		dataStructure = SX.newDataStructure(
 												crfSampleDataType, 
-												SX.SXConstants.FOR_PREVIEW, 
+												SX.Constants.FOR_PREVIEW, 
 												$('#<portlet:namespace/>previewPanel'));
 		
-		dataStructure.render(SX.SXConstants.FOR_PREVIEW);
+		dataStructure.render(SX.Constants.FOR_PREVIEW);
 		console.log( 'Imported Data Type: ', dataStructure );
 	});
 	
@@ -770,7 +768,7 @@ $(document).ready(function(){
 	});
 	
 	$('#<portlet:namespace/>btnAdd').click(function(){
-		if( dataStructure.addTerm( currentTerm,  0,  SX.SXConstants.FOR_PREVIEW, true ) ){
+		if( dataStructure.addTerm( currentTerm,  0,  SX.Constants.FOR_PREVIEW, true ) ){
 			dataStructure.disable(['add', 'btnClear', 'termType'], true);
 			/*
 			$('#<portlet:namespace/>add').prop('disabled', true);
@@ -782,7 +780,7 @@ $(document).ready(function(){
 	});
 	
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
-		dataStructure.render(SX.SXConstants.FOR_PREVIEW);
+		dataStructure.render(SX.Constants.FOR_PREVIEW);
 	});
 	
 	$('#<portlet:namespace/>btnUp').click(function(event){
@@ -862,37 +860,52 @@ $(document).ready(function(){
 		});
 	});
 	
-	$('#<portlet:namespace/>btnShowSDE').click( function(event){
-		let promise = new Promise( (resolve, reject) => {
-			$.ajax({
-				url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>" ><portlet:param name="portletName" value="com_sx_visualizers_sde_StructuredDataEditorPortlet" /></portlet:resourceURL>',
-				type: 'post',
-				dataType: 'json',
-				data: {
-					<portlet:namespace/>portletName: 'com_sx_visualizers_sde_StructuredDataEditorPortlet'
-				},
-				success: function(result){
-					resolve( result );
-				},
-				error: function( error ){
-					reject( error );
+	$('#<portlet:namespace/>btnRemoveDataStructure').click( function(event){
+		$.confirm({
+			title: '<liferay-ui:message key="confirm-remove-data-structure" />',
+			content: '<p><liferay-ui:message key="are-you-sure-to-remove-this-data-structure-if-you-click-ok-then-it-is-impossible-to-get-back"/></p>',
+			type: 'orange',
+			typeAnimated: true,
+			columnClass: 'medium',
+			buttons:{
+				ok: {
+					text: '<liferay-ui:message key="ok"/>',
+					btnClass: 'btn-blue',
+					action: function(){
+						$.ajax({
+							url: '<%= removeDataStructureResourceCommandURL.toString() %>',
+							method: 'post',
+							dataType: 'text',
+							success: function( result ){
+								$.alert( '<liferay-ui:message key="data-structure-successfully-deleted-from-database"/>' );
+								createEmptyDataStructure();
+							},
+							error: function(){
+								$.alert( '<liferay-ui:message key="failed-to-delete-data-structure-from-database"/>' );
+							}
+						});
+					}
 				}
-			});
+			},
+			draggable: true
 		});
-
-		promise.then( portletInstance => {
-				let sdeURL = Liferay.PortletURL.createURL(portletInstance.url);
-                sdeURL.setParameter('dataTypeId', '<%= String.valueOf(dataTypeId) %>');
+	});
+	
+	<%
+		JSONObject sdePortletInfo = SXPortalUtil.createPortletInstanceId( renderRequest, "com_sx_visualizers_sde_StructuredDataEditorPortlet" );
+	%>
+	
+	$('#<portlet:namespace/>btnShowSDE').click( function(event){
+		let sdeURL = Liferay.PortletURL.createURL( '<%= sdePortletInfo.getString("url") %>');
                 sdeURL.setParameter('basePortlet', '<portlet:namespace/>' );
                 sdeURL.setParameter('enableMenu', 'true');
-                
-                let data = new Object();
-                data[portletInstance.namespace+'dataStructure'] =  JSON.stringify( dataStructure );
                 
 				$.ajax({
 		                url: sdeURL.toString(),
 		                type:'post',
-		                data: data,
+		                data: {
+		                	'<%=sdePortletInfo.getString("namespace")%>dataStructure':  JSON.stringify( dataStructure )
+		                },
 		                success: function(data) {
 		                	$dialog = $('<div></div>')
 		                		.html(data)
@@ -902,6 +915,18 @@ $(document).ready(function(){
 		                			height: 800,
 		                			width:800,
 		                			title: Liferay.Language.get('structured-data-editor'),
+		                			create: (event, ui) =>{
+		                				let eventData = {
+		                					sxeventdata: {
+		                						sourcePortlet: '<portlet:namespace/>',
+		                						targetPortlet: '<%=sdePortletInfo.getString("namespace")%>',
+			                					dataTypeId: <%= String.valueOf(dataTypeId) %>,
+			                					dataStructure: dataStructure
+		                					}
+		                				};
+		                				
+		                				Liferay.fire( SX.Events.SX_LOAD_DATA, eventData );
+		                			},
 		                			buttons:[
 		                				{
 		                					text: 'Ok',
@@ -914,14 +939,10 @@ $(document).ready(function(){
 		                			]
 		                		});
 		                },
-		                error: function(jqXHR){
-		                    //Do something here
+		                error: function(jqXHR, a, b){
+		                    console.log('Bad request....', a, b);
 		                }
               });
-		})
-		.catch( error => {
-			alert( error );
-		});
 	});
 	
 	Liferay.on('jquery_alert', function(e){

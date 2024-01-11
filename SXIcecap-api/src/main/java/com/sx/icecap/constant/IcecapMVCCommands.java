@@ -45,6 +45,8 @@ public class IcecapMVCCommands {
 	public static final String RESOURCE_DATATYPE_RENDER_DATATYPE = "/html/DataTypeManagement/render-datatype";
 	public static final String RESOURCE_DATATYPE_LOAD_STRUCTURE = "/html/DataTypeManagement/load-data-structure";
 	public static final String RESOURCE_DATATYPE_SAVE_STRUCTURE = "/html/DataTypeManagement/save-data-structure";
+	public static final String RESOURCE_DATATYPE_STRUCTURE_DELETE = "/html/DataTypeManagement/delete-data-structure";
+	
 
 	public static final String RENDER_STRUCTURED_DATA_LIST = "/html/StructuredData/structured-data-list";
 	public static final String RENDER_STRUCTURED_DATA_EDIT = "/html/StructuredData/edit-structured-data";

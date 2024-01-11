@@ -39,9 +39,9 @@
 	<portlet:param name="cmd" value="<%= hasDataStructure?StationXConstants.CMD_UPDATE:StationXConstants.CMD_ADD %>"/>
 </portlet:resourceURL>
 
-<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATA_STRUCTURE_DELETE %>" var="removeDataStructureURL">
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_STRUCTURE_DELETE %>" var="removeDataStructureResourceCommandURL">
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
-</portlet:actionURL>
+</portlet:resourceURL>
 
 
 <portlet:renderURL var="dataTypeListURL">
@@ -296,7 +296,7 @@
 	<aui:button-row>
 		<aui:button id="btnSave" value="save"></aui:button>
 		<aui:button id="btnSaveAndViewDataTypeList" value="save-and-view-datatype-list"></aui:button>
-		<aui:button id="btnRemoveDataStructure" value="remove-data-structure" href="<%= removeDataStructureURL %>"></aui:button>
+		<aui:button id="btnRemoveDataStructure" value="remove-data-structure"></aui:button>
 	</aui:button-row>
 
 </aui:container>
