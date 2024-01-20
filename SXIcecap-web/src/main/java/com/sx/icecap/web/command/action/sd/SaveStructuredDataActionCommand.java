@@ -191,8 +191,11 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 
 		Set<Entry<String, FileItem[]>> entrySet = uploadFileMap.entrySet();
 		
+		System.out.println("File Entry Set Count: " + entrySet.size() );
+		
 		for( Entry<String, FileItem[]> fileEntry : entrySet ){
 			FileItem item[] = fileEntry.getValue();
+			System.out.println("item count: " + item.length);
 			
 			String termName = fileEntry.getKey();
 			JSONObject term = _dataTypeLocalService.getTermByName(dataTypeId, termName );
@@ -204,7 +207,6 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 			
 			termData = JSONFactoryUtil.createJSONObject();
 			
-			System.out.println("Term Data: " + termData.toString(4));
 			String termVersion = term.getString("termVersion");
 			if( termVersion.isEmpty() ) {
 				termVersion = "1.0.0";

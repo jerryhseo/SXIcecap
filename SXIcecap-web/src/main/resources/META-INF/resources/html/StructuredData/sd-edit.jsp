@@ -23,9 +23,6 @@
 <%@page import="com.sx.icecap.model.DataType"%>
 <%@ include file="../init.jsp" %>
 
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/samples/crf-data-samples-fixed.js"></script>
-
-
 <%
 	DataType dataType = (DataType)renderRequest.getAttribute(DataType.class.getName());
 	JSONObject structuredData = (JSONObject)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT);
@@ -89,6 +86,8 @@
 				</div>
 				<hr class=""></hr>
 				
+				<div id="<portlet:namespace/>inputStatusBar" style="margin-bottom:10px;margin-left:10px; display:none;"><span style="margin-right:5px;">Input Status:</span></div>
+				
 				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
 				<input type="hidden" id="<portlet:namespace/>uploadParams" name="<portlet:namespace/>uploadParams"/>
 				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
@@ -129,15 +128,15 @@ $(document).ready(function(){
 	}
 	
 	console.log( 'Data Structure: ', dataStructure );
-	dataStructure.render( SX.SXConstants.FOR_EDITOR, $('#<portlet:namespace/>canvasPanel') );
+	dataStructure.render( SX.Constants.FOR_EDITOR, $('#<portlet:namespace/>canvasPanel') );
 	
 	let uploadParams = new Object();
 	
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED, function( event ){
+	Liferay.on( SX.Events.DATATYPE_SDE_VALUE_CHANGED, function( event ){
 		event.stopPropagation();
 		event.preventDefault();
 		
-		let eventData = event.sxeventData;
+		let eventData = event.sxeventdata;
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
@@ -162,6 +161,8 @@ $(document).ready(function(){
 			$('#<portlet:namespace/>uploadParams').val( 
 						JSON.stringify(uploadParams) );
 		}
+		
+		dataStructure.displayInputStatus();
 		
 		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
 	});

@@ -71,9 +71,6 @@
 		<aui:col md="6" >
 			<h3  class="height-full"><span class="vertical-align-bottom"><liferay-ui:message key="<%= pageTitleKey %>" /></span></h3>
 		</aui:col>
-		<aui:col md="6" >
-			<aui:button name="importDataType" value="import-datatype" cssClass="right"></aui:button>
-		</aui:col>
 	</aui:row>
 	<aui:row>
 		<aui:col>
@@ -201,6 +198,15 @@
 
 $(document).ready(function(){
 	const isUpdate = <%= isUpdate %>;
+	
+	$('#<portlet:namespace/>dataTypeName').change( function( event ){
+		let name = $('#<portlet:namespace/>dataTypeName').val();
+		
+		if( !/^[_a-zA-Z]([_a-zA-Z0-9])*$/.test(name) ){
+			$.alert( 'DataType Name[' + name +'] is unvalid for a datatype. Try another one.');
+			$('#<portlet:namespace/>dataTypeName').val('');
+		}
+	});
 
 	$('#<portlet:namespace/>btnSaveToList').click( function(){
 		let actionURL = isUpdate ? '<%= updateActionURL.toString() %>' : '<%= addActionURL.toString() %>';

@@ -159,8 +159,18 @@
 		</aui:col>
 	</aui:row>
 	<aui:row>
-		<aui:col>
-			<hr class="title-horizontal-line">
+		<aui:col md="12">
+			<hr class="title-horizontal-line"><br>
+		</aui:col>
+	</aui:row>
+	<aui:row>
+		<aui:col md="8">
+			<aui:input type="checkbox" name="displayInputStatus" label="input-status-display"/>
+		</aui:col>
+		<aui:col md="4">
+			<div id="<portlet:namespace/>inputStatusBar" style="margin-bottom:10px;margin-left:10px; display:none;font-size:0.9rem;font-weight:600;float:right;">
+				<span style="margin-right:5px;">Input Status:</span>
+			</div>
 		</aui:col>
 	</aui:row>
 	<aui:row id="editSection" cssClass="border">
@@ -179,14 +189,14 @@
 						<aui:option label="String" value="String"/>
 						<aui:option label="Numeric" value="Numeric"/>
 						<aui:option label="List" value="List"/>
-						<aui:option label="Matrix" value="Matrix"/>
-						<aui:option label="Boolean" value="Boolean"/>
-						<aui:option label="Address" value="Address"/>
-						<aui:option label="Phone" value="Phone" selected="true"/>
-						<aui:option label="EMail" value="EMail"/>
-						<aui:option label="Date" value="Date"/>
-						<aui:option label="Group" value="Group"/>
 						<aui:option label="File" value="File"/>
+						<aui:option label="Boolean" value="Boolean"/>
+						<aui:option label="Date" value="Date"/>
+						<aui:option label="Address" value="Address"/>
+						<aui:option label="Phone" value="Phone"/>
+						<aui:option label="EMail" value="EMail"/>
+						<aui:option label="Matrix" value="Matrix"/>
+						<aui:option label="Group" value="Group"/>
 					</aui:select>
 				</div>
 				

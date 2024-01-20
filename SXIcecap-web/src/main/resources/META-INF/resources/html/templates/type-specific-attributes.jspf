@@ -56,6 +56,28 @@
 					</aui:input>
 				</aui:col>
 			</aui:row>
+			<aui:row>
+				<aui:col md="12">
+					<aui:input 
+							type="text"
+							id="stringInputSize" 
+							name="stringInputSize" 
+							label="input-size"
+							value="5" 
+							inlineField="true"
+							inlineLabel="left"
+							helpMessage="input-size-help">
+					</aui:input>
+					<aui:input 
+							type="checkbox"
+							id="stringLineBreak" 
+							name="stringLineBreak" 
+							label="line-break"
+							inlineField="true"
+							helpMessage="line-break-help">
+					</aui:input>
+				</aui:col>
+			</aui:row>
 		</aui:container>
 	</div>
 	
@@ -105,6 +127,28 @@
 										xml="">
 						</liferay-ui:input-localized>
 					</aui:field-wrapper>
+				</aui:col>
+			</aui:row>
+			<aui:row>
+				<aui:col md="12">
+					<aui:input 
+							type="text"
+							id="numericInputSize" 
+							name="numericInputSize" 
+							label="input-size"
+							value="5" 
+							inlineField="true"
+							inlineLabel="left"
+							helpMessage="input-size-help">
+					</aui:input>
+					<aui:input 
+							type="checkbox"
+							id="numericLineBreak" 
+							name="numericLineBreak" 
+							label="line-break"
+							inlineField="true"
+							helpMessage="line-break-help">
+					</aui:input>
 				</aui:col>
 			</aui:row>
 		</aui:container>

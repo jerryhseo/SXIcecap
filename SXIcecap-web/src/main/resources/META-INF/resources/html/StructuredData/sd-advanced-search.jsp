@@ -109,9 +109,9 @@
 
 <aui:container  cssClass="SXIcecap-web">
 	<aui:row >
-		<aui:col md="5"   cssClass="show-border" id="searchSection">
+		<aui:col md="6"   cssClass="show-border" id="searchSection">
 		</aui:col>
-		<aui:col md="7"   cssClass="show-border">
+		<aui:col md="6"   cssClass="show-border">
 			<aui:container>
 				<aui:row>
 					<aui:col md="8"><span id="<portlet:namespace/>resultPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
@@ -159,8 +159,8 @@ $(document).ready(function(){
 	});
 	
 	
-	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_KEYWORD_CHANGED, function(evt){
-		let eventData = evt.sxeventData;
+	Liferay.on(SX.Events.SD_SEARCH_KEYWORD_CHANGED, function(evt){
+		let eventData = evt.sxeventdata;
 		console.log( 'SD_SEARCH_KEYWORD_CHANGED' , eventData );
 		
 		let term = eventData.term;
@@ -177,8 +177,8 @@ $(document).ready(function(){
 		//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_FROM_NUMERIC_CHANGED, function(evt){
-		let eventData = evt.sxeventData;
+	Liferay.on(SX.Events.SD_SEARCH_FROM_NUMERIC_CHANGED, function(evt){
+		let eventData = evt.sxeventdata;
 		console.log( 'SD_SEARCH_FROM_NUMERIC_CHANGED ' , eventData );
 		
 		let term = eventData.term;
@@ -200,8 +200,8 @@ $(document).ready(function(){
 		}
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_TO_NUMERIC_CHANGED, function(evt){
-		let eventData = evt.sxeventData;
+	Liferay.on(SX.Events.SD_SEARCH_TO_NUMERIC_CHANGED, function(evt){
+		let eventData = evt.sxeventdata;
 		console.log( 'SD_SEARCH_TO_NUMERIC_CHANGED ' , eventData );
 		
 		let term = eventData.term;
@@ -217,8 +217,8 @@ $(document).ready(function(){
 		}
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED, function(evt){
-		let eventData = evt.sxeventData;
+	Liferay.on(SX.Events.SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED, function(evt){
+		let eventData = evt.sxeventdata;
 		console.log( 'SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED ' , eventData );
 		
 		let term = eventData.term;
@@ -240,8 +240,8 @@ $(document).ready(function(){
 		}
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_FROM_DATE_CHANGED, function(evt){
-		let eventData = evt.sxeventData;
+	Liferay.on(SX.Events.SD_SEARCH_FROM_DATE_CHANGED, function(evt){
+		let eventData = evt.sxeventdata;
 		console.log( 'SD_SEARCH_FROM_DATE_CHANGED ' , eventData );
 		
 		let term = eventData.term;
@@ -263,8 +263,8 @@ $(document).ready(function(){
 		}
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_TO_DATE_CHANGED, function(evt){
-		let eventData = evt.sxeventData;
+	Liferay.on(SX.Events.SD_SEARCH_TO_DATE_CHANGED, function(evt){
+		let eventData = evt.sxeventdata;
 		console.log( 'SD_SEARCH_TO_DATE_CHANGED ' , eventData );
 		
 		let term = eventData.term;
@@ -279,8 +279,8 @@ $(document).ready(function(){
 		}
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.SD_DATE_RANGE_SEARCH_STATE_CHANGED, function(evt){
-		let eventData = evt.sxeventData;
+	Liferay.on(SX.Events.SD_DATE_RANGE_SEARCH_STATE_CHANGED, function(evt){
+		let eventData = evt.sxeventdata;
 		console.log( 'SD_DATE_RANGE_SEARCH_STATE_CHANGED ' , eventData );
 		
 		let term = eventData.term;
@@ -303,7 +303,7 @@ $(document).ready(function(){
 		
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.SD_SEARCH_HISTORY_CHANGED, function(evt){
+	Liferay.on(SX.Events.SD_SEARCH_HISTORY_CHANGED, function(evt){
 	
 		console.log('SD_SEARCH_HISTORY_CHANGED: ', advancedSearch.getSearchHistories() );
 		$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
