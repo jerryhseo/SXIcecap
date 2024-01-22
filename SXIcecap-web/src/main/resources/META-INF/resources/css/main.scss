@@ -11,19 +11,19 @@
 		display:inline-block;
 	}
 
-	> .card-horizontal {
+	.card-horizontal {
 		margin-bottom: 0px;
 	}
 	
-	> .main-content-card {
+	.main-content-card {
 		min-height: auto !important;
 	}
 
-	> .form-group {
+	.form-group {
 		margin-bottom: 0.5rem;
 	}
 
-	> .form-control {
+	.form-control {
 		margin-bottom: 0.5rem;
 		background-color: rgba(255, 255, 255, 0.989);
 		width:100%;
@@ -58,21 +58,21 @@
 		float: right;
 	}
 
-	> .vertical-align-bottom{
+	.vertical-align-bottom{
 		bottom:0;
 		position: absolute;
 	}
 
-	> .height-full{
+	.height-full{
 		height: 100%;
 	}
 
-	> .full{
+	.full{
 		min-height:100%;
 		min-width:100%;
 	}
 
-	> .border{
+	.border{
 		border: 2px solid gray !important;
 		margin-bottom: 5px;
 	}
@@ -85,7 +85,7 @@
 		border-right: 1px solid lightgray !important;
 	}
 
-	> .bottom-margin{
+	.bottom-margin{
 		margin-bottom: 15px;
 	}
 
@@ -93,11 +93,20 @@
 		border: 3px solid darkcyan;
 	}
 
-	> .center-button{
+	.center-button{
 		width:80px;
 		height:65px;
 		padding: 2px;
 		margin: 5px 0;
+	}
+
+	div .control-label {
+		color: #272833;
+		font-size: 0.875rem;
+		font-weight:600;
+		margin-bottom:0.25rem;
+		max-width:100%;
+		word-wrap: break-word;
 	}
 }
 
