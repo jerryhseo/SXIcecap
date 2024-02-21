@@ -28,7 +28,6 @@
 	JSONObject structuredData = (JSONObject)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT);
 	
 	String command = (String)renderRequest.getAttribute(StationXWebKeys.CMD);
-	out.println("CMD: " + command);
 	long structuredDataId = ParamUtil.getLong(renderRequest, IcecapWebKeys.STRUCTURED_DATA_ID, 0);
 	
 	Ticket ticket = TicketLocalServiceUtil.addTicket(user.getCompanyId(), User.class.getName(), user.getUserId(), TicketConstants.TYPE_IMPERSONATE, null, null, new ServiceContext());
@@ -56,6 +55,11 @@
 
 <portlet:actionURL name="<%= IcecapMVCCommands.ACTION_STRUCTURED_DATA_ADD %>" var="saveActionURL">
 	<portlet:param name="<%= StationXWebKeys.CMD %>" value="<%= command %>"/>
+</portlet:actionURL>
+
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_STRUCTURED_DATA_DELETE %>" var="deleteActionURL">
+	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%=String.valueOf(dataType.getDataTypeId()) %>"/>
+	<portlet:param name="<%= StationXWebKeys.STRUCTURED_DATA_ID %>" value="<%= String.valueOf(structuredDataId) %>"/>
 </portlet:actionURL>
 
 <portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_STRUCTURED_DATA_ADD_SAMPLE %>" var="addSampleData">
@@ -91,14 +95,12 @@
 					<input type="hidden" id="<portlet:namespace/>dataContent" name="<portlet:namespace/>dataContent" >
 					<aui:button-row>
 						<aui:button type="submit" id="btnSave" value="save"></aui:button>
-						<aui:button type="button" id="btnDelete" value="delete"></aui:button>
+						<aui:button type="button" id="btnDelete" value="delete" href="<%= deleteActionURL %>"></aui:button>
 					</aui:button-row>
 				</form>
 		</aui:col>
 	</aui:row>
 </aui:container>
-
-
 
 <aui:script use="aui-base, liferay-form, liferay-menu">
 
@@ -210,10 +212,6 @@ $(document).ready(function(){
 		
 		$('#<portlet:namespace/>dataContent').val( recvPacket.payload.toFileContent() );
 		console.log( 'dataContent: ', $('#<portlet:namespace/>dataContent').val() );
-	});
-
-	$('#<portlet:namespace/>btnSave').click( function(event){
-		$('#<portlet:namespace/>fm').submit();
 	});
 
 	/*

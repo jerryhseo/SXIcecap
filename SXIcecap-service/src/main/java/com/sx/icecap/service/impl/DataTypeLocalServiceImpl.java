@@ -992,7 +992,7 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 			}
 		}
 		
-		return folder.getFolderId();
+		return Validator.isNull(folder) ? 0 : folder.getFolderId();
 	}
 	
 	@Deprecated
@@ -1009,6 +1009,10 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	}
 	
 	public JSONArray getDLFolderFiles( long repositoryId, long folderId ) {
+		if( folderId == 0 ) {
+			return null;
+		}
+		
 		List<FileEntry> fileEntries = null;
 		
 		try {

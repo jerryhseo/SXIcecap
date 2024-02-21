@@ -277,7 +277,10 @@ public class StructuredDataLocalServiceImpl
 	@Indexable(type = IndexableType.DELETE)
 	public StructuredData removeStructuredData( long structuredDataId, long dataFileFolderId ) throws PortalException {
 		StructuredData structuredData = super.structuredDataPersistence.remove(structuredDataId);
-		_dlAppService.deleteFolder(dataFileFolderId);
+		
+		if( dataFileFolderId > 0 ) {
+			_dlAppService.deleteFolder(dataFileFolderId);
+		}
 		
 		super.assetEntryLocalService.deleteEntry(StructuredData.class.getName(), structuredData.getPrimaryKey());
 

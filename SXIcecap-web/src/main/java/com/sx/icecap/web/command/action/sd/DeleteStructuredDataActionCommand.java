@@ -43,6 +43,7 @@ public class DeleteStructuredDataActionCommand extends BaseMVCActionCommand  {
 		long structuredDataId = ParamUtil.getLong(actionRequest, StationXWebKeys.STRUCTURED_DATA_ID, 0);
 		long dataTypeId = ParamUtil.getLong(actionRequest, IcecapWebKeys.DATATYPE_ID, 0);
 		
+		System.out.println("dataTypeId: "+dataTypeId);
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		StructuredData structuredData = null;
 		try {
