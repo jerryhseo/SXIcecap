@@ -47,4 +47,6 @@ public class IcecapConstants {
 	public static final String RENDER_DATATYPE = "renderDataType";
 	public static final String CMD_REDIRECT_TO_DEFINE_STRUCTURE = "redirectToDefineStructure";
 	
+	public static final String ROOT_DATA_FILE_FOLDER_NAME = "Data Files";
+	
 }

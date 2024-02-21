@@ -10,6 +10,7 @@
 	<import class="com.sx.icecap.model.DataTypeStructure" />
 	<import class="com.sx.icecap.model.StructuredData" />
 	<import class="com.sx.icecap.model.Term" />
+	<import class="com.sx.icecap.model.VisualizerLink" />
 	<class name="com.sx.icecap.model.impl.DataPackImpl" table="SX_ICECAP_DataPack">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="dataPackId" type="long">
 			<generator class="assigned" />
@@ -168,5 +169,12 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="synonyms" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="attributesJSON" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="standard" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+	</class>
+	<class name="com.sx.icecap.model.impl.VisualizerLinkImpl" table="SX_ICECAP_VisualizerLink">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="VisualizerLink" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="dataTypeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="visualizerId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 </hibernate-mapping>

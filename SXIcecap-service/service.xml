@@ -573,6 +573,18 @@
 		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
         
 	</entity>
+    <entity name="VisualizerLink">
+        <column name="VisualizerLink" type="long" primary="true"></column>
+        <column name="dataTypeId" type="long"></column>
+        <column name="visualizerId" type="long"></column>
+        
+        <finder name="DataTypeId" return-type="Collection">
+			<finder-column name="dataTypeId" ></finder-column>
+		</finder>
+        <finder name="VisualizerId" return-type="Collection">
+			<finder-column name="visualizerId" ></finder-column>
+		</finder>
+    </entity>
 	
 
 	<exceptions>

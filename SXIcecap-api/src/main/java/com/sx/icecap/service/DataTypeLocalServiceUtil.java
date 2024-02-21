@@ -315,6 +315,19 @@ public class DataTypeLocalServiceUtil {
 			groupId, start, end, comparator);
 	}
 
+	public static long getDataFileFolderId(
+			long repositoryId, long parentFoderId, String dataTypeName,
+			String dataTypeVersion, long dataId, String termName,
+			String termVersion,
+			com.liferay.portal.kernel.service.ServiceContext sc,
+			boolean createWhenNoExist)
+		throws PortalException {
+
+		return getService().getDataFileFolderId(
+			repositoryId, parentFoderId, dataTypeName, dataTypeVersion, dataId,
+			termName, termVersion, sc, createWhenNoExist);
+	}
+
 	/**
 	 * Returns the data type with the primary key.
 	 *
@@ -530,6 +543,12 @@ public class DataTypeLocalServiceUtil {
 		return getService().getDataTypeStructureJSONObject(dataTypeId);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray getDLFolderFiles(
+		long repositoryId, long folderId) {
+
+		return getService().getDLFolderFiles(repositoryId, folderId);
+	}
+
 	public static List<String> getDownloadableFields(
 			long dataTypeId, boolean downloadable)
 		throws com.liferay.portal.kernel.json.JSONException {
@@ -618,12 +637,13 @@ public class DataTypeLocalServiceUtil {
 
 	public static com.liferay.portal.kernel.json.JSONObject
 			getStructuredDataWithValues(long dataTypeId, long structuredDataId)
-		throws com.liferay.portal.kernel.json.JSONException {
+		throws PortalException {
 
 		return getService().getStructuredDataWithValues(
 			dataTypeId, structuredDataId);
 	}
 
+	@Deprecated
 	public static com.liferay.portal.kernel.json.JSONObject
 			getStructuredDataWithValues(long dataTypeId, String structuredData)
 		throws com.liferay.portal.kernel.json.JSONException {
@@ -672,16 +692,11 @@ public class DataTypeLocalServiceUtil {
 	}
 
 	public static com.sx.icecap.model.StructuredData removeStructuredData(
-			long structuredDataId)
+			long structuredDataId, long dataFileFolderId)
 		throws PortalException {
 
-		return getService().removeStructuredData(structuredDataId);
-	}
-
-	public static void removeStructuredDatas(long[] structuredDataIds)
-		throws PortalException {
-
-		getService().removeStructuredDatas(structuredDataIds);
+		return getService().removeStructuredData(
+			structuredDataId, dataFileFolderId);
 	}
 
 	/**

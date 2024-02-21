@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.PersistedModel;
@@ -271,6 +272,13 @@ public interface DataTypeLocalService
 		long groupId, int start, int end,
 		OrderByComparator<DataType> comparator);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long getDataFileFolderId(
+			long repositoryId, long parentFoderId, String dataTypeName,
+			String dataTypeVersion, long dataId, String termName,
+			String termVersion, ServiceContext sc, boolean createWhenNoExist)
+		throws PortalException;
+
 	/**
 	 * Returns the data type with the primary key.
 	 *
@@ -429,6 +437,9 @@ public interface DataTypeLocalService
 		throws JSONException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getDLFolderFiles(long repositoryId, long folderId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<String> getDownloadableFields(
 			long dataTypeId, boolean downloadable)
 		throws JSONException;
@@ -485,8 +496,9 @@ public interface DataTypeLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getStructuredDataWithValues(
 			long dataTypeId, long structuredDataId)
-		throws JSONException;
+		throws PortalException;
 
+	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getStructuredDataWithValues(
 			long dataTypeId, String structuredData)
@@ -510,10 +522,8 @@ public interface DataTypeLocalService
 
 	public void removeDataTypeStructure(long dataTypeId);
 
-	public StructuredData removeStructuredData(long structuredDataId)
-		throws PortalException;
-
-	public void removeStructuredDatas(long[] structuredDataIds)
+	public StructuredData removeStructuredData(
+			long structuredDataId, long dataFileFolderId)
 		throws PortalException;
 
 	/**

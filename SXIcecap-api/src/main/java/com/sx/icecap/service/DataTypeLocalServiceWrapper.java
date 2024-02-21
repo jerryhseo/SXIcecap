@@ -350,6 +350,20 @@ public class DataTypeLocalServiceWrapper
 			groupId, start, end, comparator);
 	}
 
+	@Override
+	public long getDataFileFolderId(
+			long repositoryId, long parentFoderId, String dataTypeName,
+			String dataTypeVersion, long dataId, String termName,
+			String termVersion,
+			com.liferay.portal.kernel.service.ServiceContext sc,
+			boolean createWhenNoExist)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _dataTypeLocalService.getDataFileFolderId(
+			repositoryId, parentFoderId, dataTypeName, dataTypeVersion, dataId,
+			termName, termVersion, sc, createWhenNoExist);
+	}
+
 	/**
 	 * Returns the data type with the primary key.
 	 *
@@ -621,6 +635,13 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.kernel.json.JSONArray getDLFolderFiles(
+		long repositoryId, long folderId) {
+
+		return _dataTypeLocalService.getDLFolderFiles(repositoryId, folderId);
+	}
+
+	@Override
 	public java.util.List<String> getDownloadableFields(
 			long dataTypeId, boolean downloadable)
 		throws com.liferay.portal.kernel.json.JSONException {
@@ -726,12 +747,13 @@ public class DataTypeLocalServiceWrapper
 	@Override
 	public com.liferay.portal.kernel.json.JSONObject
 			getStructuredDataWithValues(long dataTypeId, long structuredDataId)
-		throws com.liferay.portal.kernel.json.JSONException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _dataTypeLocalService.getStructuredDataWithValues(
 			dataTypeId, structuredDataId);
 	}
 
+	@Deprecated
 	@Override
 	public com.liferay.portal.kernel.json.JSONObject
 			getStructuredDataWithValues(long dataTypeId, String structuredData)
@@ -788,17 +810,11 @@ public class DataTypeLocalServiceWrapper
 
 	@Override
 	public com.sx.icecap.model.StructuredData removeStructuredData(
-			long structuredDataId)
+			long structuredDataId, long dataFileFolderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _dataTypeLocalService.removeStructuredData(structuredDataId);
-	}
-
-	@Override
-	public void removeStructuredDatas(long[] structuredDataIds)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		_dataTypeLocalService.removeStructuredDatas(structuredDataIds);
+		return _dataTypeLocalService.removeStructuredData(
+			structuredDataId, dataFileFolderId);
 	}
 
 	/**

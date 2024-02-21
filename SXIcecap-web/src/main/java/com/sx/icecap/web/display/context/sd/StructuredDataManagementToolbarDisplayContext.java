@@ -391,6 +391,7 @@ public class StructuredDataManagementToolbarDisplayContext
 							
 							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_STRUCTURED_DATA_DELETE);
 							deleteURL.setParameter(StationXWebKeys.BACK_URL, currentURL);
+							deleteURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(_dataTypeId) );
 							deleteURL.setParameter(StationXWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredDataId) );
 							
 							add( dropdownItem -> {

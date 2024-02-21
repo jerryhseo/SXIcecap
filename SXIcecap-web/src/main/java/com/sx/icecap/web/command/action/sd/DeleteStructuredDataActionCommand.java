@@ -1,5 +1,6 @@
 package com.sx.icecap.web.command.action.sd;
 
+import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
@@ -12,8 +13,10 @@ import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapMVCCommands;
 import com.sx.icecap.constant.IcecapWebKeys;
 import com.sx.icecap.constant.IcecapWebPortletKeys;
+import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
+import com.sx.util.SXPortalUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -32,22 +35,31 @@ import org.osgi.service.component.annotations.Reference;
 		service = MVCActionCommand.class
 )
 public class DeleteStructuredDataActionCommand extends BaseMVCActionCommand  {
-	@Reference
-	DataTypeLocalService _dataTypeLocalService;
+	
 	
 	@Override
 	public void doProcessAction(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 		
 		long structuredDataId = ParamUtil.getLong(actionRequest, StationXWebKeys.STRUCTURED_DATA_ID, 0);
+		long dataTypeId = ParamUtil.getLong(actionRequest, IcecapWebKeys.DATATYPE_ID, 0);
 		
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		StructuredData structuredData = null;
 		try {
-			structuredData = _dataTypeLocalService.removeStructuredData(structuredDataId);
+			DataType dataType = this._dataTypeLocalService.getDataType(dataTypeId);
+			long dataFileFolderId = this._dataTypeLocalService.getDataFileFolderId(
+					themeDisplay.getSiteGroupId(), 
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, 
+					dataType.getDataTypeName(), 
+					dataType.getDataTypeVersion(), 
+					structuredDataId, 
+					"", "", null, false);
+					
+
+			structuredData = _dataTypeLocalService.removeStructuredData( structuredDataId, dataFileFolderId );
 		} catch (PortalException e) {
 			throw new PortletException(e.getMessage());
 		}
-		
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		
 		PortletURL renderURL = PortletURLFactoryUtil.create(
 				actionRequest, 
@@ -60,4 +72,6 @@ public class DeleteStructuredDataActionCommand extends BaseMVCActionCommand  {
 		actionResponse.sendRedirect(renderURL.toString());
 	}
 
+	@Reference
+	DataTypeLocalService _dataTypeLocalService;
 }

@@ -745,16 +745,12 @@ public class StructuredDataLocalServiceUtil {
 		return getService().getStructuredDatasCount();
 	}
 
-	public static StructuredData removeStructuredData(long structuredDataId)
+	public static StructuredData removeStructuredData(
+			long structuredDataId, long dataFileFolderId)
 		throws PortalException {
 
-		return getService().removeStructuredData(structuredDataId);
-	}
-
-	public static void removeStructuredDatas(long[] structuredDataIds)
-		throws PortalException {
-
-		getService().removeStructuredDatas(structuredDataIds);
+		return getService().removeStructuredData(
+			structuredDataId, dataFileFolderId);
 	}
 
 	public static StructuredData updateStatus(

@@ -910,18 +910,11 @@ public class StructuredDataLocalServiceWrapper
 
 	@Override
 	public com.sx.icecap.model.StructuredData removeStructuredData(
-			long structuredDataId)
+			long structuredDataId, long dataFileFolderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _structuredDataLocalService.removeStructuredData(
-			structuredDataId);
-	}
-
-	@Override
-	public void removeStructuredDatas(long[] structuredDataIds)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		_structuredDataLocalService.removeStructuredDatas(structuredDataIds);
+			structuredDataId, dataFileFolderId);
 	}
 
 	@Override

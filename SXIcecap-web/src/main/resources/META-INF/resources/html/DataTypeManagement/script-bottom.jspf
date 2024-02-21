@@ -38,735 +38,59 @@ $(document).ready(function(){
 					}
 				});
 	****************************************************************/
-	let setCurrentTerm = function( term ){
-		currentTerm = term;
-		
-		dataStructure.replaceVisibleTypeSpecificSection( currentTerm.termType );
-		currentTerm.setPropertyFormValues();
-		
-		if( currentTerm.isRendered() ){
-			dataStructure.disable(['btnAdd', 'btnClear', 'termType'], true);
-			dataStructure.disable(['btnUp', 'btnDown'], false);
-		}
-		else{
-			dataStructure.disable(['btnAdd', 'btnClear', 'termType'], false);
-			dataStructure.disable(['btnUp', 'btnDown'], true);
-		}
-		
-		if( currentTerm.isGroupTerm() ){
-			dataStructure.disable(['mandatory', 'abstractKey', 'downloadable', 'searchable'], true);
-		}
-		else{
-			dataStructure.disable(['mandatory', 'abstractKey', 'downloadable', 'searchable'], false);
-		}
-		
-		// console.log( 'Current term rendered: ' + currentTerm.isRendered() );
-		if( currentTerm.isRendered() ){
-			dataStructure.highlightTerm( currentTerm );
-		}
+	
+	let profile = {
+		resourceCommandURL: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_VISUALIZER_COMMON%>"></portlet:resourceURL>',
+		dataTypeId: '<%= dataType.getDataTypeId() %>',
+		dataTypeName:  '<%= dataType.getDataTypeName() %>',
+		dataTypeVersion:  '<%= dataType.getDataTypeVersion() %>',
+		dataTypeDisplayName:  '<%= dataType.getDisplayName(locale) %>'
 	};
+	
 	
 	let createEmptyDataStructure = function(){
 		$('#<portlet:namespace/>previewPanel').empty();
 		
 		dataStructure =  SX.newDataStructure(
-												new Object(), 
+												undefined,
+												profile,
 												SX.Constants.FOR_PREVIEW, 
 												$('#<portlet:namespace/>previewPanel') );
-		setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
+		dataStructure.setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
 	}
 
 	let dataStructure;
 	
 	let jsonDataStructure = <%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>;
 	
-	let currentTerm = null;
-	if( SX.Util.isEmptyObject(jsonDataStructure) ){
+	console.log( '-------------------', jsonDataStructure );
+	if( $.isEmptyObject(jsonDataStructure) ){
 		dataStructure =  SX.newDataStructure(
-												new Object(), 
+												crfSampleDataType,
+												profile,
 												SX.Constants.FOR_PREVIEW, 
 												$('#<portlet:namespace/>previewPanel'));
-		setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
+		
+		dataStructure.render();										
+		dataStructure.setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
 	}
 	else{
 		dataStructure =  SX.newDataStructure( 
 												jsonDataStructure,
+												profile,
 												SX.Constants.FOR_PREVIEW, 
 												$('#<portlet:namespace/>previewPanel'));
-		dataStructure.render( SX.Constants.FOR_PREVIEW );
+												
+		dataStructure.render();
 		
-		setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
-		dataStructure.highlightTerm( currentTerm );
+		dataStructure.setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
 	}
 	
-	
-	/**************************************************************
-	* Change Event handlers for form controls 
-	***************************************************************/
-	SX.DataStructure.$TERM_DELIMITER_FORM_CTRL.change(function(eventObj){
-			dataStructure.getTermDelimiterFormValue( true );
-	});
-
-	SX.DataStructure.$TERM_DELIMITER_POSITION_FORM_CTRL.change(function(eventObj){
-			dataStructure.getTermDelimiterPositionFormValue( true );
-	});
-	
-	SX.DataStructure.$TERM_VALUE_DELIMITER_FORM_CTRL.change(function(eventObj){
-			dataStructure.getTermValueDelimiterFormValue( true );
-	});
-
-	SX.DataStructure.$MATRIX_BRACKET_TYPE_FORM_CTRL.change(function(eventObj){
-			dataStructure.getMatrixBracketTypeFormValue( true );
-	});
-	
-	SX.DataStructure.$MATRIX_ELEMENT_DELIMITER_FORM_CTRL.change(function(eventObj){
-			dataStructure.getMatrixElementDelimiterFormValue( true );
-	});
-
-	SX.DataStructure.$COMMENT_CHAR_FORM_CTRL.change(function(eventObj){
-			dataStructure.getCommentCharFormValue( true );
-	});
-	
-	$('#<portlet:namespace/>displayInputStatus').change( function(event){
-		let prevVal = dataStructure.inputStatusDisplay;
-		
-		dataStructure.inputStatusDisplay = SX.FormUIUtil.getFormCheckboxValue( 'displayInputStatus' );
-		
-		if( prevVal !== dataStructure.inputStatusDisplay  ){
-			dataStructure.displayInputStatus();
-		}
-	});
-	
-	SX.Term.$DEFAULT_TERM_TYPE_FORM_CTRL.change(function(eventObj){
-		let selectedTermType = currentTerm.getTermTypeFormValue( false );
-		
-		if( selectedTermType === currentTerm.termType ){
-			// Do nothing
-			return;
-		}
-		
-		if( currentTerm.isRendered() ){
-			$.alert({
-				title: '<liferay-ui:message key="term-type-change-alert"/>',
-				content: 'how-to-term-type-change'
-			});
-			
-			setCurrentTerm( currentTerm );
-		}
-		else{
-			setCurrentTerm( dataStructure.createTerm( selectedTermType ) );
-			currentTerm.setDirty( true );
-		}
-	});
-	
-	SX.Term.$DEFAULT_TERM_NAME_FORM_CTRL.change(function(eventObj){
-		let changedName = currentTerm.getTermNameFormValue( false );
-		if( dataStructure.exist( changedName ) ){
-			$.alert( changedName + 'already exist. Should be changed another name.' );
-			currentTerm.setTermNameFormValue();
-		}
-		else 	if( currentTerm.validateNameExpression( changedName ) === false ){
-			$.alert( 'Term Name[' + changedName +'] is unvalid for a term name. Try another one.');
-			currentTerm.setTermNameFormValue();
-		} 
-		
-		if( currentTerm.$rendered ){
-			// It means the current term is one of the data structure and previewed on the preview panel.
-			// Therefore, we must confirm that the term's name be changed before the preview changed.
-			$.confirm({
-				title: '<liferay-ui:message key="select-term-type" />',
-				content: '<liferay-ui:message key="this-term-is-previewed-are-you-sure-to-change-the-name-of-the-term" />',
-				type: 'orange',
-				typeAnimated: true,
-				buttons:{
-					ok: {
-						text: 'OK',
-						btnClass: 'btn-blue',
-						action: function(){
-							currentTerm.getTermNameFormValue(true);
-							dataStructure.refreshTerm( currentTerm );
-						}
-					},
-					cancel: function(){
-						currentTerm.setTermNameFormValue();
-					}
-				},
-				draggable: true
-			}); 
-		}
-		else{
-			currentTerm.getTermNameFormValue( true );
-		}
-	});
-
-	SX.Term.$DEFAULT_TERM_VERSION_FORM_CTRL.change(function(eventObj){
-		const changedVersion = currentTerm.getTermVersionFormValue( false );
-		
-		let validated;
-		if( currentTerm.$rendered ){
-			validated = SX.Term.validateTermVersion( changedVersion, currentTerm.termVersion );
-		}
-		else{
-			validated = SX.Term.validateTermVersion( changedVersion );
-		}
-		
-		if( validated === true ){
-			currentTerm.getTermVersionFormValue();
-			
-		}
-		else{
-			if( !changedVersion ){
-				$.alert( Liferay.Language.get('term-version-is-required') );
-			}
-			else{
-				$.alert( Liferay.Language.get('wrong-term-version-format')  );
-			}
-			
-			currentTerm.setTermVersionFormValue();
-		} 
-	});
-
-	SX.Term.$DEFAULT_TERM_DISPLAY_NAME_FORM_CTRL.change(function(eventObj){
-		currentTerm.getDisplayNameFormValue(true);
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>termDefinition').change(function(eventObj){
-		currentTerm.getDefinitionFormValue(true);
-		currentTerm.setDirty( true );
-	});
-	
-	$('#<portlet:namespace/>abstractKey').change(function(eventObj){
-		// console.log( 'abstractKey changed...', currentTerm);
-		currentTerm.getAbstractKeyFormValue(true);
-	});
-	
-	$('#<portlet:namespace/>disabled').change(function(eventObj){
-		// console.log( 'abstractKey changed...', currentTerm);
-		currentTerm.getDisabledFormValue(true);
-		dataStructure.disableTerm( currentTerm, currentTerm.disabled, SX.Constants.FOR_PREVIEW );
-	});
-	
-	$('#<portlet:namespace/>searchable').change(function(eventObj){
-		// console.log( 'searchable changed...', currentTerm);
-		currentTerm.getSearchableFormValue(); 
-		dataStructure.setSearchable( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>downloadable').change(function(eventObj){
-		// console.log( 'downloadable changed...', currentTerm);
-		currentTerm.getDownloadableFormValue();
-	});
-	
-	$('#<portlet:namespace/>termTooltip').change(function(eventObj){
-		currentTerm.getTooltipFormValue(true);
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>placeHolder').change(function(eventObj){
-		currentTerm.getPlaceHolderFormValue(true);
-		dataStructure.refreshTerm( currentTerm );
-	});
-
-	$('#<portlet:namespace/>numericPlaceHolder').change(function(eventObj){
-		currentTerm.getNumericPlaceHolderFormValue(true);
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>synonyms').change(function(eventObj){
-		currentTerm.getSynonymsFormValue(true);
-	});
-	
-	$('#<portlet:namespace/>mandatory').change(function(eventObj){
-		currentTerm.getMandatoryFormValue(true);
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>value').change(function(eventObj){
-		currentTerm.getValueFormValue(true);
-		dataStructure.refreshTerm( currentTerm );
-	});
-
-	$('#<portlet:namespace/>minLength').change(function(eventObj){
-		const changedValue = Number( currentTerm.getMinLengthFormValue() );
-		
-		if( isNaN( changedValue ) || changedValue <= 0){
-			$.alert('Minimum length should be an interger larger than 0.');
-			currentTerm.setMinLengthFormValue()
-		}
-		else{
-			currentTerm.minLength = changedValue;
-			currentTerm.setDirty( true );
-			dataStructure.refreshTerm( currentTerm );
-		}
-	});
-	
-	$('#<portlet:namespace/>maxLength').change(function(eventObj){
-		const minLength = currentTerm.getMinLengthFormValue();
-		const maxLength = currentTerm.getMaxLengthFormValue();
-		if( maxLength < minLength ){
-			$.alert('Maximum length should be larger than minimum length.');
-			currentTerm.setMaxLengthFormValue();
-		}
-		else{
-			currentTerm.getMaxLengthFormValue(true);
-			currentTerm.setDirty( true );
-			dataStructure.refreshTerm( currentTerm );
-		}
-	});
-
-	$('#<portlet:namespace/>multipleLine').change(function(eventObj){
-		currentTerm.getMultipleLineFormValue(true);
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-
-	$('#<portlet:namespace/>validationRule').change(function(eventObj){
-		currentTerm.getValidationRuleFormValue(true);
-		currentTerm.setDirty( true );
-	});
-	
-	$('#<portlet:namespace/>minValue').change(function(eventObj){
-		const preValue = currentTerm.minValue;
-	
-		currentTerm.getMinValueFormValue(true);
-		currentTerm.setDirty( true );
-		
-		if( !currentTerm.minValue ){
-			currentTerm.setMinBoundaryFormValue();
-			dataStructure.disable(['minBoundary'], true);
-			//$('#<portlet:namespace/>minBoundary').prop('disabled', true);
-		}
-		else{
-			dataStructure.disable(['minBoundary'], false);
-			//$('#<portlet:namespace/>minBoundary').prop('disabled', false);
-		}
-		
-		if( preValue !== currentTerm.minValue ){
-			dataStructure.refreshTerm( currentTerm );
-		}
-	});
-
-	$('#<portlet:namespace/>minBoundary').change(function(eventObj){
-		currentTerm.getMinBoundaryFormValue(true);
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>maxValue').change(function(eventObj){
-		const preValue = currentTerm.maxValue;
-		
-		currentTerm.getMaxValueFormValue(true);
-		currentTerm.setDirty( true );
-		
-		if( !currentTerm.maxValue ){
-			currentTerm.setMaxBoundaryFormValue();
-			dataStructure.disable(['maxBoundary'], true);
-//			$('#<portlet:namespace/>maxBoundary').prop('disabled', true);
-		}
-		else{
-			dataStructure.disable(['maxBoundary'], false);
-//			$('#<portlet:namespace/>maxBoundary').prop('disabled', false);
-		}
-		
-		if( preValue !== currentTerm.maxValue ){
-			dataStructure.refreshTerm( currentTerm );
-		}
-	});
-
-	$('#<portlet:namespace/>maxBoundary').change(function(eventObj){
-		currentTerm.getMaxBoundaryFormValue(true);
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-
-	$('#<portlet:namespace/>unit').change(function(eventObj){
-		currentTerm.getUnitFormValue(true);
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>uncertainty').change(function(eventObj){
-		currentTerm.getUncertaintyFormValue(true);
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-
-	$('#<portlet:namespace/>sweepable').change(function(eventObj){
-		currentTerm.getSweepableFormValue(true);
-		currentTerm.setDirty( true );
-	});
-	
-	$('input[name="<portlet:namespace/>listDisplayStyle"]').change(function(eventObj){
-		currentTerm.getDisplayStyleFormValue(true);
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	SX.ListTerm.$OPTION_LABEL.change(function(event){
-		let labelMap = currentTerm.getOptionLabelFormValue();
-		if( Object.keys(labelMap).length === 0 ){
-			$.alert('<liferay-ui:message key="option-label-required"/>');
-			currentTerm.setOptionLabelFormValue();
-			SX.ListTerm.$OPTION_LABEL.trigger('focus');
-			
-			return;
-		}
-		
-		currentTerm.setOptionLabelMap( labelMap );
-		
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	SX.ListTerm.$OPTION_VALUE.change(function(event){
-		let value = currentTerm.getOptionValueFormValue();
-		if( !value ){
-			$.alert('<liferay-ui:message key="option-label-required"/>');
-			currentTerm.setOptionValueFormValue();
-			SX.ListTerm.$OPTION_VALUE.focus();
-			
-			return;
-		}
-		
-		currentTerm.setOptionValue( value );
-		
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	SX.ListTerm.$OPTION_SELECTED.change(function(event){
-		let value = currentTerm.getOptionSelectedFormValue();
-		
-		currentTerm.setOptionSelected( value );
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	SX.ListTerm.$OPTION_ACTIVE_TERMS.change(function(event){
-		let activeTermNames = currentTerm.getActiveTermsFormValue();
-		
-		currentTerm.setActiveTerms( activeTermNames );
-		currentTerm.setDirty( true );
-		// console.log('active terms: ', activeTermNames);
-	});
-	
-	$('input[name="<portlet:namespace/>booleanDisplayStyle"]').change(function(event){
-		currentTerm.getDisplayStyleFormValue( true );
-		currentTerm.setDirty( true );
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>booleanTrueLabel').change(function(event){
-		currentTerm.getTrueLabelFormValue ();
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>booleanFalseLabel').change(function(event){
-		currentTerm.getFalseLabelFormValue ();
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	
-	SX.DateTerm.$DEFAULT_ENABLE_TIME_FORM_CTRL.change(function(event){
-		currentTerm.getEnableTimeFormValue();
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	SX.DateTerm.$DEFAULT_START_YEAR_FORM_CTRL.change(function(event){
-		currentTerm.getStartYearFormValue();
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	SX.DateTerm.$DEFAULT_END_YEAR_FORM_CTRL.change(function(event){
-		currentTerm.getEndYearFormValue();
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>allowedExtensions').change(function(event){
-		currentTerm.setDirty( true );
-		console.log( 'allowed extensions: ', SX.FormUIUtil.getFormValue( 'allowedExtensions' ).split(',') ); 
-	});
-	
-	$('#<portlet:namespace/>extended').change(function(event){
-		dataStructure.extendGroup( currentTerm, SX.FormUIUtil.getFormCheckboxValue('extended') );
-	});
-	
-	$('#<portlet:namespace/>rows').change(function(event){
-		currentTerm.getRowsFormValue();;
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>columns').change(function(event){
-		currentTerm.getColumnsFormValue();
-		dataStructure.refreshTerm( currentTerm );
-	});
-
-	$('#<portlet:namespace/>columnWidth').change(function(event){
-		currentTerm.getColumnWidthFormValue();;
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>stringInputSize').change(function(event){
-		currentTerm.inputSize = $(this).val();
-		console.log('Input Size: ' + currentTerm.inputSize);
-	});
-	$('#<portlet:namespace/>stringLineBreak').change(function(event){
-		currentTerm.lineBreak = $(this).prop('checked');
-		console.log('Line Break: ' + currentTerm.lineBreak);
-	});
-	
-	$('#<portlet:namespace/>numericInputSize').change(function(event){
-		currentTerm.inputSize = $(this).val();
-		console.log('Input Size: ' + currentTerm.inputSize);
-	});
-	$('#<portlet:namespace/>numericLineBreak').change(function(event){
-		currentTerm.lineBreak = $(this).prop('checked');
-		console.log('Line Break: ' + currentTerm.lineBreak);
-	});
-	
-	/**************************************************************
-	* Custom Liferay event handlers
-	**************************************************************/
-	
-	Liferay.on(SX.Events.DATATYPE_PREVIEW_TERM_DELETED, function(event){
-		let eventData = event.sxeventdata;
-		 
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		dataStructure.removeTerm( eventData.term.termName );
-		
-		dataStructure.render( SX.Constants.FOR_PREVIEW );
-	});
-	
-	Liferay.on(SX.Events.DATATYPE_PREVIEW_COPY_TERM, function(event){
-		let eventData = event.sxeventdata;
-		 
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		console.log('DATATYPE_PREVIEW_COPY_TERM', eventData);
-		
-		dataStructure.copyTerm( eventData.term );
-	});
-	
-	Liferay.on(SX.Events.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
-		let eventData = event.sxeventdata;
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		if( currentTerm === eventData.term ){
-			return;
-		}
-		
-		setCurrentTerm( eventData.term );
-		dataStructure.highlightTerm( currentTerm );
-		// console.log( 'Selected current term: ', currentTerm );
-	});
-
-	
-	Liferay.on( SX.Events.LIST_OPTION_PREVIEW_REMOVED, function( event ){
-		let eventData = event.sxeventdata;
-				
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-
-		let removedOption = eventData.option;
-
-		currentTerm.removeOption( removedOption.value );
-		
-		dataStructure.render( SX.Constants.FOR_PREVIEW );
-	});
-
-	Liferay.on( SX.Events.LIST_OPTION_PREVIEW_SELECTED, function( event ){
-		let eventData = event.sxeventdata;
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-
-		currentTerm.initOptionFormValues( eventData.option );
-		currentTerm.highlightOptionPreview(); 
-	});
-	
-	Liferay.on( SX.Events.DATATYPE_FORM_UI_SHOW_TERMS, function( event ){
-		let eventData = event.sxeventdata;
-		// console.log( 'SX.Events.DATATYPE_FORM_UI_SHOW_TERMS received...', eventData);
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.Constants.FOR_PREVIEW );
-	});
-	
-	Liferay.on( SX.Events.DATATYPE_FORM_UI_CHECKBOX_CHANGED, function( event ){
-		let eventData = event.sxeventdata;
-		// console.log( 'SX.Events.DATATYPE_FORM_UI_CHECKBOX_CHANGED received...', eventData);
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.Constants.FOR_PREVIEW );
-	});
-	
-	Liferay.on( SX.Events.DATATYPE_PREVIEW_REMOVE_TERM, function( event ){
-		let eventData = event.sxeventdata;
-		// console.log( 'SX.Events.DATATYPE_PREVIEW_REMOVE_TERM received...', eventData);
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		dataStructure.removeTerm( eventData.term );
-		
-		// console.log('Data Structure: ', dataStructure );
-	});
-	
-	Liferay.on( SX.Events.DATATYPE_PREVIEW_DELETE_TERM, function( event ){
-		let eventData = event.sxeventdata;
-		// console.log( 'SX.Events.DATATYPE_PREVIEW_DELETE_TERM received...', eventData);
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		dataStructure.deleteTerm( eventData.term );
-		
-		// console.log('Data Structure: ', dataStructure );
-	});
-
-	Liferay.on( SX.Events.DATATYPE_SDE_VALUE_CHANGED, function( event ){
-		let eventData = event.sxeventdata;
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		console.log( 'SX.Events.DATATYPE_SDE_VALUE_CHANGED received...', eventData);
-		
-		let term = eventData.term;
-		if( term.termType === 'List' ){
-			dataStructure.activateSlaveTerms( term );
-		}
-		
-		if( dataStructure.inputStatusDisplay ){
-			dataStructure.displayInputStatus();
-		}
-	});
-	
-	Liferay.on( 'STRUCTURED_DATA_CHANGED', function(event){
-		let eventData = event.sxeventdata;
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		console.log( 'SX.Events.STRUCTURED_DATA_CHANGED received...', eventData);
-	});
-	
-	/*******************************************************************************
-	* Event handlers for buttons
-	*******************************************************************************/
-	$('#<portlet:namespace/>btnNewTerm').click(function(){
-		// dataStructure.disable(['termType'], false);
-		
-		setCurrentTerm( dataStructure.createTerm(SX.Term.$DEFAULT_TERM_TYPE_FORM_CTRL.val()) );
-		$('#<portlet:namespace/>termType').trigger('focus');
-		
-		/*
-		$.confirm({
-			title: '<liferay-ui:message key="select-term-type" />',
-			content: $('#<portlet:namespace/>termTypeSelector').html(),
-			type: 'orange',
-			typeAnimated: true,
-			buttons:{
-				ok: {
-					text: 'OK',
-					btnClass: 'btn-blue',
-					action: function(){
-						setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>dlgTermType').val() ) );
-					}
-				},
-				cancel: function(){
-					
-				}
-			},
-			draggable: true
-		});
-		*/
-	});
-
-	$('#<portlet:namespace/>btnCopyTerm').click(function(){
-		setCurrentTerm( dataStructure.copyTerm( currentTerm ) );
-	});
-	
-	$('#<portlet:namespace/>btnClear').click(function(){
-		currentTerm.initAllFormValues();
-	});
-
-	$('#<portlet:namespace/>btnImportTerm').click(function(){
-		dataStructure = SX.newDataStructure(
-												crfSampleDataType, 
-												SX.Constants.FOR_PREVIEW, 
-												$('#<portlet:namespace/>previewPanel'));
-		
-		dataStructure.render(SX.Constants.FOR_PREVIEW);
-		console.log( 'Imported Data Type: ', dataStructure );
-	});
-	
-	SX.ListTerm.$BTN_NEW_OPTION.click(function(){
-		
-		// console.log( 'click new button' );
-		
-		/*
-		$listOptionManagementDlg.dialog( 'open' );
-		*/
-	
-		$('#<portlet:namespace/>optionLabel').trigger('focus');
-		currentTerm.setEmptyHighlightedOption();
-		
-		//currentTerm.initOptionFormValues();
-		dataStructure.disable(['btnAddOption'], false);
-	
-		/*
-		console.log($('#<portlet:namespace/>optionManagementDlg' ).html());
-		$.confirm({
-			title: '<liferay-ui:message key="define-new-option" />',
-			content: $('#<portlet:namespace/>optionManagementDlg' ).html(),
-			type: 'orange',
-			typeAnimated: true,
-			columnClass: 'medium',
-			buttons:{
-				ok: {
-					text: '<liferay-ui:message key="add"/>',
-					btnClass: 'btn-blue',
-					action: function(){
-						let labelMap = currentTerm.getOptionLabelFormValue();
-						// console.log( 'labelMap: ', $('#<portlet:namespace/>optionLabel').val() );
-						if( Object.keys(labelMap).length === 0 ){
-							$.alert('<liferay-ui:message key="option-label-cannot-be-empty"/>');
-							$('#<portlet:namespace/>optionLabel').focus();
-							return false;
-						}
-					}
-				},
-				cancel: function(){
-					
-				}
-			},
-			draggable: true
-		});
-		*/
-		
-	});
-	
+	/*
 	SX.ListTerm.$BTN_CHOOSE_ACTIVE_TERMS.click(function(event){
-		let option = currentTerm.getHighlightedOption();
+		let option = dataStructure.currentTerm.getHighlightedOption();
 		if( !option ){
-			option = currentTerm.addOption();
+			option = dataStructure.currentTerm.addOption();
 			if( !option ){
 				return;
 			}
@@ -774,61 +98,23 @@ $(document).ready(function(){
 		
 		dataStructure.disable(['btnAddOption'], true);
 
-		dataStructure.chooseActiveTerms( currentTerm, option );		
-		dataStructure.refreshTerm( currentTerm );
+		dataStructure.chooseActiveTerms( dataStructure.currentTerm, option );		
+		dataStructure.refreshTerm( dataStructure.currentTerm );
 	});
 	
 	SX.BooleanTerm.$TRUE_ACTIVE_TERMS_BUTTON.click(function(event){
-		dataStructure.chooseActiveTerms( currentTerm, currentTerm.getTrueOption() );
+		dataStructure.chooseActiveTerms( dataStructure.currentTerm, dataStructure.currentTerm.getTrueOption() );
 	});
 	
 	SX.BooleanTerm.$FALSE_ACTIVE_TERMS_BUTTON.click(function(event){
-		dataStructure.chooseActiveTerms( currentTerm, currentTerm.getFalseOption() );
+		dataStructure.chooseActiveTerms( dataStructure.currentTerm, dataStructure.currentTerm.getFalseOption() );
 	});
 	
-	SX.GroupTerm.$BTN_CHOOSE_GROUP_TERMS.click(function(event){
-		// console.log( 'Current Term before group: ', currentTerm );
-		dataStructure.chooseGroupTerms( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>btnAddOption').click(function(event){
-		currentTerm.addOption();
-		
-		dataStructure.disable(['btnAddOption'], true);
-		
-		dataStructure.refreshTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>btnAdd').click(function(){
-		if( dataStructure.addTerm( currentTerm,  0,  SX.Constants.FOR_PREVIEW, true ) ){
-			dataStructure.disable(['add', 'btnClear', 'termType'], true);
-			/*
-			$('#<portlet:namespace/>add').prop('disabled', true);
-			$('#<portlet:namespace/>btnClear').prop('disabled', true); 
-			*/
-		}
-		
-		// console.log('currentTerm: ',  currentTerm, dataStructure.terms );
-	});
+	*/
 	
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
-		dataStructure.render(SX.Constants.FOR_PREVIEW);
-	});
-	
-	$('#<portlet:namespace/>btnUp').click(function(event){
-		if( !currentTerm.isRendered() ){
-			return;
-		}
-		
-		dataStructure.moveUpTerm( currentTerm );
-	});
-	
-	$('#<portlet:namespace/>btnDown').click(function(event){
-		if( !currentTerm.isRendered() ){
-			return;
-		}
-		
-		dataStructure.moveDownTerm( currentTerm );
+		dataStructure.render();
+		dataStructure.setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
 	});
 	
 	$('#<portlet:namespace/>btnSave').click(function(event){
@@ -930,26 +216,53 @@ $(document).ready(function(){
 	%>
 	
 	$('#<portlet:namespace/>btnShowSDE').click( function(event){
-		let sdeURL = Liferay.PortletURL.createURL( '<%= sdePortletInfo.getString("url") %>');
-                sdeURL.setParameter('basePortlet', '<portlet:namespace/>' );
-                sdeURL.setParameter('enableMenu', 'true');
-                
+		let promise = new Promise( (resolve, reject) =>{
+			$.ajax({
+				url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
+				type:'post',
+				dataType: 'json',
+				data:{
+					'<portlet:namespace/>portletName': 'com_sx_visualizers_sde_StructuredDataEditorPortlet'
+				},
+				success: function(result){
+					resolve( result );
+				},
+				error: function(jqXHR, a, b){
+					reject('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
+				}
+			});
+		});
+		
+		promise.then( portletInfo => {
+			let sdeURL = Liferay.PortletURL.createURL( portletInfo.url );
+			//sdeURL.setParameter( portletInfo.namespace+'employer',  '<portlet:namespace/>');
+			let packet = SX.createEventDataPacket( '<portlet:namespace/>', portletInfo.namespace );
+			packet.content = dataStructure.toJSON();
+			packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
+			console.log('sdeURL: ', sdeURL.toString() );
+			
+			let data = new Object();
+			data[portletInfo.namespace+'employer'] = '<portlet:namespace/>';
+			data[portletInfo.namespace+'dataPacket'] = JSON.stringify(packet);
+			data[portletInfo.namespace+'cmd'] = '<%= StationXConstants.CMD_ADD %>';
+			
+			console.log('call SDE data: ', data);
 				$.ajax({
 		                url: sdeURL.toString(),
 		                type:'post',
-		                data: {
-		                	'<%=sdePortletInfo.getString("namespace")%>dataStructure':  JSON.stringify( dataStructure ),
-		                	'<%=sdePortletInfo.getString("namespace")%>employer': '<portlet:namespace/>'
-		                },
+		                data: data,
 		                success: function(data) {
-		                	$dialog = $('<div></div>')
+		                	let $dialog = $('<div></div>')
 		                		.html(data)
 		                		.dialog({
-		                			autoOpen: true,
+		                			autoOpen: true,                          
 		                			modal: false,
-		                			height: 800,
 		                			width:800,
+		                			maxHeight:800,
 		                			title: Liferay.Language.get('structured-data-editor'),
+		                			close: function(event, ui){
+		                				$dialog.dialog('destroy');
+		                			},
 		                			buttons:[
 		                				{
 		                					text: 'Ok',
@@ -966,27 +279,45 @@ $(document).ready(function(){
 		                    console.log('Bad request....', a, b);
 		                }
               });
+		})
+		.catch( errorMsg => console.log(errorMsg ) );
 	});
 	
-	Liferay.on( SX.Events.SX_PORTLET_READY, function(event){
-		let eventData = event.sxeventdata;
+	Liferay.on( SX.Events.SX_VISUALIZER_READY, function(event){
+		let dataPacket = event.dataPacket;
 		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' )	return;
+		if( !!dataPacket.targetPortlet && dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
 		
-		console.log('Portlet Ready: ', eventData );
+		console.log('Portlet SX_VISUALIZER_READY: ', dataPacket );
 		
-		let packet = SX.createDataPacket( '<%= dataType.getDataTypeName() %>', '<%= dataType.getDataTypeVersion() %>' );
-		packet.createDataStructurePayload( dataStructure );
-		let ed = {
-			sxeventdata: {
-				sourcePortlet: '<portlet:namespace/>',
-				targetPortlet: eventData.sourcePortlet,
-				data:packet
-			}
+		if( dataPacket.initialized ){
+			let packet = SX.createEventDataPacket( '<portlet:namespace/>', dataPacket.sourcePortlet );
+			packet.payload = dataStructure.toJSON();
+			packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
+	
+			SX.Util.fire( SX.Events.SX_LOAD_DATA, packet );
 		}
-		
-		Liferay.fire( SX.Events.SX_LOAD_DATA, ed );
 	});
+	
+	Liferay.on( SX.Events.SX_VISUALIZER_DATA_CHANGED, function(event){
+		let dataPacket = event.dataPacket;
+		
+		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
+		console.log('SX_VISUALIZER_DATA_LOADED: ', dataPacket );
+		
+	});
+	
+	Liferay.on( SX.Events.SX_STRUCTURED_DATA_CHANGED, function(event){
+		let dataPacket = event.dataPacket;
+		
+		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
+		console.log('SX_STRUCTURED_DATA_CHANGED: ', dataPacket );
+		
+		let fileContent = dataPacket.payload.toFileContent();
+		
+		console.log('fileContent: ', fileContent);
+	});
+	
 	
 	Liferay.on('jquery_alert', function(e){
 		alert('JQuery Alert');

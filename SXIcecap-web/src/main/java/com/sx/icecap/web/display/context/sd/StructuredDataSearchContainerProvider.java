@@ -312,13 +312,11 @@ public class StructuredDataSearchContainerProvider {
 		}
 		else {
 			_searchContainer.setTotal(
-					_structuredDataLocalService.countStructuredDatasByDataTypeId_S(
-							_dataType.getPrimaryKey(),
-							_status));
+					_structuredDataLocalService.countStructuredDatasByDataTypeId(
+							_dataType.getPrimaryKey()) );
 			
-			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId_S(
+			entriesResults = _structuredDataLocalService.getStructuredDatasByDataTypeId(
 					_dataType.getPrimaryKey(),
-					_status,
 					_searchContainer.getStart(),
 					_searchContainer.getEnd() ,
 			        _searchContainer.getOrderByComparator());

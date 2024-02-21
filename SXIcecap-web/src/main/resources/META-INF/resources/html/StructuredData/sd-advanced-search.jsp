@@ -139,12 +139,6 @@ $(document).ready(function(){
 			'<%= locale.toString() %>',
 			<%= jsonLocales.toJSONString() %> );
 	
-	/*
-	let dataStructure = SX.newDataStructure(  <%= dataStructure.toString() %> );
-	let abstractFields = <%= abstractFields.toJSONString() %>;
-	dataStructure.render( SX.SXConstants.FOR_SEARCH, $('#<portlet:namespace/>searchSection') );
-	*/
-	
 	let advancedSearch = new SX.AdvancedSearch(
 						<%= dataStructure.toString() %>,
 						<%= abstractFields.toJSONString() %>,
@@ -160,10 +154,10 @@ $(document).ready(function(){
 	
 	
 	Liferay.on(SX.Events.SD_SEARCH_KEYWORD_CHANGED, function(evt){
-		let eventData = evt.sxeventdata;
-		console.log( 'SD_SEARCH_KEYWORD_CHANGED' , eventData );
+		let dataPacket = evt.dataPacket;
+		console.log( 'SD_SEARCH_KEYWORD_CHANGED' , dataPacket );
 		
-		let term = eventData.term;
+		let term = dataPacket.term;
 
 		let hitCount = advancedSearch.doKeywordSearch(  term.termName, term.searchKeywords, term.termType );
 		
@@ -178,10 +172,10 @@ $(document).ready(function(){
 	});
 	
 	Liferay.on(SX.Events.SD_SEARCH_FROM_NUMERIC_CHANGED, function(evt){
-		let eventData = evt.sxeventdata;
-		console.log( 'SD_SEARCH_FROM_NUMERIC_CHANGED ' , eventData );
+		let dataPacket = evt.dataPacket;
+		console.log( 'SD_SEARCH_FROM_NUMERIC_CHANGED ' , dataPacket );
 		
-		let term = eventData.term;
+		let term = dataPacket.term;
 		
 		let hitCount;
 		if( term.rangeSearch ){
@@ -201,10 +195,10 @@ $(document).ready(function(){
 	});
 	
 	Liferay.on(SX.Events.SD_SEARCH_TO_NUMERIC_CHANGED, function(evt){
-		let eventData = evt.sxeventdata;
-		console.log( 'SD_SEARCH_TO_NUMERIC_CHANGED ' , eventData );
+		let dataPacket = evt.dataPacket;
+		console.log( 'SD_SEARCH_TO_NUMERIC_CHANGED ' , dataPacket );
 		
-		let term = eventData.term;
+		let term = dataPacket.term;
 		
 		let hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchValue, term.toSearchValue, term.termType );
 		console.log('hitCount: ' + hitCount );
@@ -218,10 +212,10 @@ $(document).ready(function(){
 	});
 	
 	Liferay.on(SX.Events.SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED, function(evt){
-		let eventData = evt.sxeventdata;
-		console.log( 'SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED ' , eventData );
+		let dataPacket = evt.dataPacket;
+		console.log( 'SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED ' , dataPacket );
 		
-		let term = eventData.term;
+		let term = dataPacket.term;
 		
 		let hitCount;
 		if( term.rangeSearch ){
@@ -241,10 +235,10 @@ $(document).ready(function(){
 	});
 	
 	Liferay.on(SX.Events.SD_SEARCH_FROM_DATE_CHANGED, function(evt){
-		let eventData = evt.sxeventdata;
-		console.log( 'SD_SEARCH_FROM_DATE_CHANGED ' , eventData );
+		let dataPacket = evt.dataPacket;
+		console.log( 'SD_SEARCH_FROM_DATE_CHANGED ' , dataPacket );
 		
-		let term = eventData.term;
+		let term = dataPacket.term;
 		
 		let hitCount;
 		if( term.rangeSearch ){
@@ -264,10 +258,10 @@ $(document).ready(function(){
 	});
 	
 	Liferay.on(SX.Events.SD_SEARCH_TO_DATE_CHANGED, function(evt){
-		let eventData = evt.sxeventdata;
-		console.log( 'SD_SEARCH_TO_DATE_CHANGED ' , eventData );
+		let dataPacket = evt.dataPacket;
+		console.log( 'SD_SEARCH_TO_DATE_CHANGED ' , dataPacket );
 		
-		let term = eventData.term;
+		let term = dataPacket.term;
 		let hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
 		
 		if( hitCount !== null ){
@@ -280,10 +274,10 @@ $(document).ready(function(){
 	});
 	
 	Liferay.on(SX.Events.SD_DATE_RANGE_SEARCH_STATE_CHANGED, function(evt){
-		let eventData = evt.sxeventdata;
-		console.log( 'SD_DATE_RANGE_SEARCH_STATE_CHANGED ' , eventData );
+		let dataPacket = evt.dataPacket;
+		console.log( 'SD_DATE_RANGE_SEARCH_STATE_CHANGED ' , dataPacket );
 		
-		let term = eventData.term;
+		let term = dataPacket.term;
 		
 		let hitCount;
 		if( term.rangeSearch ){

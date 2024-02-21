@@ -541,10 +541,8 @@ public interface StructuredDataLocalService
 	public int getStructuredDatasCount();
 
 	@Indexable(type = IndexableType.DELETE)
-	public StructuredData removeStructuredData(long structuredDataId)
-		throws PortalException;
-
-	public void removeStructuredDatas(long[] structuredDataIds)
+	public StructuredData removeStructuredData(
+			long structuredDataId, long dataFileFolderId)
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)

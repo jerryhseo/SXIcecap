@@ -1,6 +1,6 @@
 let crfSampleDataType = {
     "termValueDelimiter": "=",
-    "termDelimiterPosition": true,
+    "termDelimiterPosition": "end",
     "matrixBracketType": "[]",
     "matrixElementDelimiter": " ",
     "tooltip": {

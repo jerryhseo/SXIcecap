@@ -64,6 +64,7 @@ import com.sx.icecap.service.persistence.DataTypePersistence;
 import com.sx.icecap.service.persistence.DataTypeStructurePersistence;
 import com.sx.icecap.service.persistence.StructuredDataPersistence;
 import com.sx.icecap.service.persistence.TermPersistence;
+import com.sx.icecap.service.persistence.VisualizerLinkPersistence;
 
 import java.io.Serializable;
 
@@ -653,6 +654,9 @@ public abstract class TermLocalServiceBaseImpl
 
 	@Reference
 	protected TermPersistence termPersistence;
+
+	@Reference
+	protected VisualizerLinkPersistence visualizerLinkPersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

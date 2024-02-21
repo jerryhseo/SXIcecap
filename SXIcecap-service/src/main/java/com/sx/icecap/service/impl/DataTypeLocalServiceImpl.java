@@ -17,7 +17,10 @@ package com.sx.icecap.service.impl;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppService;
+import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -33,12 +36,14 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.sx.constant.StationXConstants;
+import com.sx.icecap.constant.IcecapConstants;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapSSSTermAttributes;
 import com.sx.icecap.constant.IcecapSSSTermTypes;
@@ -54,6 +59,7 @@ import com.sx.icecap.service.base.DataTypeLocalServiceBaseImpl;
 import com.sx.icecap.util.comparator.datatype.DataTypeModifiedDateComparator;
 import com.sx.icecap.util.comparator.datatype.DataTypeNameComparator;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +70,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import javax.portlet.PortletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -630,13 +638,16 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		return StructuredDataLocalServiceUtil.updateStatus(userId, structuredDataId, status, sc);
 	}
 	
-	public StructuredData removeStructuredData( long structuredDataId ) throws PortalException {
-		return StructuredDataLocalServiceUtil.removeStructuredData(structuredDataId);
+	public StructuredData removeStructuredData( long structuredDataId, long dataFileFolderId ) throws PortalException {
+		return StructuredDataLocalServiceUtil.removeStructuredData( 
+				structuredDataId, dataFileFolderId);
 	}
 	
+	/*
 	public void removeStructuredDatas( long[] structuredDataIds ) throws PortalException {
 		StructuredDataLocalServiceUtil.removeStructuredDatas(structuredDataIds);
 	}
+	*/
 
 	public StructuredData getStructuredData( long structuredDataId ){
 		return super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
@@ -685,7 +696,6 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 				}
 			}
 		}
-		
 		
 		try {
 			JSONObject query = JSONFactoryUtil.createJSONObject(advancedQuery);
@@ -827,7 +837,7 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	}
 
 	public JSONObject getStructuredDataWithValues( 
-			long dataTypeId, long structuredDataId ) throws JSONException {
+			long dataTypeId, long structuredDataId ) throws PortalException {
 		String dataStructure = "";
 		try {
 			dataStructure = getDataTypeStructure( dataTypeId );
@@ -835,12 +845,157 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 			return null;
 		} 
 		
-		StructuredData structuredData = 
-				super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
+		if( structuredDataId == 0 ) {
+			return JSONFactoryUtil.createJSONObject( dataStructure );
+		}
 		
-		return _fillDataStructureWithValues( dataStructure, structuredData.getStructuredData() );
+		StructuredData structuredData = super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
+		
+		JSONObject jsonStructure = JSONFactoryUtil.createJSONObject( dataStructure );
+		JSONObject jsonData = JSONFactoryUtil.createJSONObject(structuredData.getStructuredData());
+
+		Set<String> dataKeys = jsonData.keySet();
+		
+		JSONArray terms = jsonStructure.getJSONArray(IcecapDataTypeAttributes.TERMS);
+		
+		for( int i=0; i< terms.length(); i++ ){
+			JSONObject jsonTerm = terms.getJSONObject(i);
+			
+			String termType = jsonTerm.getString( IcecapSSSTermAttributes.TERM_TYPE );
+			String termName = jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME);
+			String termVersion = jsonTerm.getString(IcecapSSSTermAttributes.TERM_VERSION);
+			
+			if( dataKeys.contains( jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME) ) ){
+				if(  IcecapSSSTermTypes.FILE.equalsIgnoreCase(  termType ) ) {
+					DataType dataType = getDataType(dataTypeId);
+					long dataFileFolderId = getDataFileFolderId(
+																dataType.getGroupId(),
+																DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+																dataType.getDataTypeName(),
+																dataType.getDataTypeVersion(),
+																structuredDataId,
+																termName,
+																termVersion,
+																null, false );
+					
+					JSONArray dlFolderFiles = getDLFolderFiles(
+									dataType.getGroupId(),
+									dataFileFolderId );
+					
+					JSONObject jsonFiles = jsonData.getJSONObject(termName);
+					
+					if( Validator.isNotNull(dlFolderFiles) ) {
+						for( int j=0; j<dlFolderFiles.length(); j++ ) {
+							JSONObject dlFile =dlFolderFiles.getJSONObject(j);
+							if( Validator.isNull(jsonFiles) ) {
+								jsonFiles = JSONFactoryUtil.createJSONObject();
+								jsonData.put(termName, jsonFiles);
+							}
+							
+							jsonFiles.put(dlFile.getString("name"), dlFile);
+						}
+					}
+					
+					jsonTerm.put("value", jsonFiles );
+				}
+				else if(  IcecapSSSTermTypes.EMAIL.equalsIgnoreCase( termType) ) {
+					String data = jsonData.getString(termName);
+					String[] parts = data.split("@");
+					JSONArray email = JSONFactoryUtil.createJSONArray();
+					email.put(parts[0]);
+					email.put(parts[1]);
+					
+					jsonTerm.put("value", email );
+				}
+				else if( IcecapSSSTermTypes.PHONE.equalsIgnoreCase( termType) ) {
+					String data = jsonData.getString(termName);
+					String[] parts = data.split("-");
+					JSONArray phone = JSONFactoryUtil.createJSONArray();
+					phone.put(parts[0]);
+					phone.put(parts[1]);
+					phone.put(parts[2]);
+					
+					jsonTerm.put("value", phone );
+				}
+				else if( IcecapSSSTermTypes.ADDRESS.equalsIgnoreCase( termType ) ) {
+					String data = jsonData.getString(termName);
+					String[] parts = data.split(", ");
+					JSONArray address = JSONFactoryUtil.createJSONArray();
+					address.put(parts[0]);
+					address.put(parts[1]);
+					address.put(parts[2]);
+					
+					jsonTerm.put("value", address );
+				}
+				else if( IcecapSSSTermTypes.MATRIX.equalsIgnoreCase( termType ) ||
+							 IcecapSSSTermTypes.LIST.equalsIgnoreCase( termType ) ) {
+					jsonTerm.put("value", jsonData.getJSONArray( termName ) );
+				}
+				else if( IcecapSSSTermTypes.STRING.equalsIgnoreCase( termType) ){
+					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
+											jsonData.getString(termName) );
+				}
+				else if( IcecapSSSTermTypes.NUMERIC.equalsIgnoreCase( termType) ){
+					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
+							jsonData.getDouble(termName) );
+				}
+				else if( IcecapSSSTermTypes.DATE.equalsIgnoreCase( termType) ) {
+					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
+							jsonData.getLong(termName) );
+				}
+				else if( IcecapSSSTermTypes.BOOLEAN.equalsIgnoreCase( termType) ){
+					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
+							jsonData.getBoolean(termName) );
+				}
+			}
+		}
+		
+		return jsonStructure;
 	}
 	
+	public final long getDataFileFolderId(
+			long repositoryId,
+			long parentFoderId,
+			String dataTypeName,
+			String dataTypeVersion,
+			long dataId,
+			String termName,
+			String termVersion,
+			ServiceContext sc,
+			boolean createWhenNoExist ) throws PortalException {
+	
+		long parentFolderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
+		String rootDataFolderName = "Data Files";
+		
+		long rootFolderId = _getFolderId( repositoryId, parentFolderId, rootDataFolderName, sc, createWhenNoExist);
+		long dataTypeFolderId = _getFolderId( repositoryId, rootFolderId, dataTypeName, sc, createWhenNoExist);
+		long dataTypeVersionFolderId = _getFolderId( repositoryId, dataTypeFolderId, dataTypeVersion, sc, createWhenNoExist);
+		long dataFolderId = _getFolderId( repositoryId, dataTypeVersionFolderId, String.valueOf(dataId), sc, createWhenNoExist );
+		
+		if( termName.isEmpty() ) {
+			return dataFolderId;
+		}
+		
+		long termNameFolderId = _getFolderId( repositoryId, dataFolderId, termName, sc, createWhenNoExist);
+		long termVersionFolderId = _getFolderId( repositoryId, termNameFolderId, termVersion, sc, createWhenNoExist);
+		
+		return termVersionFolderId;
+	}
+	
+	private final long _getFolderId( long repositoryId, long parentFolderId, String folderName, ServiceContext sc, boolean createWhenNoExist ) throws PortalException{
+		Folder folder = null;
+		try {
+			folder = _dlAppService.getFolder(repositoryId, parentFolderId, folderName);
+		} catch (PortalException e) {
+			if( createWhenNoExist ) {
+				folder = _dlAppService.addFolder(repositoryId, parentFolderId, folderName, "", sc);
+			}
+		}
+		
+		return folder.getFolderId();
+	}
+	
+	@Deprecated
 	public JSONObject getStructuredDataWithValues( 
 			long dataTypeId, String structuredData ) throws JSONException {
 		String dataStructure = "";
@@ -850,10 +1005,40 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 			return null;
 		} 
 		
-		return _fillDataStructureWithValues( dataStructure, structuredData );
+		return _fillDataStructureWithValues( dataStructure, structuredData, null );
 	}
 	
-	private JSONObject _fillDataStructureWithValues( String dataStructure, String values ) throws JSONException {
+	public JSONArray getDLFolderFiles( long repositoryId, long folderId ) {
+		List<FileEntry> fileEntries = null;
+		
+		try {
+			fileEntries = _dlAppService.getFileEntries( repositoryId, folderId );
+		} catch (Exception e) {
+			return null;
+		}
+		
+		JSONArray files = JSONFactoryUtil.createJSONArray(); 
+		for( FileEntry fileEntry : fileEntries ) {
+			JSONObject fileInfo = JSONFactoryUtil.createJSONObject();
+			fileInfo.put("parentFolderId", fileEntry.getFolderId() );
+			fileInfo.put("fileId", fileEntry.getFileEntryId() );
+			fileInfo.put("name", fileEntry.getFileName() );
+			fileInfo.put("size", fileEntry.getSize() );
+			fileInfo.put("type", fileEntry.getMimeType() );
+			fileInfo.put("downloadURL", "/documents/" + fileEntry.getGroupId() + StringPool.BACK_SLASH + fileEntry.getFolderId() + StringPool.BACK_SLASH + fileEntry.getFileName() + StringPool.BACK_SLASH + fileEntry.getUuid() );
+			
+			files.put(fileInfo);
+		}
+		
+		return files;
+	}
+	
+	@Deprecated
+	private JSONObject _fillDataStructureWithValues( 
+			String dataStructure, 
+			String values, 
+			JSONArray dlFolderFiles ) throws JSONException {
+		
 		JSONObject jsonStructure = JSONFactoryUtil.createJSONObject( dataStructure );
 		JSONObject jsonValues = JSONFactoryUtil.createJSONObject(values);
 
@@ -861,8 +1046,9 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		
 		JSONArray terms = jsonStructure.getJSONArray(IcecapDataTypeAttributes.TERMS);
 		
-		terms.forEach(  term -> {
-			JSONObject jsonTerm = (JSONObject)term;
+		for( int i=0; i< terms.length(); i++ ){
+			JSONObject jsonTerm = terms.getJSONObject(i);
+			
 			String termType = jsonTerm.getString( IcecapSSSTermAttributes.TERM_TYPE );
 			String termName = jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME);
 			
@@ -871,38 +1057,40 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
 							jsonValues.getJSONArray(termName) );
 				}
-				else if(  IcecapSSSTermTypes.FILE.equalsIgnoreCase( jsonTerm.getString( termType )) ) {
-					JSONObject folderInfo = jsonValues.getJSONObject(termName);
+				else if(  IcecapSSSTermTypes.FILE.equalsIgnoreCase(  termType ) ) {
+					JSONObject jsonFiles = jsonValues.getJSONObject(termName);
 					
-					if( Validator.isNull(folderInfo) ) {
+					System.out.println("jsonFiles: " + jsonFiles.toString() );
+					if( Validator.isNull(jsonFiles) || jsonFiles.length() == 0 ) {
 						System.out.println("Term "+termName+" has no folder information");
+						System.out.println("jsonValues: " + jsonValues.toString() );
+						continue;
 					}
-					else if( folderInfo.length() == 0 ){
-						System.out.println("Term "+termName+" has empty information.");
-					}
-					else {
-						List<FileEntry> fileEntries = null;
-						try {
-							fileEntries = _dlAppService.getFileEntries( folderInfo.getLong("repositoryId"), folderInfo.getLong("folderId") );
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-						JSONObject value = JSONFactoryUtil.createJSONObject();
-						for( FileEntry fileEntry : fileEntries ) {
-							JSONObject fileInfo = JSONFactoryUtil.createJSONObject();
-							fileInfo.put("parentFolderId", fileEntry.getFolderId() );
-							fileInfo.put("fileId", fileEntry.getFileEntryId() );
-							fileInfo.put("name", fileEntry.getFileName() );
-							fileInfo.put("size", fileEntry.getSize() );
-							fileInfo.put("type", fileEntry.getMimeType() );
-							fileInfo.put("downloadURL", "/documents/" + fileEntry.getGroupId() + StringPool.BACK_SLASH + fileEntry.getFolderId() + StringPool.BACK_SLASH + fileEntry.getFileName() + StringPool.BACK_SLASH + fileEntry.getUuid() );
+					else{
+						/*
+						for( FileEntry entry : fileEntries) {
+							JSONObject jsonFile =jsonFiles.getJSONObject(entry.getFileName());
+							if( Validator.isNull(jsonFile) ) {
+								jsonFile = JSONFactoryUtil.createJSONObject();
+							}
 							
-							value.put( fileEntry.getFileName(), fileInfo);
+							jsonFile.put("parentFolderId", entry.getFolderId());
+							jsonFile.put("fileId", entry.getFileEntryId());
+							jsonFile.put("name", entry.getFileName());
+							jsonFile.put("type", entry.getMimeType());
+							jsonFile.put("size", entry.getSize());
+							jsonFile.put("downloadURL", entry.getSize());
 						}
-						
-						jsonTerm.put("value", value );
+						*/
+						Iterator<String> iter = jsonFiles.keys();
+						while( iter.hasNext() ) {
+							String fileName = iter.next();
+							
+							JSONObject jsonFile = jsonFiles.getJSONObject(fileName);
+							if( !jsonFile.has("fileId") ) {
+								jsonFiles.remove(fileName);
+							}
+						}
 					}
 				}
 				else if(  IcecapSSSTermTypes.EMAIL.equalsIgnoreCase( jsonTerm.getString(termType)) ) {
@@ -948,7 +1136,7 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 											jsonValues.getString(jsonTerm.getString(termName)));
 				}
 			}
-		});
+		}
 		
 		return jsonStructure;
 	}

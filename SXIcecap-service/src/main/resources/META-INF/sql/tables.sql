@@ -148,3 +148,9 @@ create table SX_ICECAP_Term (
 	attributesJSON TEXT null,
 	standard BOOLEAN
 );
+
+create table SX_ICECAP_VisualizerLink (
+	VisualizerLink LONG not null primary key,
+	dataTypeId LONG,
+	visualizerId LONG
+);

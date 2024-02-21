@@ -25,6 +25,7 @@ import org.osgi.service.component.annotations.Component;
 	    immediate = true,
 	    property = {
 	        "javax.portlet.name=" + IcecapWebPortletKeys.DATATYPE_MANAGEMENT,
+	        "javax.portlet.name=" + IcecapWebPortletKeys.STRUCTURED_DATA,
 	        "mvc.command.name="+IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE
 	    },
 	    service = MVCResourceCommand.class

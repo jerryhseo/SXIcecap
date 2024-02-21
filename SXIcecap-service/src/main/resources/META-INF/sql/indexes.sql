@@ -54,3 +54,6 @@ create index IX_305706C1 on SX_ICECAP_Term (termName[$COLUMN_LENGTH:75$], termVe
 create index IX_25944BF0 on SX_ICECAP_Term (userId, status);
 create index IX_65C19CC4 on SX_ICECAP_Term (uuid_[$COLUMN_LENGTH:75$], companyId);
 create unique index IX_C9D28446 on SX_ICECAP_Term (uuid_[$COLUMN_LENGTH:75$], groupId);
+
+create index IX_5A09A2CF on SX_ICECAP_VisualizerLink (dataTypeId);
+create index IX_7EA0C129 on SX_ICECAP_VisualizerLink (visualizerId);

@@ -156,16 +156,16 @@
 	
 	<div id="<portlet:namespace/>listAttributes" class="type-specific-attrs">
 		<aui:fieldset-group markupView="lexicon" >
-			<aui:fieldset label="display-style"  helpMessage="list-display-style-help">
-				<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-					<aui:input type="radio" name="listDisplayStyle" label="select-box" value="select" checked="true"></aui:input>
-				</div>
-				<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-					<aui:input type="radio" name="listDisplayStyle" label="radio" value="radio"></aui:input>
-				</div>
-				<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-					<aui:input type="radio" name="listDisplayStyle" label="check-box" value="check"></aui:input>
-				</div>
+			<aui:fieldset id="listDisplayStyle" label="display-style"  helpMessage="list-display-style-help">
+				<span style="display:inline-block;margin-right:20px;">
+					<aui:input type="radio" name="listDisplayStyle" inlineField="true" label="select-box" value="select" checked="true"></aui:input>
+				</span>
+				<span style="display:inline-block;margin-right:20px;">
+					<aui:input type="radio" name="listDisplayStyle" inlineField="true" label="radio" value="radio"></aui:input>
+				</span>
+				<span style="display:inline-block;">
+					<aui:input type="radio" name="listDisplayStyle" inlineField="true" label="check-box" value="check"></aui:input>
+				</span>
 			</aui:fieldset>
 		</aui:fieldset-group> 
 			<div class="form-group input-text-wrapper" style="margin-top:10px;">
@@ -185,7 +185,7 @@
 						<span class="taglib-text hide-accessible"><liferay-ui:message key="list-options-help"></liferay-ui:message></span>
 					</span>
 					<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-					<span id="<portlet:namespace/>btnNewOption" class="right" style="margin-top:3px; padding-right:20px;">
+					<span id="<portlet:namespace/>btnNewOption" class="right" style="margin-top:3px; margin-right:20px;">
 							<svg class="lexicon-icon" x="0px" y="0px" focusable="false" role="button" viewBox="0 0 296 296">
 								<g>
 									<g>
@@ -220,7 +220,7 @@
 							<div id="<portlet:namespace/>activeTerms" ></div>
 							<hr class="content-horizontal-line">
 							<aui:button-row>
-								<aui:button id="btnListChooseActiveTerms" value="choose-active-terms"/>
+								<aui:button id="btnListChooseSlaveTerms" value="choose-active-terms"/>
 								<aui:button id="btnAddOption" value="add-option" cssClass="right"/>
 							</aui:button-row>
 						</aui:fieldset>
@@ -231,7 +231,7 @@
 
 	<div id="<portlet:namespace/>booleanAttributes" class="type-specific-attrs ">
 		<aui:fieldset-group markupView="lexicon" >
-			<aui:fieldset label="display-style"  helpMessage="boolean-display-style-help">
+			<aui:fieldset label="display-style" id="booleanDisplayStyle"  helpMessage="boolean-display-style-help">
 				<div style="display:inline-block; margin-left:10px; margin-right:10px;">
 					<aui:input type="radio" id="booleanDisplayStyle_select" name="booleanDisplayStyle" label="select-box" value="select" checked="true"></aui:input>
 				</div>
@@ -250,7 +250,7 @@
 						</aui:field-wrapper>
 					</div>
 					 <div style="display:inline-block;margin:1.7rem 10px 0 10px;height:1.2rem;flex-grow:1;">
-					 	<aui:button id="btnBooleanTrueActiveTerms" value="active-terms" cssClass="full"></aui:button>
+					 	<aui:button id="btnBooleanTrueSlaveTerms" value="active-terms" cssClass="full"></aui:button>
 					 </div>
 				</div>
 				<div style="display:flex;">
@@ -263,7 +263,7 @@
 						</aui:field-wrapper> 
 					</div> 
 					 <div style="display:inline-block;margin:1.7rem 10px 0 10px;height:1.2rem;flex-grow:1;">
-					 	<aui:button id="btnBooleanFalseActiveTerms" value="active-terms" cssClass="full"></aui:button>
+					 	<aui:button id="btnBooleanFalseSlaveTerms" value="active-terms" cssClass="full"></aui:button>
 					 </div>
 				</div>
 				<div id="<portlet:namespace/>booleanActiveTerms" ></div>

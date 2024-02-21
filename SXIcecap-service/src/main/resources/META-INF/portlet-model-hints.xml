@@ -154,4 +154,9 @@
 		</field>
 		<field name="standard" type="boolean" />
 	</model>
+	<model name="com.sx.icecap.model.VisualizerLink">
+		<field name="VisualizerLink" type="long" />
+		<field name="dataTypeId" type="long" />
+		<field name="visualizerId" type="long" />
+	</model>
 </model-hints>

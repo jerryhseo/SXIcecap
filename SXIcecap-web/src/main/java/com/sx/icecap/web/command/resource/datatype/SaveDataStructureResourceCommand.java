@@ -47,7 +47,10 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 		
 		long dataTypeId = ParamUtil.getLong(resourceRequest, "dataTypeId");
 		String dataStructure = ParamUtil.getString(resourceRequest, "dataStructure");
-		
+
+/************************************************************************************************
+ *	Block out for future use of  term management 
+ *
 //		System.out.println("dataStructure: " + dataStructure);
 		
 		JSONObject jsonDataStructure = JSONFactoryUtil.createJSONObject(dataStructure);
@@ -112,7 +115,6 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 			
 			_printOutTermAttributes(termType, termName, termVersion, displayNameMap, definitionMap, tooltipMap, synonyms, mandatory, searchable, downloadable, value, typeAttributes, groupTermId, status);
 			
-/*	 Temporarily Block out to dis-connect SSS
 			Term existTerm = null;
 			try{
 				existTerm = _termLocalService.getTerm(termName, termVersion);
@@ -151,8 +153,8 @@ public class SaveDataStructureResourceCommand extends BaseMVCResourceCommand {
 						standard,
 						sc);
 			}
- */
 		}
+ */
 		
 		_dataTypeLocalService.setDataTypeStructure(dataTypeId, dataStructure);
 	}

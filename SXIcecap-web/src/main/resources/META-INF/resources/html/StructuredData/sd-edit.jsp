@@ -27,11 +27,9 @@
 	DataType dataType = (DataType)renderRequest.getAttribute(DataType.class.getName());
 	JSONObject structuredData = (JSONObject)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT);
 	
-	String cmd = (String)renderRequest.getAttribute(StationXWebKeys.CMD);
-	String structuredDataId = (String)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_ID);
-	if( Validator.isNull(structuredDataId) ){
-		structuredDataId = "0";
-	}
+	String command = (String)renderRequest.getAttribute(StationXWebKeys.CMD);
+	out.println("CMD: " + command);
+	long structuredDataId = ParamUtil.getLong(renderRequest, IcecapWebKeys.STRUCTURED_DATA_ID, 0);
 	
 	Ticket ticket = TicketLocalServiceUtil.addTicket(user.getCompanyId(), User.class.getName(), user.getUserId(), TicketConstants.TYPE_IMPERSONATE, null, null, new ServiceContext());
 	
@@ -40,6 +38,10 @@
 
 <portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_STRUCTURED_DATA_DELETE_FILE %>" var="deleteFileURL">
 </portlet:resourceURL>
+
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_VISUALIZER_COMMON %>" var="resourceURL">
+</portlet:resourceURL>
+
 
 <%
 	JSONArray terms = structuredData.getJSONArray("terms");
@@ -53,11 +55,7 @@
 %>
 
 <portlet:actionURL name="<%= IcecapMVCCommands.ACTION_STRUCTURED_DATA_ADD %>" var="saveActionURL">
-	<portlet:param name="<%= StationXWebKeys.CMD %>" value="<%= cmd %>"/>
-	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%=String.valueOf(dataType.getDataTypeId()) %>"/>
-	<portlet:param name="dataTypeName" value="<%=dataType.getDataTypeName() %>"/>
-	<portlet:param name="dataTypeVersion" value="<%=dataType.getDataTypeVersion() %>"/>
-	<portlet:param name="<%= IcecapWebKeys.STRUCTURED_DATA_ID %>" value="<%= structuredDataId %>"/>
+	<portlet:param name="<%= StationXWebKeys.CMD %>" value="<%= command %>"/>
 </portlet:actionURL>
 
 <portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_STRUCTURED_DATA_ADD_SAMPLE %>" var="addSampleData">
@@ -67,7 +65,6 @@
 <aui:container cssClass="SXIcecap-web">
 	<aui:row cssClass="form-section">
 		<aui:col md="12" >
-			<aui:form action="<%= saveActionURL %>" enctype="multipart/form-data" method="POST" name="fm" inlineLabels="true" >
 				<aui:fieldset-group markupView="lexicon">
 					<aui:fieldset label="datatype">
 						<span style="display:table-cell; width:40%;">
@@ -86,87 +83,140 @@
 				</div>
 				<hr class=""></hr>
 				
-				<div id="<portlet:namespace/>inputStatusBar" style="margin-bottom:10px;margin-left:10px; display:none;"><span style="margin-right:5px;">Input Status:</span></div>
+				<div id="<portlet:namespace/>editorPanel"></div>
 				
-				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
-				<input type="hidden" id="<portlet:namespace/>uploadParams" name="<portlet:namespace/>uploadParams"/>
-				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-md-12"  id="<portlet:namespace/>canvasPanel"></div>
-					</div>
-				</div>
-				<aui:button-row>
-					<c:choose>
-						<c:when test="<%= cmd.equalsIgnoreCase(StationXConstants.CMD_ADD) %>">
-							<aui:button type="submit" name="add"></aui:button>
-						</c:when>
-						<c:otherwise>
-							<aui:button type="submit" name="update"></aui:button>
-						</c:otherwise>
-					</c:choose>
-					<aui:button name="addSamples" value="add-samples"></aui:button>
-					<aui:button name="delete" value="delete"></aui:button>
-				</aui:button-row>
-			</aui:form>
+				<form action="<%= saveActionURL.toString() %>" name="<portlet:namespace/>fm" id="<portlet:namespace/>fm" method="post">
+					<input type="hidden" id="<portlet:namespace/>dataTypeId" name="<portlet:namespace/>dataTypeId" value="<%= dataType.getDataTypeId() %>" >
+					<input type="hidden" id="<portlet:namespace/>structuredDataId" name="<portlet:namespace/>structuredDataId" value="<%= structuredDataId %>" >
+					<input type="hidden" id="<portlet:namespace/>dataContent" name="<portlet:namespace/>dataContent" >
+					<aui:button-row>
+						<aui:button type="submit" id="btnSave" value="save"></aui:button>
+						<aui:button type="button" id="btnDelete" value="delete"></aui:button>
+					</aui:button-row>
+				</form>
 		</aui:col>
 	</aui:row>
 </aui:container>
 
-<script>
+
+
+<aui:script use="aui-base, liferay-form, liferay-menu">
+
+
 $(document).ready(function(){
-	let SX = StationX(  '<portlet:namespace/>', 
+	let SX =  StationX(  '<portlet:namespace/>', 
 			'<%= defaultLocale.toString() %>',
 			'<%= locale.toString() %>',
 			<%= jsonLocales.toJSONString() %> );
-	
-	let jsonDataStructure = <%= structuredData.toString() %>;
-	
-	let dataStructure = SX.newDataStructure(  jsonDataStructure ) ;
-	if( <%= cmd.equalsIgnoreCase("update") %> === true ){
-		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
-	}
-	
-	console.log( 'Data Structure: ', dataStructure );
-	dataStructure.render( SX.Constants.FOR_EDITOR, $('#<portlet:namespace/>canvasPanel') );
-	
-	let uploadParams = new Object();
-	
-	Liferay.on( SX.Events.DATATYPE_SDE_VALUE_CHANGED, function( event ){
-		event.stopPropagation();
-		event.preventDefault();
-		
-		let eventData = event.sxeventdata;
-		
-		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
-			return;
-		}
-		
-		let term = eventData.term;
-		
-		if( term.termType === 'List' ){
-			dataStructure.activateSlaveTerms( term );
-		}
-		
-		if( term.termType === SX.TermTypes.FILE){
-			$('#<portlet:namespace/>hasFile').val(true);
-		
-			if( term.value ){
-				uploadParams[term.termName] = term.getJsonValue();
+
+	let dataStructure;
+
+	let promise = new Promise( (resolve, reject) =>{
+		$.ajax({
+			url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
+			type:'post',
+			dataType: 'json',
+			data:{
+				<portlet:namespace/>portletName: 'com_sx_visualizers_sde_StructuredDataEditorPortlet',
+			},
+			success: function(result){
+				resolve( result );
+			},
+			error: function(jqXHR, a, b){
+				reject('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
 			}
-			else{
-				delete uploadParams[term.termName];
-			}
-			
-			$('#<portlet:namespace/>uploadParams').val( 
-						JSON.stringify(uploadParams) );
-		}
-		
-		dataStructure.displayInputStatus();
-		
-		$("#<portlet:namespace/>structuredData").val( dataStructure.toFileContent() );
+		});
 	});
 	
+	promise.then( portletInfo => {
+		console.log('Promise: ', portletInfo );
+		let sdeURL = Liferay.PortletURL.createURL( portletInfo.url );
+		
+		$.ajax({
+			url: portletInfo.url,
+			success: function(data) {
+				$('#<portlet:namespace/>editorPanel').html(data);
+			},
+			error: function(jqXHR, a, b){
+				console.log('Loading Visualizer FAILED: ', a, b);
+			}
+		});
+	})
+	.catch( errorMsg => $.alert(errorMsg ) );
+	
+	
+			
+	Liferay.on( 'SX_VISUALIZER_WAITING', function(event){
+		let dataPacket = event.dataPacket;
+		
+		if( !dataPacket.initialized ){
+			let packet = SX.Util.createEventDataPacket( '<portlet:namespace/>',  dataPacket.sourcePortlet );
+			
+			SX.Util.fire( 'SX_HANDSHAKE', packet);			
+		}
+	});
+
+	Liferay.on( SX.Events.SX_VISUALIZER_READY, function(evt){
+		let rcvdPacket = evt.dataPacket;
+		if( !rcvdPacket.isTargetPortlet( '<portlet:namespace/>') )	return;
+		
+		console.log( 'SX_VISUALIZER_READY: ',  rcvdPacket );
+		
+		let dataPromise = new Promise( (resolve, reject)=>{
+			$.ajax({
+				url: '<%=  resourceURL.toString() %>',
+				type: 'post',
+				data: {
+					<portlet:namespace/>command: 'GET_STRUCTURED_DATA',
+					<portlet:namespace/>dataTypeId: '<%= String.valueOf( dataType.getDataTypeId() ) %>',
+					<portlet:namespace/>structuredDataId: '<%= String.valueOf( structuredDataId ) %>'
+				},
+				dataType: 'json',
+				success: function(result){
+					resolve( result.dataStructure );
+				},
+				error:function(jqXHR, a, b){
+					reject('Fail to get data: ');
+				}
+			});
+		});
+		
+		dataPromise.then( dataStructure => {
+			console.log('promise result: ', dataStructure );
+			// load data from DB or a file
+			let dataPacket = SX.Util.createEventDataPacket( '<portlet:namespace/>', rcvdPacket.sourcePortlet );
+			dataPacket.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
+			dataPacket.payload = dataStructure; 
+			
+			dataPacket.profile = {
+					dataTypeId: '<%= dataType.getDataTypeId() %>',
+					dataTypeName:  '<%= dataType.getDataTypeName() %>',
+					dataTypeVersion:  '<%= dataType.getDataTypeVersion() %>',
+					dataTypeDisplayName:  '<%= dataType.getDisplayName(locale) %>',
+					structuredDataId: '<%= structuredDataId %>'
+			};
+			
+			SX.Util.fire( SX.Events.SX_LOAD_DATA, dataPacket );
+			console.log('SX_LOAD_DATA fired: ', dataPacket );
+		})
+		.catch( errorMsg => console.log(errorMsg ) );
+	} );
+	
+	Liferay.on( SX.Events.SX_VISUALIZER_DATA_CHANGED, function(evt){
+		let recvPacket = evt.dataPacket;
+		if( !recvPacket.isTargetPortlet( '<portlet:namespace/>') )	return;
+		
+		console.log( 'SX_VISUALIZER_DATA_CHANGED: ',  recvPacket );
+		
+		$('#<portlet:namespace/>dataContent').val( recvPacket.payload.toFileContent() );
+		console.log( 'dataContent: ', $('#<portlet:namespace/>dataContent').val() );
+	});
+
+	$('#<portlet:namespace/>btnSave').click( function(event){
+		$('#<portlet:namespace/>fm').submit();
+	});
+
+	/*
 	$('#<portlet:namespace/>addSamples').click( function(event){
 		crfSampleData.forEach( data =>{
 				$.ajax({
@@ -181,7 +231,6 @@ $(document).ready(function(){
 					}
 				});
 		});
-		/*
 		crfSampleData.forEach( data =>{
 			Object.keys( data ).forEach( key =>{
 				if( !data[key] ){
@@ -203,7 +252,9 @@ $(document).ready(function(){
 				}
 			});
 		});
-		*/
 	});
+		*/
 });
-</script>
+
+
+</aui:script>

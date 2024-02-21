@@ -119,8 +119,8 @@
 			<aui:select 
 						name="termDelimiterPosition"
 						helpMessage="term-delimiter-position-help">
-				<aui:option label="start" value="false"></aui:option>
-				<aui:option label="end" value="true" selected="true"></aui:option>
+				<aui:option label="start" value="start"></aui:option>
+				<aui:option label="end" value="end" selected="true"></aui:option>
 			</aui:select>
 		</aui:col>
 		<aui:col md="4">
@@ -165,11 +165,10 @@
 	</aui:row>
 	<aui:row>
 		<aui:col md="8">
-			<aui:input type="checkbox" name="displayInputStatus" label="input-status-display"/>
+			<aui:input type="checkbox" name="inputStatusDisplay" label="input-status-display"/>
 		</aui:col>
 		<aui:col md="4">
-			<div id="<portlet:namespace/>inputStatusBar" style="margin-bottom:10px;margin-left:10px; display:none;font-size:0.9rem;font-weight:600;float:right;">
-				<span style="margin-right:5px;">Input Status:</span>
+			<div id="<portlet:namespace/>inputStatusBar" style="display:flex;align-items:self-end;height:100%;margin-bottom:10px;margin-left:10px;font-size:0.9rem;font-weight:600;float:right;">
 			</div>
 		</aui:col>
 	</aui:row>

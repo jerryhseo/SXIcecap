@@ -1,5 +1,6 @@
 package com.sx.icecap.web.command.render.sd;
 
+import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.petra.string.StringPool;
@@ -9,8 +10,11 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portlet.documentlibrary.constants.DLConstants;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
@@ -22,6 +26,7 @@ import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
+import com.sx.util.SXPortalUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -70,17 +75,21 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 		} catch (Exception e) {
 			throw new PortletException( "Cannot find data type: " + dataTypeId );
 		}
-
-		JSONObject jsonData = _getStructuredDataWithValues(dataTypeId, structuredDataId);
+		
+		JSONObject jsonData = null;
+		try {
+			jsonData = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredDataId);
+		} catch (Exception e) {
+			throw new PortletException( e.getMessage() );
+		}
 		
 		if( structuredDataId <= 0 ) {
 			renderRequest.setAttribute( StationXWebKeys.CMD, StationXConstants.CMD_ADD );
-			renderRequest.setAttribute( IcecapWebKeys.STRUCTURED_DATA_ID, "0" );
 		}
 		else {
 			renderRequest.setAttribute(StationXWebKeys.CMD, StationXConstants.CMD_UPDATE);
-			renderRequest.setAttribute( IcecapWebKeys.STRUCTURED_DATA_ID, String.valueOf(structuredDataId) );
 		}
+		
 		renderRequest.setAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT, jsonData);
 		
 		return IcecapJsps.STRUCTURED_DATA_EDIT;

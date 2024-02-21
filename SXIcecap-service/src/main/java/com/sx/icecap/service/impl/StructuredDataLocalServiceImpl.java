@@ -17,6 +17,7 @@ package com.sx.icecap.service.impl;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
@@ -37,11 +38,13 @@ import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.base.StructuredDataLocalServiceBaseImpl;
+import com.sx.util.SXPortalUtil;
 
 import java.util.Date;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Wing Shun Chan
@@ -52,6 +55,9 @@ import org.osgi.service.component.annotations.Component;
 )
 public class StructuredDataLocalServiceImpl
 	extends StructuredDataLocalServiceBaseImpl {
+	
+	@Reference
+	DLAppService _dlAppService;
 	
 	@Indexable(type = IndexableType.REINDEX)
 	public StructuredData addStructuredData( 
@@ -269,8 +275,9 @@ public class StructuredDataLocalServiceImpl
 	}
 	
 	@Indexable(type = IndexableType.DELETE)
-	public StructuredData removeStructuredData( long structuredDataId ) throws PortalException {
+	public StructuredData removeStructuredData( long structuredDataId, long dataFileFolderId ) throws PortalException {
 		StructuredData structuredData = super.structuredDataPersistence.remove(structuredDataId);
+		_dlAppService.deleteFolder(dataFileFolderId);
 		
 		super.assetEntryLocalService.deleteEntry(StructuredData.class.getName(), structuredData.getPrimaryKey());
 
@@ -287,11 +294,13 @@ public class StructuredDataLocalServiceImpl
 		return structuredData;
 	}
 	
+	/*
 	public void removeStructuredDatas( long[] structuredDataIds ) throws PortalException {
 		for( long structuredDataId : structuredDataIds ) {
 			this.removeStructuredData(structuredDataId);
 		}
 	}
+	*/
 	
 	public JSONObject getStructuredDataJSON( long structuredDataId ) throws PortalException {
 		
