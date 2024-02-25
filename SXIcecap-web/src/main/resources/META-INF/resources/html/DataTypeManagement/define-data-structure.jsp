@@ -1,19 +1,13 @@
 <%@page import="com.liferay.portal.kernel.util.Validator"%>
 <%@page import="com.sx.constant.StationXConstants"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
-<%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
-<%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
-<%@page import="com.liferay.portal.kernel.json.JSONArray"%>
-<%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
-<%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
-<%@page import="java.util.Set"%>
 <%@page import="java.util.Locale"%>
 <%@page import="com.sx.constant.StationXWebKeys"%>
 <%@page import="com.sx.icecap.constant.IcecapMVCCommands"%>
-<%@page import="com.sx.icecap.constant.IcecapConstants"%>
 <%@page import="com.sx.icecap.model.DataType"%>
-<%@page import="com.sx.icecap.model.DataTypeStructure"%>
+<%@page import="com.sx.util.SXPortalUtil"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ include file="../init.jsp" %>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/samples/crf-datatype-sample.js"></script>
@@ -164,8 +158,11 @@
 		</aui:col>
 	</aui:row>
 	<aui:row>
-		<aui:col md="8">
-			<aui:input type="checkbox" name="inputStatusDisplay" label="input-status-display"/>
+		<aui:col md="3">
+			<aui:input type="checkbox" name="inputStatusDisplay" label="input-status-display" inlineField="true" cssClass="display-inline-block"/>
+		</aui:col>
+		<aui:col md="5">
+			<aui:input type="checkbox" name="goTo" label="use-goto" inlineField="true" cssClass="display-inline-block"/>
 		</aui:col>
 		<aui:col md="4">
 			<div id="<portlet:namespace/>inputStatusBar" style="display:flex;align-items:self-end;height:100%;margin-bottom:10px;margin-left:10px;font-size:0.9rem;font-weight:600;float:right;">
@@ -296,6 +293,17 @@
 				</aui:button-row>
 				
 				<div class="container-fluid">
+					<div class="row" id="<portlet:namespace/>goToBar" style="display:none;" >
+						<div class="col-md-6">
+							<aui:select name="goToCategory" label="go-to-category" inlineLabel="left" inlineField="true">
+								<aui:option label="term-name" value="termName"></aui:option>
+								<aui:option label="display-name" value="displayName"></aui:option>
+							</aui:select>
+						</div>
+						<div class="col-md-6" class="ui-widget">
+							<aui:input name="goToSelector" label="go-to" inlineLabel="left" inlineField="true"></aui:input>
+						</div>
+					</div>
 					<div class="row" >
 						<div class="col-md-12" id="<portlet:namespace/>previewPanel"></div>
 					</div>
@@ -311,6 +319,317 @@
 </aui:container>
 </aui:form>
 
-<%@include file="script-bottom.jspf" %>
+<aui:script use="aui-base, liferay-form, liferay-menu">
+var _ = AUI._;
+
+$(document).ready(function(){
+	
+	let SX = StationX(  '<portlet:namespace/>', 
+								'<%= defaultLocale.toString() %>',
+								'<%= locale.toString() %>',
+								<%= jsonLocales.toJSONString() %> );
+								
+	/**************************************************************
+    * 	When a liferay-ui:input-localized tag is included in the dialog template section, then 
+    *  Liferay.Menu.register() function makes critical trouble so that localized functions donot 
+    *  work.
+    *				
+	let $listOptionManagementDlg = $('#<portlet:namespace/>manageListOptions')
+				.dialog({
+					autoOpen: true,
+					width: 400,
+					modal: true,
+					title: '<liferay-ui:message key="edit-list-option"/>',
+					buttons: {
+						'<liferay-ui:message key="add-option"/>': function(){
+						},
+						'<liferay-ui:message key="cancel"/>': function(){
+						}
+					}
+				});
+	****************************************************************/
+	
+	let profile = {
+		resourceCommandURL: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_VISUALIZER_COMMON%>"></portlet:resourceURL>',
+		dataTypeId: '<%= dataType.getDataTypeId() %>',
+		dataTypeName:  '<%= dataType.getDataTypeName() %>',
+		dataTypeVersion:  '<%= dataType.getDataTypeVersion() %>',
+		dataTypeDisplayName:  '<%= dataType.getDisplayName(locale) %>'
+	};
+	
+	
+	let createEmptyDataStructure = function(){
+		$('#<portlet:namespace/>previewPanel').empty();
+		
+		dataStructure =  SX.newDataStructure(
+												undefined,
+												profile,
+												SX.Constants.FOR_PREVIEW, 
+												$('#<portlet:namespace/>previewPanel') );
+		dataStructure.setCurrentTerm( dataStructure.createTerm( SX.FormUIUtil.getFormValue( 'termType' ) ) );
+	}
+
+	let dataStructure;
+	
+	let jsonDataStructure = <%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>;
+	
+	console.log( '-------------------', jsonDataStructure );
+	if( $.isEmptyObject(jsonDataStructure) ){
+		dataStructure =  SX.newDataStructure(
+												crfSampleDataType,
+												profile,
+												SX.Constants.FOR_PREVIEW, 
+												$('#<portlet:namespace/>previewPanel'));
+		
+		dataStructure.render();										
+	}
+	else{
+		dataStructure =  SX.newDataStructure( 
+												jsonDataStructure,
+												profile,
+												SX.Constants.FOR_PREVIEW, 
+												$('#<portlet:namespace/>previewPanel'));
+												
+		dataStructure.render();
+	}
+	
+	/*
+	SX.ListTerm.$BTN_CHOOSE_ACTIVE_TERMS.click(function(event){
+		let option = dataStructure.currentTerm.getHighlightedOption();
+		if( !option ){
+			option = dataStructure.currentTerm.addOption();
+			if( !option ){
+				return;
+			}
+		}
+		
+		dataStructure.disable(['btnAddOption'], true);
+
+		dataStructure.chooseActiveTerms( dataStructure.currentTerm, option );		
+		dataStructure.refreshTerm( dataStructure.currentTerm );
+	});
+	
+	SX.BooleanTerm.$TRUE_ACTIVE_TERMS_BUTTON.click(function(event){
+		dataStructure.chooseActiveTerms( dataStructure.currentTerm, dataStructure.currentTerm.getTrueOption() );
+	});
+	
+	SX.BooleanTerm.$FALSE_ACTIVE_TERMS_BUTTON.click(function(event){
+		dataStructure.chooseActiveTerms( dataStructure.currentTerm, dataStructure.currentTerm.getFalseOption() );
+	});
+	
+	*/
+	
+	$('#<portlet:namespace/>btnRefresh').click(function(event){
+		dataStructure.render();
+		dataStructure.setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
+	});
+	
+	$('#<portlet:namespace/>btnSave').click(function(event){
+		if( !dataStructure.terms || dataStructure.terms.length < 1 ){
+			return;
+		}
+		
+		console.log( 'dataStructure: ', dataStructure );
+		console.log( dataStructure.toFileContent() );
+		
+		$.ajax({
+			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
+			method: 'post',
+			dataType: 'text',
+			data: {
+				<portlet:namespace/>dataTypeId: '<%= String.valueOf(dataTypeId) %>',
+				<portlet:namespace/>dataStructure: JSON.stringify(dataStructure)
+			},
+			success: function( result ){
+				$.confirm({
+					title: 'request-success',
+					content: 'data-structure-saved',
+					type: 'orange',
+					typeAnimated: true,
+					draggable: true,
+					buttons:{
+							ok: {
+								text: 'OK',
+								btnClass: 'btn-blue'
+							}
+					}
+				});
+				
+				dataStructure.clearTermsDirty();
+			},
+			error: function(){
+				console.log('error');
+			}
+		});
+	});
+	
+	$('#<portlet:namespace/>btnSaveAndViewDataTypeList').click(function(event){
+		if( !dataStructure.terms || dataStructure.terms.length < 1 ){
+			return;
+		}
+		
+		$.ajax({
+			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
+			method: 'post',
+			dataType: 'text',
+			data: {
+				<portlet:namespace/>dataTypeId: '<%= String.valueOf(dataTypeId) %>',
+				<portlet:namespace/>dataStructure: JSON.stringify(dataStructure)
+			},
+			success: function( result ){
+				// console.log( result );
+				// redirect to datatype list view
+				window.location.href='<%= dataTypeListURL %>';
+			},
+			error: function(){
+				console.log('error');
+			}
+		});
+	});
+	
+	$('#<portlet:namespace/>btnRemoveDataStructure').click( function(event){
+		$.confirm({
+			title: '<liferay-ui:message key="confirm-remove-data-structure" />',
+			content: '<p><liferay-ui:message key="are-you-sure-to-remove-this-data-structure-if-you-click-ok-then-it-is-impossible-to-get-back"/></p>',
+			type: 'orange',
+			typeAnimated: true,
+			columnClass: 'medium',
+			buttons:{
+				ok: {
+					text: '<liferay-ui:message key="ok"/>',
+					btnClass: 'btn-blue',
+					action: function(){
+						$.ajax({
+							url: '<%= removeDataStructureResourceCommandURL.toString() %>',
+							method: 'post',
+							dataType: 'text',
+							success: function( result ){
+								$.alert( '<liferay-ui:message key="data-structure-successfully-deleted-from-database"/>' );
+								createEmptyDataStructure();
+							},
+							error: function(){
+								$.alert( '<liferay-ui:message key="failed-to-delete-data-structure-from-database"/>' );
+							}
+						});
+					}
+				}
+			},
+			draggable: true
+		});
+	});
+	
+	<%
+		JSONObject sdePortletInfo = SXPortalUtil.createPortletInstanceId( renderRequest, "com_sx_visualizers_sde_StructuredDataEditorPortlet" );
+	%>
+	
+	$('#<portlet:namespace/>btnShowSDE').click( function(event){
+		let promise = new Promise( (resolve, reject) =>{
+			$.ajax({
+				url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
+				type:'post',
+				dataType: 'json',
+				data:{
+					'<portlet:namespace/>portletName': 'com_sx_visualizers_sde_StructuredDataEditorPortlet'
+				},
+				success: function(result){
+					resolve( result );
+				},
+				error: function(jqXHR, a, b){
+					reject('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
+				}
+			});
+		});
+		
+		promise.then( portletInfo => {
+			let sdeURL = Liferay.PortletURL.createURL( portletInfo.url );
+			//sdeURL.setParameter( portletInfo.namespace+'employer',  '<portlet:namespace/>');
+			let packet = SX.createEventDataPacket( '<portlet:namespace/>', portletInfo.namespace );
+			packet.content = dataStructure.toJSON();
+			packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
+			console.log('sdeURL: ', sdeURL.toString() );
+			
+			let data = new Object();
+			data[portletInfo.namespace+'employer'] = '<portlet:namespace/>';
+			data[portletInfo.namespace+'dataPacket'] = JSON.stringify(packet);
+			data[portletInfo.namespace+'cmd'] = '<%= StationXConstants.CMD_ADD %>';
+			
+			console.log('call SDE data: ', data);
+				$.ajax({
+		                url: sdeURL.toString(),
+		                type:'post',
+		                data: data,
+		                success: function(data) {
+		                	let $dialog = $('<div></div>')
+		                		.html(data)
+		                		.dialog({
+		                			autoOpen: true,                          
+		                			modal: false,
+		                			width:800,
+		                			maxHeight:800,
+		                			title: Liferay.Language.get('structured-data-editor'),
+		                			close: function(event, ui){
+		                				$dialog.dialog('destroy');
+		                			},
+		                			buttons:[
+		                				{
+		                					text: 'Ok',
+		                					icon: 'ui-icon-heart',
+		                					click: ()=>{
+		                						console.log( 'Editted Data: ', dataStructure.toFileContent() );
+		                						$dialog.dialog('destroy');
+		                					}
+		                				}
+		                			]
+		                		});
+		                },
+		                error: function(jqXHR, a, b){
+		                    console.log('Bad request....', a, b);
+		                }
+              });
+		})
+		.catch( errorMsg => console.log(errorMsg ) );
+	});
+	
+	Liferay.on( SX.Events.SX_VISUALIZER_READY, function(event){
+		let dataPacket = event.dataPacket;
+		
+		if( !!dataPacket.targetPortlet && dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
+		
+		console.log('Portlet SX_VISUALIZER_READY: ', dataPacket );
+		
+		if( dataPacket.initialized ){
+			let packet = SX.createEventDataPacket( '<portlet:namespace/>', dataPacket.sourcePortlet );
+			packet.payload = dataStructure.toJSON();
+			packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
+	
+			SX.Util.fire( SX.Events.SX_LOAD_DATA, packet );
+		}
+	});
+	
+	Liferay.on( SX.Events.SX_VISUALIZER_DATA_CHANGED, function(event){
+		let dataPacket = event.dataPacket;
+		
+		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
+		console.log('SX_VISUALIZER_DATA_LOADED: ', dataPacket );
+		
+	});
+	
+	Liferay.on( SX.Events.SX_STRUCTURED_DATA_CHANGED, function(event){
+		let dataPacket = event.dataPacket;
+		
+		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
+		console.log('SX_STRUCTURED_DATA_CHANGED: ', dataPacket );
+		
+		let fileContent = dataPacket.payload.toFileContent();
+		
+		console.log('fileContent: ', fileContent);
+	});
+	
+	
+	Liferay.on('jquery_alert', function(e){
+		alert('JQuery Alert');
+	});
+});
+</aui:script>
 
 

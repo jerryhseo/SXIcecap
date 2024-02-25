@@ -327,9 +327,9 @@
 	<div id="<portlet:namespace/>groupAttributes" class="type-specific-attrs ">
 		<aui:input 
 					type="checkbox"
-					name="extended" 
-					label="extended"
-					helpMessage="extended-help">
+					name="expanded" 
+					label="expanded"
+					helpMessage="expanded-help">
 		</aui:input>
 		
 		<aui:button-row>

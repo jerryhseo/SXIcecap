@@ -102,7 +102,7 @@
 	</aui:row>
 </aui:container>
 
-<aui:script use="aui-base, liferay-form, liferay-menu">
+<aui:script use="aui-base, liferay-form, liferay-menu, liferay-portlet-url">
 
 
 $(document).ready(function(){
@@ -113,41 +113,29 @@ $(document).ready(function(){
 
 	let dataStructure;
 
-	let promise = new Promise( (resolve, reject) =>{
-		$.ajax({
-			url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
-			type:'post',
-			dataType: 'json',
-			data:{
-				<portlet:namespace/>portletName: 'com_sx_visualizers_sde_StructuredDataEditorPortlet',
-			},
-			success: function(result){
-				resolve( result );
-			},
-			error: function(jqXHR, a, b){
-				reject('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
-			}
-		});
+	$.ajax({
+		url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
+		type:'post',
+		dataType: 'json',
+		data:{
+			<portlet:namespace/>portletName: 'com_sx_visualizers_sde_StructuredDataEditorPortlet',
+		},
+		success: function(portletInfo){
+			$.ajax({
+				url: portletInfo.url,
+				success: function(data) {
+					$('#<portlet:namespace/>editorPanel').html(data);
+				},
+				error: function(jqXHR, a, b){
+					console.log('Loading Visualizer FAILED: ', a, b);
+				}
+			});
+		},
+		error: function(jqXHR, a, b){
+			console.log('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
+		}
 	});
 	
-	promise.then( portletInfo => {
-		console.log('Promise: ', portletInfo );
-		let sdeURL = Liferay.PortletURL.createURL( portletInfo.url );
-		
-		$.ajax({
-			url: portletInfo.url,
-			success: function(data) {
-				$('#<portlet:namespace/>editorPanel').html(data);
-			},
-			error: function(jqXHR, a, b){
-				console.log('Loading Visualizer FAILED: ', a, b);
-			}
-		});
-	})
-	.catch( errorMsg => $.alert(errorMsg ) );
-	
-	
-			
 	Liferay.on( 'SX_VISUALIZER_WAITING', function(event){
 		let dataPacket = event.dataPacket;
 		

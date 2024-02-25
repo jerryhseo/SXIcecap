@@ -106,10 +106,26 @@
 			</aui:col>
 		</aui:row>
 </aui:container>
-
+ 
 <aui:container  cssClass="SXIcecap-web">
 	<aui:row >
-		<aui:col md="6"   cssClass="show-border" id="searchSection">
+		<aui:col md="6"   cssClass="show-border">
+			<div class="container-fluid">
+				<div class="row" id="<portlet:namespace/>goToBar" >
+					<div class="col-md-6">
+						<aui:select name="goToCategory" label="go-to-category" inlineLabel="left" inlineField="true">
+							<aui:option label="term-name" value="termName"></aui:option>
+							<aui:option label="display-name" value="displayName"></aui:option>
+						</aui:select>
+					</div>
+					<div class="col-md-6" class="ui-widget">
+						<aui:input name="goToSelector" label="go-to" inlineLabel="left" inlineField="true"></aui:input>
+					</div>
+				</div>
+				<div class="row" >
+					<div class="col-md-12" id="<portlet:namespace/>searchSection"></div>
+				</div>
+			</div>
 		</aui:col>
 		<aui:col md="6"   cssClass="show-border">
 			<aui:container>

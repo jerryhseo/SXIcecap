@@ -108,8 +108,42 @@
 		max-width:100%;
 		word-wrap: break-word;
 	}
-
 	
+	.sx-form-item-group {
+
+		.group-enabled-active-filled{
+			h3{
+				background-color: #007fff;
+				color: #efefef;
+			}
+		}
+		.group-enabled-active-nonfilled{
+			h3{
+				background-color: #007fff;
+				color: #bc0505;
+			}
+		}
+
+		.group-enabled-nonactive-filled{
+			h3{
+				background-color: #bfc0c0;
+				color: #454545;
+			}
+		}
+		.group-enabled-nonactive-nonfilled{
+			h3{
+				background-color: #bfc0c0;
+				color: #bc0505;
+			}
+		}
+
+		.group-disabled{
+			h3{
+				background-color: #454545;
+				color: #bfc0c0;
+			}
+		}
+	}
 }
 
 .sss-term-asset-template {

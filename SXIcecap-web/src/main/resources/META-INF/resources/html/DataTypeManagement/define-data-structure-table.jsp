@@ -31,8 +31,6 @@
 	System.out.println("BackURL: " + backURL.toString() );
 %>
 
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/main.css">
-
 <portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_SAVE_STRUCTURE %>" var="saveDataStructureResourceCommandURL">
 	<portlet:param name="cmd" value="<%= hasDataStructure?StationXConstants.CMD_UPDATE:StationXConstants.CMD_ADD %>"/>
 </portlet:resourceURL>
