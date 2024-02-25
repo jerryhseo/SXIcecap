@@ -150,46 +150,36 @@ $(document).ready(function(){
 		let rcvdPacket = evt.dataPacket;
 		if( !rcvdPacket.isTargetPortlet( '<portlet:namespace/>') )	return;
 		
-		console.log( 'SX_VISUALIZER_READY: ',  rcvdPacket );
+		console.log( 'SX_VISUALIZER_READY received: ',  rcvdPacket );
 		
-		let dataPromise = new Promise( (resolve, reject)=>{
-			$.ajax({
-				url: '<%=  resourceURL.toString() %>',
-				type: 'post',
-				data: {
-					<portlet:namespace/>command: 'GET_STRUCTURED_DATA',
-					<portlet:namespace/>dataTypeId: '<%= String.valueOf( dataType.getDataTypeId() ) %>',
-					<portlet:namespace/>structuredDataId: '<%= String.valueOf( structuredDataId ) %>'
-				},
-				dataType: 'json',
-				success: function(result){
-					resolve( result.dataStructure );
-				},
-				error:function(jqXHR, a, b){
-					reject('Fail to get data: ');
-				}
-			});
+		$.ajax({
+			url: '<%=  resourceURL.toString() %>',
+			type: 'post',
+			data: {
+				<portlet:namespace/>command: 'GET_STRUCTURED_DATA',
+				<portlet:namespace/>dataTypeId: '<%= String.valueOf( dataType.getDataTypeId() ) %>',
+				<portlet:namespace/>structuredDataId: '<%= String.valueOf( structuredDataId ) %>'
+			},
+			dataType: 'json',
+			success: function(result){
+				let dataPacket = SX.Util.createEventDataPacket( '<portlet:namespace/>', rcvdPacket.sourcePortlet );
+				dataPacket.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
+				dataPacket.payload = result.dataStructure; 
+		
+				dataPacket.profile = {
+						dataTypeId: '<%= dataType.getDataTypeId() %>',
+						dataTypeName:  '<%= dataType.getDataTypeName() %>',
+						dataTypeVersion:  '<%= dataType.getDataTypeVersion() %>',
+						dataTypeDisplayName:  '<%= dataType.getDisplayName(locale) %>',
+						structuredDataId: '<%= structuredDataId %>'
+				};
+				
+				SX.Util.fire( SX.Events.SX_LOAD_DATA, dataPacket );
+			},
+			error:function(jqXHR, a, b){
+				reject('Fail to get data: ');
+			}
 		});
-		
-		dataPromise.then( dataStructure => {
-			console.log('promise result: ', dataStructure );
-			// load data from DB or a file
-			let dataPacket = SX.Util.createEventDataPacket( '<portlet:namespace/>', rcvdPacket.sourcePortlet );
-			dataPacket.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
-			dataPacket.payload = dataStructure; 
-			
-			dataPacket.profile = {
-					dataTypeId: '<%= dataType.getDataTypeId() %>',
-					dataTypeName:  '<%= dataType.getDataTypeName() %>',
-					dataTypeVersion:  '<%= dataType.getDataTypeVersion() %>',
-					dataTypeDisplayName:  '<%= dataType.getDisplayName(locale) %>',
-					structuredDataId: '<%= structuredDataId %>'
-			};
-			
-			SX.Util.fire( SX.Events.SX_LOAD_DATA, dataPacket );
-			console.log('SX_LOAD_DATA fired: ', dataPacket );
-		})
-		.catch( errorMsg => console.log(errorMsg ) );
 	} );
 	
 	Liferay.on( SX.Events.SX_VISUALIZER_DATA_CHANGED, function(evt){
