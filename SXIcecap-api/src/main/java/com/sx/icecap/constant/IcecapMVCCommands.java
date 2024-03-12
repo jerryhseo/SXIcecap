@@ -26,6 +26,7 @@ public class IcecapMVCCommands {
 	public static final String RENDER_DATATYPE_EDIT = "/html/DataTypeManagement/edit-datatype";
 	public static final String RENDER_DATATYPE_FULL_CONTENT = "/html/DataTypeManagement/full-content";
 	public static final String RENDER_DATATYPE_VIEW = "/html/DataTypeManagement/view-datatype";
+	public static final String RENDER_TERM_TYPE_SPECIFIC_ATTRIBUTES = "/html/DataTypeManagement/term-type-attributes";
 	public static final String RENDER_SEARCH_DATATYPES = "/html/DataTypeManagement/search-datatypes";
 	public static final String RENDER_CHANGE_VIEW = "/html/DataTypeManagement/change-view";
 	

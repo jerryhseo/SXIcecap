@@ -378,15 +378,18 @@ public class DataTypeManagementToolbarDisplayContext
 						}
 
 						if (_hasDeletePermission( dataTypeId )) {
+							/*
 							PortletURL deleteURL = liferayPortletResponse.createActionURL();
 							
 							deleteURL.setParameter(ActionRequest.ACTION_NAME, IcecapMVCCommands.ACTION_DATATYPE_DELETE);
 							deleteURL.setParameter(Constants.CMD, Constants.DELETE);
 							deleteURL.setParameter(StationXWebKeys.BACK_URL, _themeDisplay.getURLCurrent());
 							deleteURL.setParameter(StationXWebKeys.DATATYPE_ID, String.valueOf(dataTypeId) );
-							
+							*/
 							add( dropdownItem -> {
-								dropdownItem.setHref(deleteURL);
+								String href = "javascript:" + liferayPortletResponse.getNamespace() + "deleteDataType(" + dataTypeId + ")";
+								dropdownItem.setHref(href);
+//								dropdownItem.setHref(deleteURL);
 								dropdownItem.setIcon("delete");
 								dropdownItem.setLabel(
 									LanguageUtil.get(request, "delete"));

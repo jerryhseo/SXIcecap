@@ -112,7 +112,8 @@ $(document).ready(function(){
 			<%= jsonLocales.toJSONString() %> );
 
 	let dataStructure;
-
+	let sdeInfo;
+	
 	$.ajax({
 		url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
 		type:'post',
@@ -121,6 +122,8 @@ $(document).ready(function(){
 			<portlet:namespace/>portletName: 'com_sx_visualizers_sde_StructuredDataEditorPortlet',
 		},
 		success: function(portletInfo){
+			sdeInfo = portletInfo;
+			
 			$.ajax({
 				url: portletInfo.url,
 				success: function(data) {
@@ -137,6 +140,12 @@ $(document).ready(function(){
 	});
 	
 	Liferay.on( 'SX_VISUALIZER_WAITING', function(event){
+		console.log('Received SX_VISUALIZER_WAITING: ', event );
+		if( event.dataPacket.sourcePortlet !== sdeInfo.namespace ){
+			console.log('It\'s not my employee', event.dataPacket );
+			return;
+		}
+		
 		let dataPacket = event.dataPacket;
 		
 		if( !dataPacket.initialized ){

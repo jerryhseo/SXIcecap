@@ -9,4 +9,5 @@ public class IcecapWebKeys {
 	public static final String DATA_STRUCTURE = "dataStructure";	
 	public static final String DATATYPE = "dataType";	
 	public static final String DATATYPE_ID = "dataTypeId";	
+	public static final String TERM_TYPE = "termType";	
 }

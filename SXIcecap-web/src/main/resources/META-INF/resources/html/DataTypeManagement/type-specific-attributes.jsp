@@ -2,11 +2,9 @@
 
 <%
 	String termType = ParamUtil.getString(renderRequest, "termType");
-
-	
 %>
 
-<div id="<portlet:namespace/>typeSpecificSection">
+
 	<c:choose>
 		<c:when test="<%= termType.equalsIgnoreCase("String") %>" >
 			<aui:container>
@@ -65,6 +63,28 @@
 						</aui:input>
 					</aui:col>
 				</aui:row>
+				<aui:row>
+					<aui:col md="12">
+						<aui:input 
+								type="text"
+								id="inputSize" 
+								name="inputSize" 
+								label="input-size"
+								value="5" 
+								inlineField="true"
+								inlineLabel="left"
+								helpMessage="input-size-help">
+						</aui:input>
+						<aui:input 
+								type="checkbox"
+								id="lineBreak" 
+								name="lineBreak" 
+								label="line-break"
+								inlineField="true"
+								helpMessage="line-break-help">
+						</aui:input>
+					</aui:col>
+				</aui:row>
 			</aui:container>
 		</c:when>
 		<c:when test="<%= termType.equalsIgnoreCase("Numeric") %>" >
@@ -107,12 +127,34 @@
 				</aui:row>
 				<aui:row>
 					<aui:col>
-						<aui:field-wrapper name="numericPlaceHolder" label="place-holder" helpMessage="numeric-place-holder-help">
+						<aui:field-wrapper name="placeHolder" label="place-holder" helpMessage="place-holder-help">
 							<liferay-ui:input-localized 
-											name="numericPlaceHolder"
+											name="placeHolder"
 											xml="">
 							</liferay-ui:input-localized>
 						</aui:field-wrapper>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col md="12">
+						<aui:input 
+								type="text"
+								id="inputSize" 
+								name="inputSize" 
+								label="input-size"
+								value="5" 
+								inlineField="true"
+								inlineLabel="left"
+								helpMessage="input-size-help">
+						</aui:input>
+						<aui:input 
+								type="checkbox"
+								id="lineBreak" 
+								name="lineBreak" 
+								label="line-break"
+								inlineField="true"
+								helpMessage="line-break-help">
+						</aui:input>
 					</aui:col>
 				</aui:row>
 			</aui:container>
@@ -124,16 +166,26 @@
 						<aui:fieldset-group markupView="lexicon" >
 							<aui:fieldset label="display-style"  helpMessage="list-display-style-help">
 								<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-									<aui:input type="radio" name="listDisplayStyle" label="select-box" value="select" checked="true"></aui:input>
+									<aui:input type="radio" name="displayStyle" label="select-box" value="select" checked="true"></aui:input>
 								</div>
 								<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-									<aui:input type="radio" name="listDisplayStyle" label="radio" value="radio"></aui:input>
+									<aui:input type="radio" name="displayStyle" label="radio" value="radio"></aui:input>
 								</div>
 								<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-									<aui:input type="radio" name="listDisplayStyle" label="check-box" value="check"></aui:input>
+									<aui:input type="radio" name="displayStyle" label="check-box" value="check"></aui:input>
 								</div>
 							</aui:fieldset>
 						</aui:fieldset-group>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col>
+						<aui:field-wrapper name="placeHolder" label="place-holder" helpMessage="place-holder-help">
+							<liferay-ui:input-localized 
+											name="placeHolder"
+											xml="">
+							</liferay-ui:input-localized>
+						</aui:field-wrapper>
 					</aui:col>
 				</aui:row>
 				<aui:row>
@@ -186,11 +238,9 @@
 											<liferay-ui:input-localized name="optionLabel" xml=""></liferay-ui:input-localized>
 										</aui:field-wrapper> 
 										<aui:input id="optionValue" name="optionValue" label="option-value" required="true" helpMessage="option-value-help"></aui:input> 
-										<aui:input type="checkbox" id="optionSelected" name="optionSelected" label="selected" helpMessage="option-selected-help"></aui:input>
-										<div id="<portlet:namespace/>activeTerms" ></div>
 										<hr class="content-horizontal-line">
 										<aui:button-row>
-											<aui:button id="btnListChooseActiveTerms" value="choose-active-terms"/>
+											<aui:button id="btnListChooseSlaveTerms" value="choose-slave-terms"/>
 											<aui:button id="btnAddOption" value="add-option" cssClass="right"/>
 										</aui:button-row>
 									</aui:fieldset>
@@ -208,40 +258,45 @@
 						<aui:fieldset-group markupView="lexicon" >
 							<aui:fieldset label="display-style"  helpMessage="boolean-display-style-help">
 								<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-									<aui:input type="radio" id="booleanDisplayStyle_select" name="booleanDisplayStyle" label="select-box" value="select" checked="true"></aui:input>
+									<aui:input type="radio" name="displayStyle" label="select-box" value="select" checked="true"></aui:input>
 								</div>
 								<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-									<aui:input type="radio" id="booleanDisplayStyle_radio" name="booleanDisplayStyle" label="radio" value="radio"></aui:input>
+									<aui:input type="radio" name="displayStyle" label="radio" value="radio"></aui:input>
 								</div>
 							</aui:fieldset>
+							<aui:field-wrapper name="placeHolder" label="place-holder" helpMessage="place-holder-help">
+								<liferay-ui:input-localized 
+												name="placeHolder"
+												xml="">
+								</liferay-ui:input-localized>
+							</aui:field-wrapper>
 							<aui:fieldset label="display-labels" helpMessage="boolean-display-labels-help">
 								<div style="display:flex;">
 									<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-										<aui:field-wrapper name="booleanTrueLabel" label="true-label">
+										<aui:field-wrapper name="trueLabel" label="true-label">
 											<%
 												String xml = "<?xml version='1.0' encoding='UTF-8'?><root available-locales=\"en_US,ko_KR\" default-locale=\"en_US\"><TrueLabel language-id=\"en_US\">Yes</TrueLabel><TrueLabel language-id=\"ko_KR\">예</TrueLabel></root>";
 											%>
-											<liferay-ui:input-localized name="booleanTrueLabel" xml="<%= xml %>"></liferay-ui:input-localized>
+											<liferay-ui:input-localized name="trueLabel" xml="<%= xml %>"></liferay-ui:input-localized>
 										</aui:field-wrapper>
 									</div>
 									 <div style="display:inline-block;margin:1.7rem 10px 0 10px;height:1.2rem;flex-grow:1;">
-									 	<aui:button id="btnBooleanTrueActiveTerms" value="active-terms" cssClass="full"></aui:button>
+									 	<span class="btn btn-default" id="<portlet:namespace/>btnTrueSlaveTerms" style="font-size:0.8rem;padding:0 5px 0 5px;"><liferay-ui:message key='active-terms'/></span>
 									 </div>
 								</div>
 								<div style="display:flex;">
 									<div style="display:inline-block; margin-left:10px; margin-right:10px;">
-										<aui:field-wrapper name="booleanFalseLabel" label="false-label">
+										<aui:field-wrapper name="falseLabel" label="false-label">
 											<%
 												String xml = "<?xml version='1.0' encoding='UTF-8'?><root available-locales=\"en_US,ko_KR\" default-locale=\"en_US\"><FalseLabel language-id=\"en_US\">No</FalseLabel><FalseLabel language-id=\"ko_KR\">아니오</FalseLabel></root>";
 											%>
-											<liferay-ui:input-localized name="booleanFalseLabel" xml="<%= xml %>"></liferay-ui:input-localized>
+											<liferay-ui:input-localized name="falseLabel" xml="<%= xml %>"></liferay-ui:input-localized>
 										</aui:field-wrapper> 
 									</div> 
 									 <div style="display:inline-block;margin:1.7rem 10px 0 10px;height:1.2rem;flex-grow:1;">
-									 	<aui:button id="btnBooleanFalseActiveTerms" value="active-terms" cssClass="full"></aui:button>
+									 	<span class="btn btn-default" id="<portlet:namespace/>btnFalseSlaveTerms" style="font-size:0.8rem;padding:0 5px 0 5px;"><liferay-ui:message key='active-terms'/></span>
 									 </div>
 								</div>
-								<div id="<portlet:namespace/>booleanActiveTerms" ></div>
 							</aui:fieldset>
 						</aui:fieldset-group> 
 					</aui:col>
@@ -284,18 +339,14 @@
 		<c:when test="<%= termType.equalsIgnoreCase("Matrix") %>" >
 			<aui:container>
 				<aui:row>
-					<aui:col md="1">
+					<aui:col md="4">
 						<aui:input type="text" name="rows" helpMessage="matrix-rows-help"></aui:input>
 					</aui:col>
-				</aui:row>
-				<aui:row>
-					<aui:col md="1">
-						<aui:input type="text" name="columnWidth" helpMessage="matrix-columns-width-help"></aui:input>
-					</aui:col>
-				</aui:row>
-				<aui:row>
-					<aui:col md="1">
+					<aui:col md="4">
 						<aui:input type="text" name="columns" helpMessage="matrix-columns-help"></aui:input>
+					</aui:col>
+					<aui:col md="4">
+						<aui:input type="text" name="columnWidth" helpMessage="matrix-columns-width-help"></aui:input>
 					</aui:col>
 				</aui:row>
 			</aui:container>
@@ -306,15 +357,22 @@
 					<aui:col>
 						<aui:input 
 									type="checkbox"
-									name="extended" 
-									label="extended"
-									helpMessage="extended-help">
+									name="expanded" 
+									label="expanded"
+									helpMessage="expanded-help">
 						</aui:input>
 					</aui:col>
 				</aui:row>
 					<aui:button-row>
 						<aui:button id="btnChooseGroupTerms" value="choose-group-terms"/>
 					</aui:button-row>
+			</aui:container>
+		</c:when>
+		<c:when test="<%= termType.equalsIgnoreCase("Grid") %>" >
+			<aui:container>
+				<aui:button-row>
+						<aui:button id="btnSelectColumns" value="select-columns"/>
+				</aui:button-row>
 			</aui:container>
 		</c:when>
 	</c:choose>

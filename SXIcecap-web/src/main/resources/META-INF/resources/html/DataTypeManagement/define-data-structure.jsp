@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
+<%@page import="com.sx.icecap.constant.IcecapWebPortletKeys"%>
 <%@page import="com.liferay.portal.kernel.util.Validator"%>
 <%@page import="com.sx.constant.StationXConstants"%>
 <%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
@@ -45,6 +47,10 @@
 <portlet:renderURL var="dataTypeEditURL">
 	<portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" value="<%= IcecapMVCCommands.RENDER_DATATYPE_EDIT %>"></portlet:param>
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
+</portlet:renderURL>
+
+<portlet:renderURL var="termTypeRenderURL"  windowState="<%= String.valueOf(LiferayWindowState.EXCLUSIVE) %>">
+	<portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" value="<%= IcecapMVCCommands.RENDER_TERM_TYPE_SPECIFIC_ATTRIBUTES %>"></portlet:param>
 </portlet:renderURL>
 
 <liferay-portlet:renderURL
@@ -193,6 +199,7 @@
 						<aui:option label="EMail" value="EMail"/>
 						<aui:option label="Matrix" value="Matrix"/>
 						<aui:option label="Group" value="Group"/>
+						<aui:option label="Grid" value="Grid"/>
 					</aui:select>
 				</div>
 				
@@ -268,12 +275,30 @@
 							type="text"
 							name="value" 
 							label="default-value" 
+							cssClass="display-inline-block"
 							helpMessage="default-value-help">
 				</aui:input>
 	
 				<hr class="content-horizontal-line">
 				
-				<%@include file="../templates/type-specific-attributes.jspf" %>
+				<aui:input
+							type="text"
+							name="cssWidth" 
+							label="width" 
+							cssClass="half-width"
+							helpMessage="css-width-help"></aui:input>
+				
+				<aui:input
+								type="text"
+								name="customCss" 
+								label="custom-css" 
+								helpMessage="custom-css-help"></aui:input>
+								
+				<hr class="content-horizontal-line">
+				
+				<div id="<portlet:namespace/>typeSpecificSection">
+				</div>
+				<!--  %@include file="../templates/type-specific-attributes.jspf" % -->
 				</aui:col>
 				</aui:row>
 			</aui:container>
@@ -351,6 +376,7 @@ $(document).ready(function(){
 	
 	let profile = {
 		resourceCommandURL: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_VISUALIZER_COMMON%>"></portlet:resourceURL>',
+		termTypeRenderURL: '<%= termTypeRenderURL.toString() %>',
 		dataTypeId: '<%= dataType.getDataTypeId() %>',
 		dataTypeName:  '<%= dataType.getDataTypeName() %>',
 		dataTypeVersion:  '<%= dataType.getDataTypeVersion() %>',
@@ -523,8 +549,7 @@ $(document).ready(function(){
 	%>
 	
 	$('#<portlet:namespace/>btnShowSDE').click( function(event){
-		let promise = new Promise( (resolve, reject) =>{
-			$.ajax({
+		$.ajax({
 				url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
 				type:'post',
 				dataType: 'json',
@@ -532,78 +557,74 @@ $(document).ready(function(){
 					'<portlet:namespace/>portletName': 'com_sx_visualizers_sde_StructuredDataEditorPortlet'
 				},
 				success: function(result){
-					resolve( result );
+					console.log('Result: ', result);
+					
+					let data = new Object();
+					data[result.namespace + 'dataPacket'] = 
+											JSON.stringify(SX.Util.createEventDataPacket('<portlet:namespace/>', result.namespace) );
+					data[result.namespace + 'employer'] = '<portlet:namespace/>';
+					
+					$.ajax({
+						url: result.url,
+						type:'post',
+						data: data,
+						success: function(data) {
+							let $dialog = $('<div></div>')
+								.html(data)
+								.dialog({
+									autoOpen: true,                          
+									modal: false,
+									width:800,
+									maxHeight:800,
+									title: Liferay.Language.get('structured-data-editor'),
+									close: function(event, ui){
+										$dialog.dialog('destroy');
+									},
+									buttons:[
+										{
+											text: 'Ok',
+											icon: 'ui-icon-heart',
+											click: ()=>{
+												console.log( 'Editted Data: ', dataStructure.toFileContent() );
+												$dialog.dialog('destroy');
+											}
+										}
+									]
+								});
+						},
+						error: function(jqXHR, a, b){
+							console.log('Bad request....', a, b);
+						}
+			  		});
 				},
 				error: function(jqXHR, a, b){
-					reject('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
+					console.log('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
 				}
-			});
 		});
-		
-		promise.then( portletInfo => {
-			let sdeURL = Liferay.PortletURL.createURL( portletInfo.url );
-			//sdeURL.setParameter( portletInfo.namespace+'employer',  '<portlet:namespace/>');
-			let packet = SX.createEventDataPacket( '<portlet:namespace/>', portletInfo.namespace );
-			packet.content = dataStructure.toJSON();
-			packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
-			console.log('sdeURL: ', sdeURL.toString() );
-			
-			let data = new Object();
-			data[portletInfo.namespace+'employer'] = '<portlet:namespace/>';
-			data[portletInfo.namespace+'dataPacket'] = JSON.stringify(packet);
-			data[portletInfo.namespace+'cmd'] = '<%= StationXConstants.CMD_ADD %>';
-			
-			console.log('call SDE data: ', data);
-				$.ajax({
-		                url: sdeURL.toString(),
-		                type:'post',
-		                data: data,
-		                success: function(data) {
-		                	let $dialog = $('<div></div>')
-		                		.html(data)
-		                		.dialog({
-		                			autoOpen: true,                          
-		                			modal: false,
-		                			width:800,
-		                			maxHeight:800,
-		                			title: Liferay.Language.get('structured-data-editor'),
-		                			close: function(event, ui){
-		                				$dialog.dialog('destroy');
-		                			},
-		                			buttons:[
-		                				{
-		                					text: 'Ok',
-		                					icon: 'ui-icon-heart',
-		                					click: ()=>{
-		                						console.log( 'Editted Data: ', dataStructure.toFileContent() );
-		                						$dialog.dialog('destroy');
-		                					}
-		                				}
-		                			]
-		                		});
-		                },
-		                error: function(jqXHR, a, b){
-		                    console.log('Bad request....', a, b);
-		                }
-              });
-		})
-		.catch( errorMsg => console.log(errorMsg ) );
+	
+		/* Why I cannot render a portlet with this url????
+		*	- creates authorization failed!!!
+		let sdeURL = Liferay.PortletURL.createURL('<portlet:renderURL></portlet:renderURL>');
+		sdeURL.setPortletId( 'com_sx_visualizers_sde_StructuredDataEditorPortlet');
+		sdeURL.setLifecycle(Liferay.PortletURL.RENDER_PHASE);
+		sdeURL.setWindowState('<%= LiferayWindowState.EXCLUSIVE %>');
+		sdeURL.setPortletMode('<%= LiferayPortletMode.VIEW %>');
+		sdeURL.setParameter('p_auth', Liferay.authToken);
+		*/
 	});
 	
 	Liferay.on( SX.Events.SX_VISUALIZER_READY, function(event){
 		let dataPacket = event.dataPacket;
 		
-		if( !!dataPacket.targetPortlet && dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
+		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
 		
 		console.log('Portlet SX_VISUALIZER_READY: ', dataPacket );
 		
-		if( dataPacket.initialized ){
 			let packet = SX.createEventDataPacket( '<portlet:namespace/>', dataPacket.sourcePortlet );
 			packet.payload = dataStructure.toJSON();
 			packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
 	
 			SX.Util.fire( SX.Events.SX_LOAD_DATA, packet );
-		}
 	});
 	
 	Liferay.on( SX.Events.SX_VISUALIZER_DATA_CHANGED, function(event){

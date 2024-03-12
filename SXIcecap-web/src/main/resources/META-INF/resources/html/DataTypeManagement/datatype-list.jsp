@@ -37,7 +37,6 @@
 	
 %>
 
-
 <portlet:renderURL var="createDataTypeURL">
     <portlet:param 
     		name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
@@ -56,6 +55,9 @@
     <portlet:param name="<%= StationXWebKeys.MVC_RENDER_COMMAND_NAME %>" 
     value="<%= IcecapMVCCommands.RENDER_SEARCH_DATATYPES %>" />
 </portlet:renderURL>
+
+<portlet:actionURL name="<%= IcecapMVCCommands.ACTION_DATATYPE_DELETE %>" var="deleteDataTypeURL">
+</portlet:actionURL>
 
 <clay:management-toolbar
 	displayContext="<%= dataTypeManagementToolbarDisplayContext %>"
@@ -198,6 +200,35 @@
 </div>
 
 <script type="text/javascript">
+
+function <portlet:namespace/>deleteDataType( dataTypeId ){
+	$.confirm(
+			{
+				title: Liferay.Language.get('delete-datatype'),
+				content: Liferay.Language.get('A-datatype-will-be-deleted-if-you-confirm-you-never-go-back-are-you-sure-to-delete-the-datatype'),
+				type: 'red',
+				typeAnimated: true,
+				buttons:{
+					ok: {
+						text: '<liferay-ui:message key="confirm"/>',
+						btnClass: 'btn-blue',
+						action: function(){
+							let actionURL = Liferay.PortletURL.createURL( "<%= deleteDataTypeURL.toString() %>" );
+							actionURL.setParameter( "dataTypeId", dataTypeId );
+							
+							console.log( 'actionURL', actionURL.toString() );
+							window.location.href = actionURL.toString();
+						}
+					},
+					cancel: function(){
+						
+					}
+				},
+				draggable: true
+			}
+	);
+}
+
 Liferay.componentReady('<%= IcecapConstants.DATATYPE_MANAGEMENT_TOOLBAR_COMPONENT_ID %>').then(function(
 		managementToolbar
 	) {

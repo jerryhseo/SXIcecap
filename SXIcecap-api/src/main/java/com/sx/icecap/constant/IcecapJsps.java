@@ -19,6 +19,7 @@ public class IcecapJsps {
 	public static final String DATATYPE_FULL_CONTENT = "/html/DataTypeManagement/full-content.jsp";
 	public static final String DATATYPE_SEARCH_VIEW = "/html/DataTypeManagement/view-search-datatypes.jsp";
 	public static final String DATATYPE_ACTIONS = "/html/DataTypeManagement/datatype-actions.jsp";
+	public static final String TERM_TYPE_SPECIFIC_ATTRIBUTES = "/html/DataTypeManagement/type-specific-attributes.jsp";
 
 
 	public static final String STRUCTURED_DATA_TERMPLATE_PATH = "/html/StructuredData/";
