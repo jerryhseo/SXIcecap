@@ -215,9 +215,11 @@ public class VisualizerCommonResourceCommand extends BaseMVCResourceCommand {
 		else if( cmd.equalsIgnoreCase("GET_STRUCTURED_DATA") ) {
 			System.out.println("scopeGroupId: " + themeDisplay.getScopeGroupId());
 			try {
-				JSONObject jsonData = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredDataId);
+				String dataStructure = _dataTypeLocalService.getDataTypeStructure(dataTypeId);
+				String structuredData = _dataTypeLocalService.getStructuredData(structuredDataId);
 				response.put("result", 0);
-				response.put("dataStructure", jsonData);
+				response.put("dataStructure", dataStructure);
+				response.put("structuredData", structuredData);
 				response.put("message", "success" );
 			} catch (Exception e) {
 				response.put("result", 1);

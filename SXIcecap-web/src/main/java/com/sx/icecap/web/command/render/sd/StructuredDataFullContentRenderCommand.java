@@ -64,7 +64,7 @@ public class StructuredDataFullContentRenderCommand implements MVCRenderCommand 
 		
 		try {
 			DataType dataType = _dataTypeLocalService.getDataType(dataTypeId);
-			JSONObject structuredData = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredDataId);
+			String structuredData = _dataTypeLocalService.getStructuredData(structuredDataId);
 			renderRequest.setAttribute(IcecapWebKeys.DATATYPE, dataType);
 			renderRequest.setAttribute(IcecapWebKeys.STRUCTURED_DATA, structuredData);
 		} catch (Exception e) {

@@ -29,15 +29,6 @@ public class IcecapSSSTermAttributeUtil {
 		else if( termType.equals(IcecapSSSTermTypes.BOOLEAN) ){
 			return getBooleanAttributesToJson(portletRequest);
 		}
-		else if( termType.equals(IcecapSSSTermTypes.DATA_LINK) ){
-			return getDataLinkAttributesToJson(portletRequest);
-		}
-		else if( termType.equals(IcecapSSSTermTypes.DATA_LINK_ARRAY) ){
-			return getDataLinkArrayAttributesToJson(portletRequest);
-		}
-		else if( termType.equals(IcecapSSSTermTypes.ARRAY) ){
-			return getArrayAttributesToJson(portletRequest);
-		}
 		else if( termType.equals(IcecapSSSTermTypes.DATE) ){
 			return getDateAttributesToJson(portletRequest);
 		}
@@ -47,20 +38,11 @@ public class IcecapSSSTermAttributeUtil {
 		else if( termType.equals(IcecapSSSTermTypes.FILE) ){
 			return getFileAttributesToJson(portletRequest);
 		}
-		else if( termType.equals(IcecapSSSTermTypes.FILE_ARRAY) ){
-			return getFileArrayAttributesToJson(portletRequest);
-		}
 		else if( termType.equals(IcecapSSSTermTypes.LIST) ){
 			return getListAttributesToJson(portletRequest);
 		}
 		else if( termType.equals(IcecapSSSTermTypes.MATRIX) ){
 			return getMatrixAttributesToJson(portletRequest);
-		}
-		else if( termType.equals(IcecapSSSTermTypes.OBJECT) ){
-			return getObjectAttributesToJson(portletRequest);
-		}
-		else if( termType.equals(IcecapSSSTermTypes.OBJECT_ARRAY) ){
-			return getObjectArrayAttributesToJson(portletRequest);
 		}
 		else if( termType.equals(IcecapSSSTermTypes.PHONE) ){
 			return getPhoneAttributesToJson(portletRequest);

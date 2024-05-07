@@ -1,6 +1,8 @@
 package com.sx.icecap.web.command.action.sd;
 
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -53,12 +55,13 @@ public class SaveStructuredDataActionCommand extends BaseMVCActionCommand {
 		String dataContent = ParamUtil.getString(actionRequest, "dataContent", "");
 		
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(StructuredData.class.getName(), actionRequest);
-		if( cmd.equalsIgnoreCase(StationXConstants.CMD_ADD) ) {
+		if( structuredDataId == 0 ) {
 			StructuredData  storedData = _dataTypeLocalService.addStructuredData(
 																		dataTypeId, 
 																		dataTypeId, 
 																		dataContent, 
-																		WorkflowConstants.STATUS_DRAFT, serviceContext);
+																		WorkflowConstants.STATUS_APPROVED, 
+																		serviceContext);
 			structuredDataId = storedData.getStructuredDataId();
 		}
 		else {

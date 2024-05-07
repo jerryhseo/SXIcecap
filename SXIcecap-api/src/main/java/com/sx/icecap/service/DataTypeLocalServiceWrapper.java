@@ -724,9 +724,7 @@ public class DataTypeLocalServiceWrapper
 	}
 
 	@Override
-	public com.sx.icecap.model.StructuredData getStructuredData(
-		long structuredDataId) {
-
+	public String getStructuredData(long structuredDataId) {
 		return _dataTypeLocalService.getStructuredData(structuredDataId);
 	}
 
@@ -742,15 +740,6 @@ public class DataTypeLocalServiceWrapper
 		getStructuredDatas(long dataTypeId, int start, int end) {
 
 		return _dataTypeLocalService.getStructuredDatas(dataTypeId, start, end);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.json.JSONObject
-			getStructuredDataWithValues(long dataTypeId, long structuredDataId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _dataTypeLocalService.getStructuredDataWithValues(
-			dataTypeId, structuredDataId);
 	}
 
 	@Deprecated

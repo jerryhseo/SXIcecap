@@ -617,9 +617,7 @@ public class DataTypeLocalServiceUtil {
 		return getService().getSearchContainerResults(searchContainer);
 	}
 
-	public static com.sx.icecap.model.StructuredData getStructuredData(
-		long structuredDataId) {
-
+	public static String getStructuredData(long structuredDataId) {
 		return getService().getStructuredData(structuredDataId);
 	}
 
@@ -633,14 +631,6 @@ public class DataTypeLocalServiceUtil {
 		long dataTypeId, int start, int end) {
 
 		return getService().getStructuredDatas(dataTypeId, start, end);
-	}
-
-	public static com.liferay.portal.kernel.json.JSONObject
-			getStructuredDataWithValues(long dataTypeId, long structuredDataId)
-		throws PortalException {
-
-		return getService().getStructuredDataWithValues(
-			dataTypeId, structuredDataId);
 	}
 
 	@Deprecated

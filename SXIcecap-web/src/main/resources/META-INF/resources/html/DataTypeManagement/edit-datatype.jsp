@@ -55,7 +55,7 @@
 		var="renderTermAttributes">
 </portlet:resourceURL>
 
-<aui:container cssClass="SXIcecap-web">
+<aui:container cssClass="station-x">
 	<aui:row>
 		<%
 			String pageTitleKey = "edit-datatype"; 

@@ -649,8 +649,9 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 	}
 	*/
 
-	public StructuredData getStructuredData( long structuredDataId ){
-		return super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
+	public String getStructuredData( long structuredDataId ){
+		StructuredData data = super.structuredDataPersistence.fetchByPrimaryKey(structuredDataId);
+		return data.getStructuredData();
 	}
 	
 	public List<StructuredData> getStructuredDatas( long dataTypeId ){
@@ -836,6 +837,7 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		return downloadableFieldList;
 	}
 
+	/*
 	public JSONObject getStructuredDataWithValues( 
 			long dataTypeId, long structuredDataId ) throws PortalException {
 		String dataStructure = "";
@@ -866,92 +868,99 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 			String termVersion = jsonTerm.getString(IcecapSSSTermAttributes.TERM_VERSION);
 			
 			if( dataKeys.contains( jsonTerm.getString(IcecapSSSTermAttributes.TERM_NAME) ) ){
-				if(  IcecapSSSTermTypes.FILE.equalsIgnoreCase(  termType ) ) {
-					DataType dataType = getDataType(dataTypeId);
-					long dataFileFolderId = getDataFileFolderId(
-																dataType.getGroupId(),
-																DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-																dataType.getDataTypeName(),
-																dataType.getDataTypeVersion(),
-																structuredDataId,
-																termName,
-																termVersion,
-																null, false );
-					
-					JSONArray dlFolderFiles = getDLFolderFiles(
-									dataType.getGroupId(),
-									dataFileFolderId );
-					
-					JSONObject jsonFiles = jsonData.getJSONObject(termName);
-					
-					if( Validator.isNotNull(dlFolderFiles) ) {
-						for( int j=0; j<dlFolderFiles.length(); j++ ) {
-							JSONObject dlFile =dlFolderFiles.getJSONObject(j);
-							if( Validator.isNull(jsonFiles) ) {
-								jsonFiles = JSONFactoryUtil.createJSONObject();
-								jsonData.put(termName, jsonFiles);
+				switch( termType ) {
+					case IcecapSSSTermTypes.FILE:{
+						DataType dataType = getDataType(dataTypeId);
+						long dataFileFolderId = getDataFileFolderId(
+																	dataType.getGroupId(),
+																	DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+																	dataType.getDataTypeName(),
+																	dataType.getDataTypeVersion(),
+																	structuredDataId,
+																	termName,
+																	termVersion,
+																	null, false );
+						
+						JSONArray dlFolderFiles = getDLFolderFiles(
+										dataType.getGroupId(),
+										dataFileFolderId );
+						
+						JSONObject jsonFiles = jsonData.getJSONObject(termName);
+						
+						if( Validator.isNotNull(dlFolderFiles) ) {
+							for( int j=0; j<dlFolderFiles.length(); j++ ) {
+								JSONObject dlFile =dlFolderFiles.getJSONObject(j);
+								if( Validator.isNull(jsonFiles) ) {
+									jsonFiles = JSONFactoryUtil.createJSONObject();
+									jsonData.put(termName, jsonFiles);
+								}
+								
+								jsonFiles.put(dlFile.getString("name"), dlFile);
 							}
-							
-							jsonFiles.put(dlFile.getString("name"), dlFile);
 						}
+						
+						jsonTerm.put("value", jsonFiles );
+						break;
 					}
-					
-					jsonTerm.put("value", jsonFiles );
-				}
-				else if(  IcecapSSSTermTypes.EMAIL.equalsIgnoreCase( termType) ) {
-					String data = jsonData.getString(termName);
-					String[] parts = data.split("@");
-					JSONArray email = JSONFactoryUtil.createJSONArray();
-					email.put(parts[0]);
-					email.put(parts[1]);
-					
-					jsonTerm.put("value", email );
-				}
-				else if( IcecapSSSTermTypes.PHONE.equalsIgnoreCase( termType) ) {
-					String data = jsonData.getString(termName);
-					String[] parts = data.split("-");
-					JSONArray phone = JSONFactoryUtil.createJSONArray();
-					phone.put(parts[0]);
-					phone.put(parts[1]);
-					phone.put(parts[2]);
-					
-					jsonTerm.put("value", phone );
-				}
-				else if( IcecapSSSTermTypes.ADDRESS.equalsIgnoreCase( termType ) ) {
-					String data = jsonData.getString(termName);
-					String[] parts = data.split(", ");
-					JSONArray address = JSONFactoryUtil.createJSONArray();
-					address.put(parts[0]);
-					address.put(parts[1]);
-					address.put(parts[2]);
-					
-					jsonTerm.put("value", address );
-				}
-				else if( IcecapSSSTermTypes.MATRIX.equalsIgnoreCase( termType ) ||
-							 IcecapSSSTermTypes.LIST.equalsIgnoreCase( termType ) ) {
-					jsonTerm.put("value", jsonData.getJSONArray( termName ) );
-				}
-				else if( IcecapSSSTermTypes.STRING.equalsIgnoreCase( termType) ){
-					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
-											jsonData.getString(termName) );
-				}
-				else if( IcecapSSSTermTypes.NUMERIC.equalsIgnoreCase( termType) ){
-					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
-							jsonData.getDouble(termName) );
-				}
-				else if( IcecapSSSTermTypes.DATE.equalsIgnoreCase( termType) ) {
-					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
-							jsonData.getLong(termName) );
-				}
-				else if( IcecapSSSTermTypes.BOOLEAN.equalsIgnoreCase( termType) ){
-					jsonTerm.put( IcecapSSSTermAttributes.VALUE, 
-							jsonData.getBoolean(termName) );
+					case IcecapSSSTermTypes.EMAIL:{
+						String data = jsonData.getString(termName);
+						String[] parts = data.split("@");
+						JSONArray email = JSONFactoryUtil.createJSONArray();
+						email.put(parts[0]);
+						email.put(parts[1]);
+						
+						jsonTerm.put("value", email );
+						break;
+					}
+					case IcecapSSSTermTypes.PHONE:{
+						String data = jsonData.getString(termName);
+						String[] parts = data.split("-");
+						JSONArray phone = JSONFactoryUtil.createJSONArray();
+						phone.put(parts[0]);
+						phone.put(parts[1]);
+						phone.put(parts[2]);
+						
+						jsonTerm.put("value", phone );
+						break;
+					}
+					case IcecapSSSTermTypes.ADDRESS:{
+						String data = jsonData.getString(termName);
+						String[] parts = data.split(", ");
+						JSONArray address = JSONFactoryUtil.createJSONArray();
+						address.put(parts[0]);
+						address.put(parts[1]);
+						address.put(parts[2]);
+						
+						jsonTerm.put("value", address );
+						break;
+					}
+					case IcecapSSSTermTypes.MATRIX:
+					case IcecapSSSTermTypes.LIST:{
+						jsonTerm.put("value", jsonData.getJSONArray( termName ) );
+						break;
+					}
+					case IcecapSSSTermTypes.NUMERIC:{
+						jsonTerm.put( IcecapSSSTermAttributes.VALUE,  jsonData.getDouble(termName) );
+						break;
+					}
+					case IcecapSSSTermTypes.DATE:{
+						jsonTerm.put( IcecapSSSTermAttributes.VALUE, jsonData.getLong(termName) );
+						break;
+					}
+					case IcecapSSSTermTypes.BOOLEAN:{
+						jsonTerm.put( IcecapSSSTermAttributes.VALUE, jsonData.getBoolean(termName) );
+						break;
+					}
+					case IcecapSSSTermTypes.GRID:{
+						break;
+					}
 				}
 			}
 		}
 		
 		return jsonStructure;
 	}
+	*/
 	
 	public final long getDataFileFolderId(
 			long repositoryId,

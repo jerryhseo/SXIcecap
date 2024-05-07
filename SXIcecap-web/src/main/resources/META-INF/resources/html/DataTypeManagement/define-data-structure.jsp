@@ -12,8 +12,6 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ include file="../init.jsp" %>
 
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/samples/crf-datatype-sample.js"></script>
-
 <%
 	long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID, 0);
 
@@ -64,7 +62,7 @@
 
 
 <aui:form action="" name="defineFm">
-<aui:container cssClass="SXIcecap-web" id="dataTypeDefiner">
+<aui:container cssClass="station-x" id="dataTypeDefiner">
 
 	<aui:row id="infoSection">
 		<aui:col md="3" id="nameCol">
@@ -383,7 +381,7 @@ $(document).ready(function(){
 		dataTypeDisplayName:  '<%= dataType.getDisplayName(locale) %>'
 	};
 	
-	
+	console.log( 'profile: ', profile);
 	let createEmptyDataStructure = function(){
 		$('#<portlet:namespace/>previewPanel').empty();
 		
@@ -396,13 +394,14 @@ $(document).ready(function(){
 	}
 
 	let dataStructure;
+	let fileContent;
 	
 	let jsonDataStructure = <%= (Validator.isNull(dataStructure)) ? "{}" : dataStructure.toJSONString() %>;
 	
 	console.log( '-------------------', jsonDataStructure );
 	if( $.isEmptyObject(jsonDataStructure) ){
 		dataStructure =  SX.newDataStructure(
-												crfSampleDataType,
+												undefined,
 												profile,
 												SX.Constants.FOR_PREVIEW, 
 												$('#<portlet:namespace/>previewPanel'));
@@ -419,32 +418,6 @@ $(document).ready(function(){
 		dataStructure.render();
 	}
 	
-	/*
-	SX.ListTerm.$BTN_CHOOSE_ACTIVE_TERMS.click(function(event){
-		let option = dataStructure.currentTerm.getHighlightedOption();
-		if( !option ){
-			option = dataStructure.currentTerm.addOption();
-			if( !option ){
-				return;
-			}
-		}
-		
-		dataStructure.disable(['btnAddOption'], true);
-
-		dataStructure.chooseActiveTerms( dataStructure.currentTerm, option );		
-		dataStructure.refreshTerm( dataStructure.currentTerm );
-	});
-	
-	SX.BooleanTerm.$TRUE_ACTIVE_TERMS_BUTTON.click(function(event){
-		dataStructure.chooseActiveTerms( dataStructure.currentTerm, dataStructure.currentTerm.getTrueOption() );
-	});
-	
-	SX.BooleanTerm.$FALSE_ACTIVE_TERMS_BUTTON.click(function(event){
-		dataStructure.chooseActiveTerms( dataStructure.currentTerm, dataStructure.currentTerm.getFalseOption() );
-	});
-	
-	*/
-	
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
 		dataStructure.render();
 		dataStructure.setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
@@ -456,7 +429,7 @@ $(document).ready(function(){
 		}
 		
 		console.log( 'dataStructure: ', dataStructure );
-		console.log( dataStructure.toFileContent() );
+		console.log( dataStructure.toDBContent() );
 		
 		$.ajax({
 			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
@@ -568,9 +541,9 @@ $(document).ready(function(){
 						url: result.url,
 						type:'post',
 						data: data,
-						success: function(data) {
+						success: function(renderImage) {
 							let $dialog = $('<div></div>')
-								.html(data)
+								.html(renderImage)
 								.dialog({
 									autoOpen: true,                          
 									modal: false,
@@ -585,7 +558,7 @@ $(document).ready(function(){
 											text: 'Ok',
 											icon: 'ui-icon-heart',
 											click: ()=>{
-												console.log( 'Editted Data: ', dataStructure.toFileContent() );
+												console.log( 'Editted Data: ', dataStructure.toDBContent() );
 												$dialog.dialog('destroy');
 											}
 										}
@@ -620,19 +593,23 @@ $(document).ready(function(){
 		
 		console.log('Portlet SX_VISUALIZER_READY: ', dataPacket );
 		
-			let packet = SX.createEventDataPacket( '<portlet:namespace/>', dataPacket.sourcePortlet );
-			packet.payload = dataStructure.toJSON();
-			packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
-	
-			SX.Util.fire( SX.Events.SX_LOAD_DATA, packet );
+		let packet = SX.createEventDataPacket( '<portlet:namespace/>', dataPacket.sourcePortlet );
+		packet.dataStructure = dataStructure.toJSON();
+		console.log( 'Last Data Structure: ', packet.dataStructure );
+		packet.structuredData = fileContent;
+		packet.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
+
+		SX.Util.fire( SX.Events.SX_LOAD_DATA, packet );
 	});
 	
 	Liferay.on( SX.Events.SX_VISUALIZER_DATA_CHANGED, function(event){
 		let dataPacket = event.dataPacket;
 		
 		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
-		console.log('SX_VISUALIZER_DATA_LOADED: ', dataPacket );
+		console.log('SX_VISUALIZER_DATA_CHANGED: ', dataPacket );
 		
+		fileContent = dataPacket.payload.toDBContent();
+		console.log('fileContent: ', fileContent);
 	});
 	
 	Liferay.on( SX.Events.SX_STRUCTURED_DATA_CHANGED, function(event){
@@ -641,7 +618,7 @@ $(document).ready(function(){
 		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
 		console.log('SX_STRUCTURED_DATA_CHANGED: ', dataPacket );
 		
-		let fileContent = dataPacket.payload.toFileContent();
+		fileContent = dataPacket.payload.toDBContent();
 		
 		console.log('fileContent: ', fileContent);
 	});

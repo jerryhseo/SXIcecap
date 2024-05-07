@@ -25,7 +25,8 @@
 
 <%
 	DataType dataType = (DataType)renderRequest.getAttribute(DataType.class.getName());
-	JSONObject structuredData = (JSONObject)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT);
+	String dataStructure = (String)renderRequest.getAttribute(IcecapWebKeys.DATA_STRUCTURE);
+	String structuredData = (String)renderRequest.getAttribute(IcecapWebKeys.STRUCTURED_DATA);
 	
 	String command = (String)renderRequest.getAttribute(StationXWebKeys.CMD);
 	long structuredDataId = ParamUtil.getLong(renderRequest, IcecapWebKeys.STRUCTURED_DATA_ID, 0);
@@ -43,6 +44,7 @@
 
 
 <%
+/*
 	JSONArray terms = structuredData.getJSONArray("terms");
 	for( int i=0; i<terms.length(); i++ ){
 		JSONObject termData = terms.getJSONObject(i);
@@ -51,6 +53,7 @@
 			
 		}
 	}
+	*/
 %>
 
 <portlet:actionURL name="<%= IcecapMVCCommands.ACTION_STRUCTURED_DATA_ADD %>" var="saveActionURL">
@@ -66,7 +69,7 @@
 	<portlet:param name="<%= StationXWebKeys.DATATYPE_ID %>" value="<%=String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:resourceURL>
 
-<aui:container cssClass="SXIcecap-web">
+<aui:container cssClass="station-x">
 	<aui:row cssClass="form-section">
 		<aui:col md="12" >
 				<aui:fieldset-group markupView="lexicon">
@@ -94,7 +97,7 @@
 					<input type="hidden" id="<portlet:namespace/>structuredDataId" name="<portlet:namespace/>structuredDataId" value="<%= structuredDataId %>" >
 					<input type="hidden" id="<portlet:namespace/>dataContent" name="<portlet:namespace/>dataContent" >
 					<aui:button-row>
-						<aui:button type="submit" id="btnSave" value="save"></aui:button>
+						<aui:button type="button" id="btnSave" value="save"></aui:button>
 						<aui:button type="button" id="btnDelete" value="delete" href="<%= deleteActionURL %>"></aui:button>
 					</aui:button-row>
 				</form>
@@ -111,7 +114,9 @@ $(document).ready(function(){
 			'<%= locale.toString() %>',
 			<%= jsonLocales.toJSONString() %> );
 
-	let dataStructure;
+	let dataStructure = <%= dataStructure %>;
+	let structuredData = <%= Validator.isNotNull(structuredData) %> ? JSON.parse('<%= structuredData %>') : null;
+	
 	let sdeInfo;
 	
 	$.ajax({
@@ -171,9 +176,14 @@ $(document).ready(function(){
 			},
 			dataType: 'json',
 			success: function(result){
+				console.log('Read structuredData: ', result);
+				let structuedData = !!result.structuredData ? JSON.parse( result.structuredData ) : null;
+				
 				let dataPacket = SX.Util.createEventDataPacket( '<portlet:namespace/>', rcvdPacket.sourcePortlet );
 				dataPacket.payloadType = SX.Constants.PayloadType.DATA_STRUCTURE;
-				dataPacket.payload = result.dataStructure; 
+				dataPacket.dataStructure = dataStructure; 
+				dataPacket.structuredData = structuredData; 
+				console.log( 'Call editor: ', dataStructure, structuredData );
 		
 				dataPacket.profile = {
 						dataTypeId: '<%= dataType.getDataTypeId() %>',
@@ -186,7 +196,7 @@ $(document).ready(function(){
 				SX.Util.fire( SX.Events.SX_LOAD_DATA, dataPacket );
 			},
 			error:function(jqXHR, a, b){
-				reject('Fail to get data: ');
+				console.log('Fail to get data: ', a, b);
 			}
 		});
 	} );
@@ -197,10 +207,16 @@ $(document).ready(function(){
 		
 		console.log( 'SX_VISUALIZER_DATA_CHANGED: ',  recvPacket );
 		
-		$('#<portlet:namespace/>dataContent').val( recvPacket.payload.toFileContent() );
+		$('#<portlet:namespace/>dataTypeId').val(  recvPacket.payload.dataTypeId );
+		$('#<portlet:namespace/>structuredDataId').val( recvPacket.payload.structuredDataId );
+		$('#<portlet:namespace/>dataContent').val( recvPacket.payload.content );
 		console.log( 'dataContent: ', $('#<portlet:namespace/>dataContent').val() );
 	});
 
+	$('#<portlet:namespace/>btnSave').on( 'click', function(event){
+		
+		$('#<portlet:namespace/>fm').submit();
+	});
 	/*
 	$('#<portlet:namespace/>addSamples').click( function(event){
 		crfSampleData.forEach( data =>{

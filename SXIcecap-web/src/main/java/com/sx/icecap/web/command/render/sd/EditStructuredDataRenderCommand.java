@@ -1,20 +1,14 @@
 package com.sx.icecap.web.command.render.sd;
 
-import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppService;
-import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portlet.documentlibrary.constants.DLConstants;
 import com.sx.icecap.constant.IcecapDataTypeAttributes;
 import com.sx.icecap.constant.IcecapJsps;
 import com.sx.icecap.constant.IcecapMVCCommands;
@@ -26,9 +20,7 @@ import com.sx.icecap.model.DataType;
 import com.sx.icecap.model.StructuredData;
 import com.sx.icecap.service.DataTypeLocalService;
 import com.sx.icecap.service.StructuredDataLocalService;
-import com.sx.util.SXPortalUtil;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -76,9 +68,9 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 			throw new PortletException( "Cannot find data type: " + dataTypeId );
 		}
 		
-		JSONObject jsonData = null;
+		String dataStructure = null;
 		try {
-			jsonData = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredDataId);
+			dataStructure = _dataTypeLocalService.getDataTypeStructure(dataTypeId);
 		} catch (Exception e) {
 			throw new PortletException( e.getMessage() );
 		}
@@ -87,14 +79,17 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 			renderRequest.setAttribute( StationXWebKeys.CMD, StationXConstants.CMD_ADD );
 		}
 		else {
+			String structuredData  = _dataTypeLocalService.getStructuredData(structuredDataId);
+			renderRequest.setAttribute(IcecapWebKeys.STRUCTURED_DATA, structuredData);
 			renderRequest.setAttribute(StationXWebKeys.CMD, StationXConstants.CMD_UPDATE);
 		}
 		
-		renderRequest.setAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT, jsonData);
+		renderRequest.setAttribute(IcecapWebKeys.DATA_STRUCTURE, dataStructure);
 		
 		return IcecapJsps.STRUCTURED_DATA_EDIT;
 	}
 	
+	/*
 	private JSONObject _getStructuredDataWithValues( 
 			long dataTypeId, long structuredDataId ) throws PortletException  {
 		DataType dataType = null;
@@ -103,7 +98,6 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 		} catch (Exception e) {
 			throw new PortletException("Cannot find the data type: " + dataTypeId);
 		}
-		
 		
 		JSONObject jsonData = null;
 		try {
@@ -193,4 +187,5 @@ public class EditStructuredDataRenderCommand implements MVCRenderCommand {
 		
 		return dataStructure;
 	}
+	*/
 }

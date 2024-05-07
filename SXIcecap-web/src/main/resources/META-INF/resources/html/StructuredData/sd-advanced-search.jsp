@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.kernel.json.JSONException"%>
 <%@page import="com.liferay.portal.util.Constants"%>
 <%@page import="javax.portlet.ActionRequest"%>
 <%@page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList"%>
@@ -50,6 +51,9 @@
 		background-color: rgba(230, 230, 230, 0.777) !important;
 	}
 	
+	.ztree span{
+		font-size: 0.875rem;
+	}
 </style>
 
 <%
@@ -58,7 +62,6 @@
 	JSONArray abstractFields  = (JSONArray)renderRequest.getAttribute(StationXWebKeys.ABSTRACT_FIELDS);
 	JSONObject dataStructure = (JSONObject)renderRequest.getAttribute(IcecapWebKeys.DATA_STRUCTURE);
 	JSONArray structuredDataList =(JSONArray)renderRequest.getAttribute("structuredDataList");
-	
 %>
 
 <portlet:renderURL var="editStructuredDataURL">
@@ -75,7 +78,7 @@
 
 <input type="hidden" id="<portlet:namespace/>searchResults" id="<portlet:namespace/>searchResults"/> 
 
-<aui:container cssClass="SXIcecap-web">
+<aui:container cssClass="station-x">
 		<aui:row>
 			<aui:col md="12">
 				<aui:a href="<%= backURL %>" label="previous-page" style="width:20%;"></aui:a>
@@ -105,42 +108,54 @@
 					</aui:fieldset-group>
 			</aui:col>
 		</aui:row>
+		<aui:button-row>
+			<aui:button name="btnNewSearch" value="new-search"></aui:button>
+			<aui:button name="btnSearchHistories" value="search-histories"></aui:button>
+			<aui:button name="btnAddSearchTerm" value="add-search-term"></aui:button>
+		</aui:button-row>
 </aui:container>
  
-<aui:container  cssClass="SXIcecap-web">
+<aui:container  cssClass="station-x">
 	<aui:row >
 		<aui:col md="6"   cssClass="show-border">
-			<div class="container-fluid">
-				<div class="row" id="<portlet:namespace/>goToBar" >
-					<div class="col-md-6">
-						<aui:select name="goToCategory" label="go-to-category" inlineLabel="left" inlineField="true">
-							<aui:option label="term-name" value="termName"></aui:option>
-							<aui:option label="display-name" value="displayName"></aui:option>
-						</aui:select>
-					</div>
-					<div class="col-md-6" class="ui-widget">
-						<aui:input name="goToSelector" label="go-to" inlineLabel="left" inlineField="true"></aui:input>
-					</div>
-				</div>
-				<div class="row" >
-					<div class="col-md-12" id="<portlet:namespace/>searchSection"></div>
-				</div>
-			</div>
+			<ul class="ztree" id="<portlet:namespace/>queryTree"></ul>
 		</aui:col>
 		<aui:col md="6"   cssClass="show-border">
-			<aui:container>
-				<aui:row>
-					<aui:col md="8"><span id="<portlet:namespace/>resultPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
-					<aui:col md="4" style="text-align:right;">
-						<aui:button name="queryHistory" value="query-history" cssClass="btn-info"></aui:button>
-					</aui:col>
-				</aui:row>
-			</aui:container>
-			<aui:container id="resultSection">
-			</aui:container>
+			<div id="<portlet:namespace/>resultSection"></div>
 		</aui:col>
 	</aui:row>
 </aui:container>
+
+<div id="<portlet:namespace/>selectSearchTerm" style="display:none;">
+	<div class="container">
+		<div class="row" id="<portlet:namespace/>goToBar" >
+			<div class="col-md-6">
+				<aui:select name="goToCategory" label="go-to-category" inlineLabel="left" inlineField="true">
+					<aui:option label="term-name" value="termName"></aui:option>
+					<aui:option label="display-name" value="displayName"></aui:option>
+				</aui:select>
+			</div>
+			<div class="col-md-6" class="ui-widget">
+				<aui:input name="goToSelector" label="go-to" inlineLabel="left" inlineField="true"></aui:input>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<aui:select name="fieldOperator" label="field-operator" inlineLabel="left" inlineField="true">
+					<aui:option label="OR" value="OR"></aui:option>
+					<aui:option label="AND" value="AND"></aui:option>
+				</aui:select>
+			</div>
+			<div class="col-md-4">
+				<aui:select name="infieldOperator" label="infield-operator" inlineLabel="left" inlineField="true">
+					<aui:option label="OR" value="OR"></aui:option>
+					<aui:option label="AND" value="AND"></aui:option>
+				</aui:select>
+			</div>
+		</div>
+	</div>
+	<div id="<portlet:namespace/>searchItemSection" class="station-x"></div>
+</div>
 
 <div id="<portlet:namespace/>historyDialog" class="pagination" style="width:100%; display:none;" ></div>
 <div id="<portlet:namespace/>itemResultDialog" class="container" style="width:100%; display:none;" >
@@ -154,169 +169,84 @@ $(document).ready(function(){
 			'<%= defaultLocale.toString() %>',
 			'<%= locale.toString() %>',
 			<%= jsonLocales.toJSONString() %> );
+			
+	let dataStructure = SX.newDataStructure(
+												<%= dataStructure.toString() %>, 
+												new Object(),
+												SX.Constants.FOR_SEARCH, 
+												$('#<portlet:namespace/>searchItemSection') );
+	dataStructure.render();
 	
 	let advancedSearch = new SX.AdvancedSearch(
-						<%= dataStructure.toString() %>,
-						<%= abstractFields.toJSONString() %>,
 						<%= structuredDataList.toJSONString() %>,
-						$('#<portlet:namespace/>searchSection'),
+						$('#<portlet:namespace/>queryTree'),
 						$('#<portlet:namespace/>resultSection'),
-						$('#<portlet:namespace/>resultPagination'),
 						'<%= editStructuredDataURL.toString() %>' );
-						
-	$('#<portlet:namespace/>queryHistory').click(function(event){
-		advancedSearch.showSearchHistories( $('#<portlet:namespace/>mainPagination' ) );
+	<portlet:namespace/>openSearchTermSelector();
+	
+	$('#<portlet:namespace/>btnAddSearchTerm').click( function(event){
+		<portlet:namespace/>openSearchTermSelector();
 	});
 	
+	function <portlet:namespace/>openSearchTermSelector(){
+		$('#<portlet:namespace/>selectSearchTerm').dialog({
+				title: '<liferay-ui:message key="select-search-field"/>',
+				width:800,
+				buttons:[{
+					text: Liferay.Language.get('ok'),
+					click: function( event ){
+						$(this).dialog('destroy');
+					}
+				}],
+				close: function( event, ui ){
+					$(this).dialog('destroy');
+				}
+		});
+	}
 	
-	Liferay.on(SX.Events.SD_SEARCH_KEYWORD_CHANGED, function(evt){
+	$('#<portlet:namespace/>btnSearchHistories').click(function(event){
+		advancedSearch.selectSearchHistory( $('#<portlet:namespace/>mainPagination' ) );
+	});
+	
+	Liferay.on(SX.Events.OPEN_QUERY_EDITOR, function(evt){
 		let dataPacket = evt.dataPacket;
-		console.log( 'SD_SEARCH_KEYWORD_CHANGED' , dataPacket );
 		
-		let term = dataPacket.term;
-
-		let hitCount = advancedSearch.doKeywordSearch(  term.termName, term.searchKeywords, term.termType );
-		
-		if( hitCount !== null ){
-			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
+		if( !dataPacket.isTargetPortlet( '<portlet:namespace/>' ) ){
+			return;
 		}
-		else{
-			$('#<portlet:namespace/>totalCount').empty();
-		}
+		console.log( 'OPEN_QUERY_EDITOR' , dataPacket );
 		
-		//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
+		$.ajax({
+				url: '<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_CREATE_PORTLET_INSTANCE %>"></portlet:resourceURL>',
+				type:'post',
+				dataType: 'json',
+				data:{
+					<portlet:namespace/>portletName: '<%= IcecapWebPortletKeys.QUERY_EDITOR_PORTLET %>',
+				},
+				success: function(portletInfo){
+					let searchHistory = dataPacket.history;
+					let query = dataPacket.query;
+					
+					let params = new Object();
+					params[portletInfo.namespace+'query'] = 
+								searchHistory.query ? JSON.stringify(searchHistory.query.toZTreeJSON()) : '';
+					params[portletInfo.namespace+'subquery'] = JSON.stringify(query.toZTreeJSON());
+					
+					advancedSearch.openQueryEditor( dataPacket.history, dataPacket.query, portletInfo.url, params );
+				},
+				error: function(jqXHR, a, b){
+					console.log('Fail to create a portlet namespace: com_sx_visualizers_sde_StructuredDataEditorPortlet'  );
+				}
+		});
 	});
 	
-	Liferay.on(SX.Events.SD_SEARCH_FROM_NUMERIC_CHANGED, function(evt){
-		let dataPacket = evt.dataPacket;
-		console.log( 'SD_SEARCH_FROM_NUMERIC_CHANGED ' , dataPacket );
+	Liferay.on(SX.Events.QUERY_CHANGED, function( event ){
+		let dataPacket = event.dataPacket;
 		
-		let term = dataPacket.term;
-		
-		let hitCount;
-		if( term.rangeSearch ){
-			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchValue, term.toSearchValue, term.termType );
+		if( !dataPacket.isTargetPortlet( '<portlet:namespace/>' ) ){
+			return;
 		}
-		else{
-			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchValues, term.termType );
-		}
-		
-		if( hitCount !== null ){
-			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
-			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
-		}
-		else{
-			$('#<portlet:namespace/>totalCount').empty();
-		}
+		console.log( 'OPEN_QUERY_EDITOR' , dataPacket );
 	});
-	
-	Liferay.on(SX.Events.SD_SEARCH_TO_NUMERIC_CHANGED, function(evt){
-		let dataPacket = evt.dataPacket;
-		console.log( 'SD_SEARCH_TO_NUMERIC_CHANGED ' , dataPacket );
-		
-		let term = dataPacket.term;
-		
-		let hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchValue, term.toSearchValue, term.termType );
-		console.log('hitCount: ' + hitCount );
-		if( hitCount !== null ){
-			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
-			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
-		}
-		else{
-			$('#<portlet:namespace/>totalCount').empty();
-		}
 	});
-	
-	Liferay.on(SX.Events.SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED, function(evt){
-		let dataPacket = evt.dataPacket;
-		console.log( 'SD_NUMERIC_RANGE_SEARCH_STATE_CHANGED ' , dataPacket );
-		
-		let term = dataPacket.term;
-		
-		let hitCount;
-		if( term.rangeSearch ){
-			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchValue, term.toSearchValue, term.termType );
-		}
-		else{
-			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchValues, term.termType );
-		}
-		
-		if( hitCount !== null ){
-			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
-			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
-		}
-		else{
-			$('#<portlet:namespace/>totalCount').empty();
-		}
-	});
-	
-	Liferay.on(SX.Events.SD_SEARCH_FROM_DATE_CHANGED, function(evt){
-		let dataPacket = evt.dataPacket;
-		console.log( 'SD_SEARCH_FROM_DATE_CHANGED ' , dataPacket );
-		
-		let term = dataPacket.term;
-		
-		let hitCount;
-		if( term.rangeSearch ){
-			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
-		}
-		else{
-			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchDate, term.termType  );
-		}
-		
-		if( hitCount !== null ){
-			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
-			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
-		}
-		else{
-			$('#<portlet:namespace/>totalCount').empty();
-		}
-	});
-	
-	Liferay.on(SX.Events.SD_SEARCH_TO_DATE_CHANGED, function(evt){
-		let dataPacket = evt.dataPacket;
-		console.log( 'SD_SEARCH_TO_DATE_CHANGED ' , dataPacket );
-		
-		let term = dataPacket.term;
-		let hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
-		
-		if( hitCount !== null ){
-			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
-			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
-		}
-		else{
-			$('#<portlet:namespace/>totalCount').empty();
-		}
-	});
-	
-	Liferay.on(SX.Events.SD_DATE_RANGE_SEARCH_STATE_CHANGED, function(evt){
-		let dataPacket = evt.dataPacket;
-		console.log( 'SD_DATE_RANGE_SEARCH_STATE_CHANGED ' , dataPacket );
-		
-		let term = dataPacket.term;
-		
-		let hitCount;
-		if( term.rangeSearch ){
-			hitCount = advancedSearch.doRangeSearch( term.termName, term.fromSearchDate, term.toSearchDate, term.termType );
-		}
-		else{
-			hitCount = advancedSearch.doKeywordSearch( term.termName, term.searchDate, term.termType );
-		}
-		
-		if( hitCount !== null ){
-			$('#<portlet:namespace/>totalCount').text( hitCount + ' ' + Liferay.Language.get('found') );
-			//$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
-		}
-		else{
-			$('#<portlet:namespace/>totalCount').empty();
-		}
-		
-	});
-	
-	Liferay.on(SX.Events.SD_SEARCH_HISTORY_CHANGED, function(evt){
-	
-		console.log('SD_SEARCH_HISTORY_CHANGED: ', advancedSearch.getSearchHistories() );
-		$('#<portlet:namespace/>searchResults').val( JSON.stringify( advancedSearch.getSearchHistories() ) );
-	});
-});
 </aui:script>

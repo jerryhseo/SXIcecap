@@ -484,7 +484,7 @@ public interface DataTypeLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public StructuredData getStructuredData(long structuredDataId);
+	public String getStructuredData(long structuredDataId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<StructuredData> getStructuredDatas(long dataTypeId);
@@ -492,11 +492,6 @@ public interface DataTypeLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<StructuredData> getStructuredDatas(
 		long dataTypeId, int start, int end);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject getStructuredDataWithValues(
-			long dataTypeId, long structuredDataId)
-		throws PortalException;
 
 	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

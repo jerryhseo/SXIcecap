@@ -86,7 +86,7 @@
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:renderURL>
 
-<aui:container cssClass="SXIcecap-web">
+<aui:container cssClass="station-x">
 		<aui:row>
 			<aui:col md="12">
 				<aui:a href="<%= backURL %>" label="previous-page" style="width:20%;"></aui:a>
@@ -167,7 +167,6 @@
 					JSONObject jsonData = JSONFactoryUtil.createJSONObject( structuredData.getStructuredData() );
 					
 					String abstractData = "";
-					
 					Iterator<String> keys = jsonData.keys();
 					for( String field : abstractFieldList ){ 
 						if( jsonData.has(field) ){

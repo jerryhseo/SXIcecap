@@ -50,6 +50,9 @@
 		background-color: rgba(230, 230, 230, 0.777) !important;
 	}
 	
+	.ztree span{
+		font-size: 0.875rem;
+	}
 </style>
 
 <%
@@ -133,14 +136,8 @@
 			</div>
 		</aui:col>
 		<aui:col md="6"   cssClass="show-border">
-			<aui:container id="resultSection">
-				<aui:row>
-					<aui:col md="12"><span id="<portlet:namespace/>resultPagination" style="display:inline;"></span><span  id="<portlet:namespace/>totalCount" style="float:right;padding-top:8px;padding-bottom:8px"></span></aui:col>
-				</aui:row>
-			</aui:container>
-			
-			<aui:container id="resultSection">
-			</aui:container>
+			<ul class="ztree" id="<portlet:namespace/>queryTree">
+			</ul>
 		</aui:col>
 	</aui:row>
 </aui:container>
@@ -160,11 +157,9 @@ $(document).ready(function(){
 	
 	let advancedSearch = new SX.AdvancedSearch(
 						<%= dataStructure.toString() %>,
-						<%= abstractFields.toJSONString() %>,
 						<%= structuredDataList.toJSONString() %>,
 						$('#<portlet:namespace/>searchSection'),
-						$('#<portlet:namespace/>resultSection'),
-						$('#<portlet:namespace/>resultPagination'),
+						$('#<portlet:namespace/>queryTree'),
 						'<%= editStructuredDataURL.toString() %>' );
 						
 	$('#<portlet:namespace/>btnSearchHistories').click(function(event){
