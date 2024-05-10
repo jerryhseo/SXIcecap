@@ -608,7 +608,7 @@ $(document).ready(function(){
 		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
 		console.log('SX_VISUALIZER_DATA_CHANGED: ', dataPacket );
 		
-		fileContent = dataPacket.payload.toDBContent();
+		fileContent = dataPacket.payload;
 		console.log('fileContent: ', fileContent);
 	});
 	
@@ -618,7 +618,7 @@ $(document).ready(function(){
 		if( dataPacket.targetPortlet !== '<portlet:namespace/>' )	return;
 		console.log('SX_STRUCTURED_DATA_CHANGED: ', dataPacket );
 		
-		fileContent = dataPacket.payload.toDBContent();
+		fileContent = dataPacket.payload;
 		
 		console.log('fileContent: ', fileContent);
 	});

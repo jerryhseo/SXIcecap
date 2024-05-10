@@ -195,13 +195,22 @@ $(document).ready(function(){
 				buttons:[{
 					text: Liferay.Language.get('ok'),
 					click: function( event ){
+						advancedSearch.addWritingQueryToHistory();
+						
+						//Clear all search input control
+						<portlet:namespace/>clearSearchTermSelector();
 						$(this).dialog('destroy');
 					}
 				}],
 				close: function( event, ui ){
+					<portlet:namespace/>clearSearchTermSelector();
 					$(this).dialog('destroy');
 				}
 		});
+	}
+	
+	function <portlet:namespace/>clearSearchTermSelector(){
+		$('#<portlet:namespace/>searchItemSection').find( 'input').val( '' );
 	}
 	
 	$('#<portlet:namespace/>btnSearchHistories').click(function(event){
