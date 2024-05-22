@@ -128,22 +128,11 @@
 
 <div id="<portlet:namespace/>selectSearchTerm" style="display:none;">
 	<div class="container">
-		<div class="row" id="<portlet:namespace/>goToBar" >
-			<div class="col-md-6">
-				<aui:select name="goToCategory" label="go-to-category" inlineLabel="left" inlineField="true">
-					<aui:option label="term-name" value="termName"></aui:option>
-					<aui:option label="display-name" value="displayName"></aui:option>
-				</aui:select>
-			</div>
-			<div class="col-md-6" class="ui-widget">
-				<aui:input name="goToSelector" label="go-to" inlineLabel="left" inlineField="true"></aui:input>
-			</div>
-		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<aui:select name="fieldOperator" label="field-operator" inlineLabel="left" inlineField="true">
 					<aui:option label="OR" value="OR"></aui:option>
-					<aui:option label="AND" value="AND"></aui:option>
+					<aui:option label="AND" value="AND" selected="true"></aui:option>
 				</aui:select>
 			</div>
 			<div class="col-md-4">
@@ -196,8 +185,15 @@ $(document).ready(function(){
 					text: Liferay.Language.get('ok'),
 					click: function( event ){
 						advancedSearch.addWritingQueryToHistory();
-						
+						advancedSearch.retrieve();
+						advancedSearch.openQueryEditor($('#<portlet:namespace/>queryTree'));
 						//Clear all search input control
+						<portlet:namespace/>clearSearchTermSelector();
+						$(this).dialog('destroy');
+					}
+				},{
+					text: Liferay.Language.get('cancel'),
+					click: function( event ){
 						<portlet:namespace/>clearSearchTermSelector();
 						$(this).dialog('destroy');
 					}
@@ -210,7 +206,9 @@ $(document).ready(function(){
 	}
 	
 	function <portlet:namespace/>clearSearchTermSelector(){
-		$('#<portlet:namespace/>searchItemSection').find( 'input').val( '' );
+		$('#<portlet:namespace/>searchItemSection').find( 'input[type="text"]').val('');
+		$('#<portlet:namespace/>searchItemSection').find( 'input[type="checkbox"]').prop( 'checked', false );
+		$('#<portlet:namespace/>searchItemSection').find( 'input[type="radio"]').prop( 'checked', false );
 	}
 	
 	$('#<portlet:namespace/>btnSearchHistories').click(function(event){

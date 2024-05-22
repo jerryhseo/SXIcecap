@@ -180,6 +180,18 @@
 				</aui:row>
 				<aui:row>
 					<aui:col>
+						<aui:input 
+								type="checkbox"
+								id="multiple" 
+								name="multiple" 
+								label="multiple" 
+								style="margin-top:15px;"
+								helpMessage="multiple-select-help">
+						</aui:input>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col>
 						<aui:field-wrapper name="placeHolder" label="place-holder" helpMessage="place-holder-help">
 							<liferay-ui:input-localized 
 											name="placeHolder"
