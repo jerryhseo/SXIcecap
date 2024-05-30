@@ -206,7 +206,8 @@ $(document).ready(function(){
 	}
 	
 	function <portlet:namespace/>clearSearchTermSelector(){
-		$('#<portlet:namespace/>searchItemSection').find( 'input[type="text"]').val('');
+		console.log('clearSearchTermSelector');
+		$('#<portlet:namespace/>searchItemSection').find( 'input' ).val('');
 		$('#<portlet:namespace/>searchItemSection').find( 'input[type="checkbox"]').prop( 'checked', false );
 		$('#<portlet:namespace/>searchItemSection').find( 'input[type="radio"]').prop( 'checked', false );
 	}
