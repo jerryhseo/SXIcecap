@@ -109,8 +109,6 @@
 			</aui:col>
 		</aui:row>
 		<aui:button-row>
-			<aui:button name="btnNewSearch" value="new-search"></aui:button>
-			<aui:button name="btnSearchHistories" value="search-histories"></aui:button>
 			<aui:button name="btnAddSearchTerm" value="add-search-term"></aui:button>
 		</aui:button-row>
 </aui:container>
