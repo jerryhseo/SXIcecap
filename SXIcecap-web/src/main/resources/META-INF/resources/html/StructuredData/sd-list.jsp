@@ -25,6 +25,8 @@
 <%@page import="com.sx.icecap.web.display.context.sd.StructuredDataManagementToolbarDisplayContext"%>
 <%@ include file="../init.jsp" %>
 
+<script src="<%=request.getContextPath() %>/js/NanumGothicLight-normal.js" defer></script>
+
 <style type="text/css">
 	.id-width {
 		width: 10% !important;
@@ -86,6 +88,12 @@
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:renderURL>
 
+<portlet:resourceURL id="<%= IcecapMVCCommands.RESOURCE_DATATYPE_LOAD_STRUCTURE  %>"  var="getDataStructureURL">
+	<portlet:param
+			name="<%= IcecapWebKeys.DATATYPE_ID %>"
+			value="<%= String.valueOf(dataType.getDataTypeId()) %>" />
+</portlet:resourceURL>
+
 <aui:container cssClass="station-x">
 		<aui:row>
 			<aui:col md="12">
@@ -101,7 +109,7 @@
 								<aui:input name="datatype-id" disabled="true" value="<%= dataType.getPrimaryKey() %>"></aui:input>
 							</span>
 							<span style="display:inline-block; width:40%;">
-								<aui:input name="datatype-name" disabled="true" value="<%= dataType.getDataTypeName() %>"></aui:input>
+								<aui:input name="datatype-name" disabled="true" value="<%= dataType.getDisplayName(locale) %>"></aui:input>
 							</span>
 							<span style="display:inline-block; width:10%;">
 								<aui:input name="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
@@ -121,12 +129,23 @@
 <aui:container>
 	<aui:row>
 		<aui:col>
-	<a class="btn btn-primary" href="<%=editStructuredDataURL.toString() %>" style="width:50px; float:left;margin-left:50px;">
-		<svg class="lexicon-icon lexicon-icon-plus" focusable="false" role="presentation" viewBox="0 0 512 512">
-			<path class="lexicon-icon-outline" d="M479.82 224.002h-192.41v-191.91c0-17.6-14.4-32-32-32v0c-17.6 0-32 14.4-32 32v191.91h-191.41c-17.6 0-32 14.4-32 32v0c0 17.6 14.4 32 32 32h191.41v191.91c0 17.6 14.4 32 32 32v0c17.6 0 32-14.4 32-32v-191.909h192.41c17.6 0 32-14.4 32-32v0c0-17.6-14.4-32-32-32z"></path>
-		</svg>
-	</a>
-	<a href="<%= advancedSearchURL %>" class="btn btn-info" style="float:right;margin-right:50px;">Search Data </a>
+			<a class="btn btn-primary sxtooltip" href="<%=editStructuredDataURL.toString() %>" style="width:50px; float:left;margin-left:50px;" title="<%= LanguageUtil.get(locale, "add")%>">
+				<svg class="lexicon-icon lexicon-icon-plus" focusable="false" role="presentation" viewBox="0 0 512 512">
+					<path class="lexicon-icon-outline" d="M479.82 224.002h-192.41v-191.91c0-17.6-14.4-32-32-32v0c-17.6 0-32 14.4-32 32v191.91h-191.41c-17.6 0-32 14.4-32 32v0c0 17.6 14.4 32 32 32h191.41v191.91c0 17.6 14.4 32 32 32v0c17.6 0 32-14.4 32-32v-191.909h192.41c17.6 0 32-14.4 32-32v0c0-17.6-14.4-32-32-32z"></path>
+				</svg>
+			</a>
+			<input type="image" 
+						id="<portlet:namespace/>pdf" name="<portlet:namespace/>pdf" 
+						src="<%= request.getContextPath() %>/svg/pdf-svgrepo-com.svg"
+						class="btn btn-default sxtooltip"
+						style="width:50px;height:40px;float:right;margin-left:5px;margin-right:50px;padding:5px 0px;"
+						title="<%= LanguageUtil.get(locale, "pdf")%>">
+			<input type="image" 
+						id="<portlet:namespace/>search" name="<portlet:namespace/>search" 
+						src="<%= request.getContextPath() %>/svg/search-svgrepo-com.svg" 
+						class="btn btn-default sxtooltip"
+						style="width:50px;height:40px;float:right;margin-left:5px;padding: 0px;"
+						title="<%= LanguageUtil.get(locale, "search")%>">
 		</aui:col>
 	</aui:row>
 </aui:container>
@@ -200,7 +219,7 @@
 					</c:when>
 					<c:when test="<%= viewStyle.equals(StationXConstants.VIEW_TYPE_LIST) %>">
 						<liferay-ui:search-container-column-text href="<%=rowURL.toString() %>" >
-							<h5 class="€œtext-default"€><%= structuredData.getStructuredDataId() %></h5>
+							<h5 class="Â€Âœtext-default"Â€Â><%= structuredData.getStructuredDataId() %></h5>
 						</liferay-ui:search-container-column-text>
 						<liferay-ui:search-container-column-text >
   								<%= abstractData %>
@@ -257,7 +276,111 @@
 	</div>
 </div>
 
+<div id="<portlet:namespace/>printPDF" style="display:none;">
+</div>
+
 <script type="text/javascript">
+$('.sxtooltip').tooltip();	
+
+$('#<portlet:namespace/>pdf').on('click', function(event){
+	$.ajax({
+		url: '<%= getDataStructureURL.toString() %>',
+		method: 'post',
+		dataType: 'json',
+		success: function( result ){
+			console.log( 'getDataStructure: ', result );
+			
+			let SX = new StationX('<portlet:namespace/>', 
+					'<%= defaultLocale.toString() %>',
+					'<%= locale.toString() %>',
+					<%= jsonLocales.toJSONString() %> );
+			
+			let $canvas = $('<div class="container"></div>');
+			let dataStructure = SX.newDataStructure(
+						result.dataStructure,
+						{},
+						SX.Constants.FOR_PDF_DATA,
+						$canvas );
+						
+			console.log( 'dataStructure: ', dataStructure );
+			
+			let $pdf = dataStructure.renderDataToPDF( 'Data List of '+'<%= dataType.getDisplayName(locale) %>', result.data );
+			$('#<portlet:namespace/>printPDF' ).empty();
+			$('#<portlet:namespace/>printPDF' ).append( $pdf );
+			
+			$('#<portlet:namespace/>printPDF' ).show();
+			
+			const pdf = new jsPDF('p', 'pt', 'a4');
+			pdf.setProperties({
+				title: '<%= dataType.getDisplayName(locale) %>'
+			});
+	
+			const image = { type: 'png', quality: 0.98 };
+			const paperWidth = 595;
+			const paperHeight = 842;
+			const margins = {
+					top: 50,
+					right: 20,
+					bottom: 40,
+					left: 30
+			};
+					
+			html2canvas($pdf[0], {scrollY: 0}).then( canvas => {
+				const innerPageWidth = paperWidth - (margins.left + margins.right);
+				const innerPageHeight = paperHeight - (margins.top + margins.bottom);
+
+				// Calculate the number of pages.
+				const pxFullHeight = canvas.height;
+				const pxPageHeight = Math.floor(canvas.width * (paperHeight / paperWidth));
+				const nPages = Math.ceil(pxFullHeight / pxPageHeight);
+
+				// Define pageHeight separately so it can be trimmed on the final page.
+				let pageHeight = innerPageHeight;
+
+				// Create a one-page canvas to split up the full image.
+				const pageCanvas = document.createElement('canvas');
+				const pageCtx = pageCanvas.getContext('2d');
+				pageCanvas.width = canvas.width;
+				pageCanvas.height = pxPageHeight;
+
+				for( let page = 0; page < nPages; page++ ) {
+					if (page === nPages - 1 && pxFullHeight % pxPageHeight !== 0) {
+						pageCanvas.height = pxFullHeight % pxPageHeight;
+						pageHeight = (pageCanvas.height * innerPageWidth) / pageCanvas.width;
+					}
+
+					const width = pageCanvas.width;
+					const height = pageCanvas.height;
+					pageCtx.fillStyle = 'white';
+					pageCtx.fillRect( 0, 0, width, height);
+					pageCtx.drawImage( canvas, 0, page * pxPageHeight, width, height, 0, 0, width, height );
+
+					if( page > 0 ){
+						pdf.addPage();
+					}
+					
+					const imgData = pageCanvas.toDataURL( 'image/' + image.type, image.quality );
+					pdf.addImage( imgData, image.type, margins.left, margins.top, innerPageWidth, pageHeight );
+
+					const pageText = '- '+(page+1)+' -'; 
+					pdf.setFontSize(10);
+					pdf.text( pageText, (paperWidth+$('<span>'+pageText+'</span>').width())/2, 820 );
+				}
+
+				window.open(pdf.output('bloburl'));
+				$pdf.remove();
+			});
+		},
+		error: function( error ){
+			console.log('AJAX error: ', error);
+		}
+	});
+	
+});
+$('#<portlet:namespace/>search').on('click', function(event){
+	window.location = '<%= advancedSearchURL %>';
+});
+
 Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_COMPONENT_ID %>').then(function(
 		managementToolbar
 	) {
@@ -275,6 +398,7 @@ Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_C
 			window.location.href = advancedSearchRenderURL;
 		});
 		
+		
 		managementToolbar.on('actionItemClicked', function(event) {
 			confirm('confirm...');
 			console.log('Data CMD: ', event.data.item.data.cmd );
@@ -288,5 +412,6 @@ Liferay.componentReady('<%= IcecapConstants.STRUCTURED_DATA_MANAGEMENT_TOOLBAR_C
 				url: '<portlet:actionURL name="<%=IcecapMVCCommands.ACTION_BULK %>" />'
 			});
 		});
+		
 	});
 </script>

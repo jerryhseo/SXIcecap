@@ -493,6 +493,9 @@ public interface DataTypeLocalService
 	public List<StructuredData> getStructuredDatas(
 		long dataTypeId, int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getStructuredDatasJSON(long dataTypeId);
+
 	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject getStructuredDataWithValues(

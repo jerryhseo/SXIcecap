@@ -115,10 +115,10 @@
  
 <aui:container  cssClass="station-x">
 	<aui:row >
-		<aui:col md="6"   cssClass="show-border">
+		<aui:col md="5"   cssClass="show-border">
 			<ul class="ztree" id="<portlet:namespace/>queryTree"></ul>
 		</aui:col>
-		<aui:col md="6"   cssClass="show-border">
+		<aui:col md="7"   cssClass="show-border">
 			<div id="<portlet:namespace/>resultSection"></div>
 		</aui:col>
 	</aui:row>

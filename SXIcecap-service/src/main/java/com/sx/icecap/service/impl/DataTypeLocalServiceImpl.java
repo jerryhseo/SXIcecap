@@ -661,6 +661,14 @@ public class DataTypeLocalServiceImpl extends DataTypeLocalServiceBaseImpl {
 		return super.structuredDataPersistence.findByDataTypeId(dataTypeId, start, end);
 	}
 	
+	public JSONArray getStructuredDatasJSON( long dataTypeId ) {
+		List<StructuredData> listDatas = this.getStructuredDatas(dataTypeId);
+		
+		JSONArray datas = JSONFactoryUtil.createJSONArray( listDatas );
+		
+		return datas;
+	}
+	
 	public List<StructuredData> performAdvancedSearchOnStructuredData( long dataTypeId, String advancedQuery, int start, int end ) throws JSONException{
 		
 		JSONObject dataStructure = this.getDataTypeStructureJSONObject(dataTypeId);

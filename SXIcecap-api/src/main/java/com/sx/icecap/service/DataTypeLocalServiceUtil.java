@@ -633,6 +633,12 @@ public class DataTypeLocalServiceUtil {
 		return getService().getStructuredDatas(dataTypeId, start, end);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray
+		getStructuredDatasJSON(long dataTypeId) {
+
+		return getService().getStructuredDatasJSON(dataTypeId);
+	}
+
 	@Deprecated
 	public static com.liferay.portal.kernel.json.JSONObject
 			getStructuredDataWithValues(long dataTypeId, String structuredData)

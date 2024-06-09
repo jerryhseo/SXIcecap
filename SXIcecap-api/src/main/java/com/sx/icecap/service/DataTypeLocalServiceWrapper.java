@@ -742,6 +742,13 @@ public class DataTypeLocalServiceWrapper
 		return _dataTypeLocalService.getStructuredDatas(dataTypeId, start, end);
 	}
 
+	@Override
+	public com.liferay.portal.kernel.json.JSONArray getStructuredDatasJSON(
+		long dataTypeId) {
+
+		return _dataTypeLocalService.getStructuredDatasJSON(dataTypeId);
+	}
+
 	@Deprecated
 	@Override
 	public com.liferay.portal.kernel.json.JSONObject
