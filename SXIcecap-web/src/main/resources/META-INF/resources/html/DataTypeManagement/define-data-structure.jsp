@@ -162,13 +162,16 @@
 		</aui:col>
 	</aui:row>
 	<aui:row>
-		<aui:col md="3">
+		<aui:col md="2">
 			<aui:input type="checkbox" name="inputStatusDisplay" label="input-status-display" inlineField="true" cssClass="display-inline-block"/>
 		</aui:col>
-		<aui:col md="5">
+		<aui:col md="2">
 			<aui:input type="checkbox" name="goTo" label="use-goto" inlineField="true" cssClass="display-inline-block"/>
 		</aui:col>
-		<aui:col md="4">
+		<aui:col md="2">
+			<aui:input type="checkbox" name="goTo" label="display-item-no" inlineField="true" cssClass="display-inline-block"/>
+		</aui:col>
+		<aui:col md="6">
 			<div id="<portlet:namespace/>inputStatusBar" style="display:flex;align-items:self-end;height:100%;margin-bottom:10px;margin-left:10px;font-size:0.9rem;font-weight:600;float:right;">
 			</div>
 		</aui:col>
@@ -313,6 +316,18 @@
 				<aui:button-row>
 					<aui:button id="btnRefresh" value="refresh"></aui:button>
 					<aui:button id="btnShowSDE" value="structured-data-editor"></aui:button>
+					<img 
+						id="<portlet:namespace/>btnPDF" name="<portlet:namespace/>btnPDF" 
+						src="<%= request.getContextPath() %>/svg/pdf-svgrepo-com.svg"
+						class="btn btn-default sxtooltip"
+						style="width:50px;height:40px;float:right;margin-left:5px;margin-right:50px;padding:5px 0px;"
+						title="<%= LanguageUtil.get(locale, "pdf")%>">
+					<img 
+						id="<portlet:namespace/>editor" name="<portlet:namespace/>editor" 
+						src="<%= request.getContextPath() %>/svg/edit-table-svgrepo-com.svg"
+						class="btn btn-default sxtooltip"
+						style="display:none;width:50px;height:40px;float:right;margin-left:5px;margin-right:50px;padding:5px 0px;"
+						title="<%= LanguageUtil.get(locale, "structure-editor")%>">
 				</aui:button-row>
 				
 				<div class="container-fluid">
@@ -342,9 +357,9 @@
 </aui:container>
 </aui:form>
 
-<aui:script use="aui-base, liferay-form, liferay-menu">
-var _ = AUI._;
+<div id="<portlet:namespace/>pdf" style="display:none;width:640px;"></div>
 
+<aui:script use="aui-base, liferay-form, liferay-menu">
 $(document).ready(function(){
 	
 	let SX = StationX(  '<portlet:namespace/>', 
@@ -421,6 +436,87 @@ $(document).ready(function(){
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
 		dataStructure.render();
 		dataStructure.setCurrentTerm( dataStructure.getTermByOrder(dataStructure.getTopLevelTermId(), 1) );
+	});
+	
+	$('#<portlet:namespace/>btnPDF').on('click',  function(event){
+		//dataStructure.renderFormToPDF( $('#<portlet:namespace/>previewPanel'), null  );
+		//$('#<portlet:namespace/>pdf').hide();
+		//$('#<portlet:namespace/>editor').show();
+		
+		let $pdf = $('#<portlet:namespace/>pdf');
+		$pdf.empty();
+		$pdf.append($('<div style="margin:20px 0px;text-align:center;"><h3>'+dataStructure.dataTypeDisplayName+'</h3></div>'))
+		
+		dataStructure.renderFormToPDF( $pdf, null  );
+		$pdf.show();
+		
+		window.jsPDF = window.jspdf.jsPDF;
+		const pdf = new jsPDF('p', 'pt', 'a4');
+		pdf.setProperties({
+			title: '<%= dataType.getDisplayName(locale) %>'
+		});
+
+		const image = { type: 'png', quality: 0.98 };
+		const paperWidth = 595;
+		const paperHeight = 842;
+		const margins = {
+				top: 50,
+				right: 20,
+				bottom: 40,
+				left: 30
+		};
+				
+		html2canvas($pdf[0], {scrollY: 0}).then( canvas => {
+			const innerPageWidth = paperWidth - (margins.left + margins.right);
+			const innerPageHeight = paperHeight - (margins.top + margins.bottom);
+
+			// Calculate the number of pages.
+			const pxFullHeight = canvas.height;
+			const pxPageHeight = Math.floor(canvas.width * (paperHeight / paperWidth));
+			const nPages = Math.ceil(pxFullHeight / pxPageHeight);
+
+			// Define pageHeight separately so it can be trimmed on the final page.
+			let pageHeight = innerPageHeight;
+
+			// Create a one-page canvas to split up the full image.
+			const pageCanvas = document.createElement('canvas');
+			const pageCtx = pageCanvas.getContext('2d');
+			pageCanvas.width = canvas.width;
+			pageCanvas.height = pxPageHeight;
+
+			for( let page = 0; page < nPages; page++ ) {
+				if (page === nPages - 1 && pxFullHeight % pxPageHeight !== 0) {
+					pageCanvas.height = pxFullHeight % pxPageHeight;
+					pageHeight = (pageCanvas.height * innerPageWidth) / pageCanvas.width;
+				}
+
+				const width = pageCanvas.width;
+				const height = pageCanvas.height;
+				pageCtx.fillStyle = 'white';
+				pageCtx.fillRect( 0, 0, width, height);
+				pageCtx.drawImage( canvas, 0, page * pxPageHeight, width, height, 0, 0, width, height );
+
+				if( page > 0 ){
+					pdf.addPage();
+				}
+				
+				const imgData = pageCanvas.toDataURL( 'image/' + image.type, image.quality );
+				pdf.addImage( imgData, image.type, margins.left, margins.top, innerPageWidth, pageHeight );
+
+				const pageText = '- '+(page+1)+' -'; 
+				pdf.setFontSize(10);
+				pdf.text( pageText, (paperWidth+$('<span>'+pageText+'</span>').width())/2, 820 );
+			}
+
+			window.open(pdf.output('bloburl'));
+			$pdf.empty();
+			$pdf.hide();
+		});
+	});
+	$('#<portlet:namespace/>editor').on('click',  function(event){
+		$('#<portlet:namespace/>btnRefresh').trigger( 'click' );
+		$('#<portlet:namespace/>editor').hide();
+		$('#<portlet:namespace/>pdf').show();
 	});
 	
 	$('#<portlet:namespace/>btnSave').click(function(event){
