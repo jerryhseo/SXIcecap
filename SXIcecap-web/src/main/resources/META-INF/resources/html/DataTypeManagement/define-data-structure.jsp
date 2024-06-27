@@ -169,7 +169,7 @@
 			<aui:input type="checkbox" name="goTo" label="use-goto" inlineField="true" cssClass="display-inline-block"/>
 		</aui:col>
 		<aui:col md="2">
-			<aui:input type="checkbox" name="goTo" label="display-item-no" inlineField="true" cssClass="display-inline-block"/>
+			<aui:input type="checkbox" name="itemNoDisplay" label="display-item-no" inlineField="true" cssClass="display-inline-block"/>
 		</aui:col>
 		<aui:col md="6">
 			<div id="<portlet:namespace/>inputStatusBar" style="display:flex;align-items:self-end;height:100%;margin-bottom:10px;margin-left:10px;font-size:0.9rem;font-weight:600;float:right;">
@@ -432,6 +432,10 @@ $(document).ready(function(){
 												
 		dataStructure.render();
 	}
+	
+	$('#<portlet:namespace/>itemNoDisplay').on('change', function(event){
+		
+	});
 	
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
 		dataStructure.render();
