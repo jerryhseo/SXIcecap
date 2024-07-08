@@ -81,7 +81,7 @@
 <aui:container cssClass="station-x">
 		<aui:row>
 			<aui:col md="12">
-				<aui:a href="<%= backURL %>" label="previous-page" style="width:20%;"></aui:a>
+				<aui:a id="backURL" href="<%= backURL %>" label="previous-page" style="width:20%;"></aui:a>
 				<hr style="height:1px;background-color:#ddd;border-top: solid #aaa 2px;border-bottom:solid #eee;margin-top:5px;">
 			</aui:col>
 		</aui:row>
