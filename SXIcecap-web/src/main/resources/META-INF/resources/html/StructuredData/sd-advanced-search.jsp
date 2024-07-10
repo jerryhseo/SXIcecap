@@ -162,7 +162,7 @@ $(document).ready(function(){
 												new Object(),
 												SX.Constants.FOR_SEARCH, 
 												$('#<portlet:namespace/>searchItemSection') );
-	dataStructure.render();
+	dataStructure.render(); 
 	
 	let advancedSearch = new SX.AdvancedSearch(
 						<%= structuredDataList.toJSONString() %>,
@@ -184,10 +184,12 @@ $(document).ready(function(){
 					click: function( event ){
 						advancedSearch.addWritingQueryToHistory();
 						advancedSearch.retrieve();
-						advancedSearch.openQueryEditor($('#<portlet:namespace/>queryTree'));
-						//Clear all search input control
-						<portlet:namespace/>clearSearchTermSelector();
+						advancedSearch.loadQueryEditor($('#<portlet:namespace/>queryTree'));
+
+						advancedSearch.showSearchResults();
 						$(this).dialog('destroy');
+						
+						dataStructure.render();
 					}
 				},{
 					text: Liferay.Language.get('cancel'),
@@ -205,13 +207,24 @@ $(document).ready(function(){
 	
 	function <portlet:namespace/>clearSearchTermSelector(){
 		console.log('clearSearchTermSelector');
-		$('#<portlet:namespace/>searchItemSection').find( 'input' ).val('');
-		$('#<portlet:namespace/>searchItemSection').find( 'input[type="checkbox"]').prop( 'checked', false );
-		$('#<portlet:namespace/>searchItemSection').find( 'input[type="radio"]').prop( 'checked', false );
+		advanceSearch.clearSearchTermSelector();
 	}
 	
 	$('#<portlet:namespace/>btnSearchHistories').click(function(event){
 		advancedSearch.selectSearchHistory( $('#<portlet:namespace/>mainPagination' ) );
+	});
+	
+	Liferay.on(SX.Events.SEARCH_QUERY_DELIVER, function(evt){
+		let dataPacket = evt.dataPacket;
+		
+		if( !dataPacket.isTargetPortlet( '<portlet:namespace/>' ) ){
+			return;
+		}
+		console.log( 'SEARCH_QUERY_DELIVER' , dataPacket );
+		
+		$('#<portlet:namespace/>searchResults').val( JSON.stringify(dataPacket.deliverObj));
+		
+		console.log( 'DELIVER: ' + $('#<portlet:namespace/>searchResults').val());
 	});
 	
 	Liferay.on(SX.Events.OPEN_QUERY_EDITOR, function(evt){
