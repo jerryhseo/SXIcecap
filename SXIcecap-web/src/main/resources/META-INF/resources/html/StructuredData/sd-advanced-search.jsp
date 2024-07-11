@@ -186,7 +186,7 @@ $(document).ready(function(){
 						advancedSearch.retrieve();
 						advancedSearch.loadQueryEditor($('#<portlet:namespace/>queryTree'));
 
-						advancedSearch.showSearchResults();
+						//advancedSearch.showSearchResults();
 						$(this).dialog('destroy');
 						
 						dataStructure.render();
