@@ -182,10 +182,11 @@ $(document).ready(function(){
 				buttons:[{
 					text: Liferay.Language.get('ok'),
 					click: function( event ){
-						advancedSearch.addWritingQueryToHistory();
-						advancedSearch.retrieve();
-						advancedSearch.loadQueryEditor($('#<portlet:namespace/>queryTree'));
-
+						if( advancedSearch.writingQuery.length > 0 ){
+							advancedSearch.addWritingQueryToHistory();
+							advancedSearch.retrieve();
+							advancedSearch.loadQueryEditor($('#<portlet:namespace/>queryTree'));
+						}
 						//advancedSearch.showSearchResults();
 						$(this).dialog('destroy');
 						
@@ -194,7 +195,11 @@ $(document).ready(function(){
 				},{
 					text: Liferay.Language.get('cancel'),
 					click: function( event ){
-						<portlet:namespace/>clearSearchTermSelector();
+						if( advancedSearch.writingQuery.length > 0 ){
+							advancedSearch.writingQuery = new Array();
+							dataStructure.render();
+						}
+						
 						$(this).dialog('destroy');
 					}
 				}],
@@ -203,11 +208,6 @@ $(document).ready(function(){
 					$(this).dialog('destroy');
 				}
 		});
-	}
-	
-	function <portlet:namespace/>clearSearchTermSelector(){
-		console.log('clearSearchTermSelector');
-		advanceSearch.clearSearchTermSelector();
 	}
 	
 	$('#<portlet:namespace/>btnSearchHistories').click(function(event){
